@@ -1,0 +1,23 @@
+.categories-container {
+    background: lightblue;
+    margin-bottom: 15px;
+    height: 90vh;
+}
+
+.products-container {
+    margin-bottom: 15px;
+    height: 90vh;
+}
+
+.products {
+    background: lightblue;
+    margin-bottom: 15px;
+    height: 49%;
+}
+
+.products-header {
+    text-align: left;
+    padding: 20px 25px;
+    border-bottom: 1px solid #e3e3e3;
+    font-size: 1.2em;
+}
