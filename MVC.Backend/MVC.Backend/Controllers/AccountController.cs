@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Controllers
 {
@@ -15,36 +16,34 @@ namespace MVC.Backend.Controllers
     {
         private readonly UserDbContext _usersDb;
         private readonly ITokenService _tokenService;
+
         public AccountController(UserDbContext usersDb, ITokenService tokenService)
         {
             _usersDb = usersDb;
             _tokenService = tokenService;
         }
+
         [HttpPost]
         public async Task<IActionResult> Signup(string email, string password)
         {
+            //todo: SignupViewModel
             var user = _usersDb.Users.SingleOrDefault(u => u.Email == email);
-            if (user != null) return StatusCode(409);
+            if (user != null) return Conflict();
 
-            byte[] salt = AuthHelper.CreateSalt(128);
-            _usersDb.Users.Add(new User
-            {
-                Id = _usersDb.Users.Max(x => x.Id) + 1,
-                Email = email,
-                PasswordHash = AuthHelper.CreateHash(password, salt),
-                PasswordSalt  = salt
-            });
-
+            var salt = AuthHelper.CreateSalt(128);
+            var newUser = new User(email, AuthHelper.CreateHash(password, salt), salt);
+            _usersDb.Users.Add(newUser);
 
             await _usersDb.SaveChangesAsync();
 
-            return Ok(user);
+            return Ok();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
-            var user = AuthHelper.Authenticate(email, password, _usersDb);
+            var user = AuthHelper.Authenticate(loginViewModel.Email, loginViewModel.Password, _usersDb);
+            if (user == null) return BadRequest();
 
             var usersClaims = new[]
             {
@@ -61,14 +60,8 @@ namespace MVC.Backend.Controllers
             return new ObjectResult(new
             {
                 token = jwtToken,
-                refreshToken = refreshToken
+                refreshToken
             });
-        }
-
-        [Authorize]
-        public async Task<IActionResult> test()
-        {
-            return Ok("asdasd");
         }
     }
 }

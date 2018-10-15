@@ -6,16 +6,14 @@ using System.Security.Cryptography;
 
 namespace MVC.Backend.Helpers
 {
-    static public class AuthHelper
+    public static class AuthHelper
     {
         public static byte[] CreateSalt(int size)
         {
-            //Generate a cryptographic random number.
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            byte[] buff = new byte[size];
+            var rng = new RNGCryptoServiceProvider();
+            var buff = new byte[size];
             rng.GetBytes(buff);
-
-            // Return a Base64 string representation of the random number.
+            
             return buff;
         }
 
@@ -24,7 +22,7 @@ namespace MVC.Backend.Helpers
             return new HMACSHA512(salt).ComputeHash(System.Text.Encoding.UTF8.GetBytes(pass));
         }
 
-        static public User Authenticate(string email, string password, UserDbContext context)
+        public static User Authenticate(string email, string password, UserDbContext context)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
@@ -36,8 +34,7 @@ namespace MVC.Backend.Helpers
 
             if (!CreateHash(password, user.PasswordSalt).SequenceEqual(user.PasswordHash))
                 return null;
-
-            // authentication successful
+            
             return user;
         }
 

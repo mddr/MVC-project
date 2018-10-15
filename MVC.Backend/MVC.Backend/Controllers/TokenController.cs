@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Controllers
 {
@@ -20,13 +21,13 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Refresh(string token, string refreshToken)
+        public async Task<IActionResult> Refresh([FromBody] TokenViewModel tokenViewModel)
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(token);
+            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenViewModel.AccessToken);
             var email = principal.Identity.Name; 
 
             var user = _usersDb.Users.SingleOrDefault(u => u.Email == email);
-            if (user == null || user.RefreshToken != refreshToken) return BadRequest();
+            if (user == null || user.RefreshToken != tokenViewModel.RefreshToken) return BadRequest();
 
             var newJwtToken = _tokenService.GenerateAccessToken(principal.Claims);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
@@ -53,7 +54,7 @@ namespace MVC.Backend.Controllers
 
             await _usersDb.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
 
     }

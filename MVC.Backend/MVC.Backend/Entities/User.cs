@@ -18,5 +18,16 @@ namespace MVC.Backend.Entities
         public byte[] PasswordSalt { get; set; }
         public string RefreshToken { get; set; }
         public bool TokenRevoked { get; set; }
+
+        public User()
+        {
+        }
+
+        public User(string email, byte[] passwordHash, byte[] passwordSalt)
+        {
+            Email = email;
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
+        }
     }
 }

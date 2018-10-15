@@ -33,6 +33,14 @@ namespace MVC.Backend
 
             services.AddDbContext<UserDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowOrigin", builder => builder
+                    .AllowAnyHeader()
+                    .WithOrigins("http://localhost:3000")
+                    .AllowCredentials()
+                    .AllowAnyMethod());
+            });
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -80,6 +88,7 @@ namespace MVC.Backend
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
+            app.UseCors("AllowOrigin");
             app.UseMvc();
             app.UseMvcWithDefaultRoute();
         }
