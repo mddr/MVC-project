@@ -1,11 +1,9 @@
-import React, { Component } from "react";
-import {
-  Panel,
-  Button,
-  FormGroup,
-  FormControl,
-} from "react-bootstrap";
-import "./Login.css";
+import './Login.css';
+
+import React, { Component } from 'react';
+import { Button, FormControl, FormGroup, Panel } from 'react-bootstrap';
+
+import AuthService from '../services/AuthService';
 
 export class Login extends Component {
   constructor(props) {
@@ -15,6 +13,12 @@ export class Login extends Component {
       email: "",
       password: ""
     };
+    this.Auth = new AuthService();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillMount() {
+    if (this.Auth.loggedInWithRefresh()) this.props.history.replace("/");
   }
 
   validateForm() {
@@ -29,12 +33,15 @@ export class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const data = new FormData(event.target);
 
-    fetch("https://localhost:34249/login", {
-      method: "POST",
-      body: data
-    }).then(res => console.log(res.json()));
+    this.Auth.login(this.state.email, this.state.password)
+      .then(() => {
+        this.props.history.replace("/");
+      })
+      .catch(() => {
+        //todo: change it
+        alert("Nieprawidłowy email lub hasło");
+      });
   };
 
   render() {

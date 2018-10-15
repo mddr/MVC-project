@@ -2,13 +2,46 @@ import './App.css';
 
 import React, { Component } from 'react';
 import { Nav, Navbar, NavItem } from 'react-bootstrap';
-import { LinkContainer } from "react-router-bootstrap";
+import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
 
 import Routes from './Routes';
+import AuthService from './services/AuthService';
+
+const auth = new AuthService();
 
 class App extends Component {
+  async handleLogout() {
+    auth.logout();
+    await window.location.reload();
+  }
+
   render() {
+    const isUserLogged = auth.loggedInWithRefresh();
+    let loginControl;
+
+    if (!isUserLogged) {
+      loginControl = (
+        <Navbar.Collapse>
+          <Nav pullRight>
+            <LinkContainer to="/login">
+              <NavItem>Zaloguj się</NavItem>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      );
+    } else {
+      loginControl = (
+        <Navbar.Collapse>
+          <Nav pullRight>
+            <NavItem onClick={this.handleLogout.bind(this)}>
+              Wyloguj się
+            </NavItem>
+          </Nav>
+        </Navbar.Collapse>
+      );
+    }
+
     return (
       <div className="App">
         <Navbar fluid collapseOnSelect>
@@ -19,13 +52,7 @@ class App extends Component {
             <Navbar.Toggle />
           </Navbar.Header>
 
-          <Navbar.Collapse>
-            <Nav pullRight>
-              <LinkContainer to="/login">
-                <NavItem>Zaloguj się</NavItem>
-              </LinkContainer>
-            </Nav>
-          </Navbar.Collapse>
+          {loginControl}
         </Navbar>
         <Routes />
       </div>
