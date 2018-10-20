@@ -13,8 +13,8 @@ namespace MVC.Backend.Controllers
     public class TokenController : Controller
     {
         private readonly ITokenService _tokenService;
-        private readonly UserDbContext _usersDb;
-        public TokenController(ITokenService tokenService, UserDbContext usersDb)
+        private readonly ApplicationDbContext _usersDb;
+        public TokenController(ITokenService tokenService, ApplicationDbContext usersDb)
         {
             _tokenService = tokenService;
             _usersDb = usersDb;

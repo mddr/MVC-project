@@ -31,7 +31,7 @@ namespace MVC.Backend
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
 
-            services.AddDbContext<UserDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddCors(options =>
             {

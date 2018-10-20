@@ -1,8 +1,8 @@
 ﻿using MVC.Backend.Data;
-using MVC.Backend.Entities;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
+using MVC.Backend.Models;
 
 namespace MVC.Backend.Helpers
 {
@@ -22,7 +22,7 @@ namespace MVC.Backend.Helpers
             return new HMACSHA512(salt).ComputeHash(System.Text.Encoding.UTF8.GetBytes(pass));
         }
 
-        public static User Authenticate(string email, string password, UserDbContext context)
+        public static User Authenticate(string email, string password, ApplicationDbContext context)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
