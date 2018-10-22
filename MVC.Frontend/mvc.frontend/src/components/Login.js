@@ -48,6 +48,9 @@ export class Login extends Component {
     return (
       <div className="LoginForm">
         <Panel>
+          <Panel.Heading>
+            Logowanie
+          </Panel.Heading>
           <form onSubmit={this.handleSubmit}>
             <FormGroup controlId="email">
               <FormControl

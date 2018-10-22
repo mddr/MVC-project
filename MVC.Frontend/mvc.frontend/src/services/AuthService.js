@@ -25,6 +25,20 @@ export class AuthService {
         })
     }
 
+    register(email, password, firstName, lastName) {
+        return this.fetch(`${this.domain}/account/signup`, {
+            method: 'POST',
+            body: JSON.stringify({
+                email,
+                password,
+                firstName,
+                lastName
+            })
+        }).then(res => {
+            return Promise.resolve(res);
+        })
+    }
+
     loggedInWithRefresh() {
         let token = this.getToken(this.accessTokenName)
         if (!!token && this.isTokenExpired(token)) {
@@ -96,6 +110,22 @@ export class AuthService {
 
 
     fetch(url, options) {
+        const headers = {
+            'Content-Type': 'application/json'
+        }
+
+        if (this.loggedIn()) {
+            headers['Authorization'] = 'Bearer ' + this.getToken(this.accessTokenName)
+        }
+
+        return fetch(url, {
+            headers,
+            ...options
+        })
+            .then(this._checkStatus)
+    }
+
+    fetchParseJson(url, options) {
         const headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

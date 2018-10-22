@@ -3,7 +3,7 @@ import './Home.css';
 import React, { Component } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
-export class Home extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props);
 
