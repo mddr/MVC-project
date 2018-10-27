@@ -2,31 +2,32 @@ import React, { Component } from "react";
 import TableRow from "./TableRow";
 
 class Table extends Component {
+  //Todo get data from api
   state = {
     people: [
       {
         id: 1,
-        name: "Szymon",
-        email: "pizda@nieasperger.com",
-        alias: "Człowiek falujący anus"
+        name: "Damian",
+        surname: "Jaźwiński",
+        email: "damian@mail.com"
       },
       {
         id: 2,
-        name: "Damian",
-        email: "mistrz-zen@gmail.com",
-        alias: "Człowiek kurwa"
+        name: "Cezary",
+        surname: "Szmurło",
+        email: "cezary@mail.com"
       },
       {
         id: 3,
-        name: "Czarek",
-        email: "szmurlo.cezary@gmail.com",
-        alias: "Człowiek czy obok pani wolne"
+        name: "Adam",
+        surname: "Sienkiewicz",
+        email: "adam@mail.com"
       },
       {
         id: 4,
-        name: "Daniel",
-        email: "misiek123@gmail.com",
-        alias: "Człowiek Tunak Tun"
+        name: "Paweł",
+        surname: "Jacewicz",
+        email: "pawel@mail.com"
       }
     ]
   };
@@ -34,7 +35,11 @@ class Table extends Component {
     const keys = Object.keys(this.state.people[0]);
     const heads = [];
     for (let i = 0; i < keys.length; i++) {
-      heads.push(<th>{keys[i].charAt(0).toUpperCase() + keys[i].slice(1)}</th>);
+      heads.push(
+        <th style={{ textAlign: "center" }}>
+          {keys[i].charAt(0).toUpperCase() + keys[i].slice(1)}
+        </th>
+      );
     }
     return (
       <main>

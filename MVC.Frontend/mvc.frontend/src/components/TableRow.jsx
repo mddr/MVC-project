@@ -12,7 +12,7 @@ class TableRow extends Component {
       <tr>
         {rows}
         <td>
-          <a href="#">
+          <a href="#" style={{ marginRight: "8px" }}>
             <i class="fa fa-pencil fa-2x" aria-hidden="true" />
           </a>
           <a href="#">
