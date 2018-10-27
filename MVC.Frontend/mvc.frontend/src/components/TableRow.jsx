@@ -13,10 +13,10 @@ class TableRow extends Component {
         {rows}
         <td>
           <a href="#">
-            <span class="glyphicon glyphicon-edit" />
+            <i class="fa fa-pencil fa-2x" aria-hidden="true" />
           </a>
           <a href="#">
-            <span class="glyphicon glyphicon-delete" />
+            <i class="fa fa-trash fa-2x" aria-hidden="true" />
           </a>
         </td>
       </tr>
