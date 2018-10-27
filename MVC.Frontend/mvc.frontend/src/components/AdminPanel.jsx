@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Table from "./Table";
 
 class AdminPanel extends Component {
   state = {};
@@ -25,7 +26,7 @@ class AdminPanel extends Component {
           <div className="col-sm-9">
             <div class="panel panel-default">
               <div class="panel-body">
-                <h1>Content goes here</h1>
+                <Table />
               </div>
             </div>
           </div>
