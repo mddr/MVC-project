@@ -8,7 +8,19 @@ class TableRow extends Component {
     for (let i = 0; i < rowKeys.length; i++) {
       rows.push(<td>{rowData[rowKeys[i]]}</td>);
     }
-    return <tr>{rows}</tr>;
+    return (
+      <tr>
+        {rows}
+        <td>
+          <a href="#">
+            <span class="glyphicon glyphicon-edit" />
+          </a>
+          <a href="#">
+            <span class="glyphicon glyphicon-delete" />
+          </a>
+        </td>
+      </tr>
+    );
   }
 }
 

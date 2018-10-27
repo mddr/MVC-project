@@ -38,7 +38,7 @@ class Table extends Component {
     }
     return (
       <main>
-        <table className="table table-dark">
+        <table className="table table-striped">
           <thead>
             <tr>{heads}</tr>
           </thead>
