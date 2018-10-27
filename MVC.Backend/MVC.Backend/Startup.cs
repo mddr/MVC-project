@@ -11,6 +11,7 @@ using MVC.Backend.Data;
 using MVC.Backend.Services;
 using System;
 using System.Text;
+using MVC.Backend.Helpers;
 
 namespace MVC.Backend
 {
@@ -28,7 +29,11 @@ namespace MVC.Backend
         {
             services.AddSingleton<IConfiguration>(provider => Configuration);
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IFileService, FileService>();
 
+            services.Configure<DirectorySettings>(Configuration.GetSection("DirectorySettings"));
             var appSettingsSection = Configuration.GetSection("AppSettings");
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));

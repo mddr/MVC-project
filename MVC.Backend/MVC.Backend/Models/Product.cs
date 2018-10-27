@@ -10,7 +10,7 @@ namespace MVC.Backend.Models
 {
     public class Product
     {
-        [Key] public int Id { get; set; }
+        [Key] public string Id { get; set; }
 
         [Required] public string Name { get; set; }
         [Required] public bool IsHidden { get; set; }
@@ -20,16 +20,38 @@ namespace MVC.Backend.Models
         [Required] public int TaxRate { get; set; } //todo: walidacja (0/5/8/23)
         public int Discount { get; set; }
 
-        [Required] public DateTime AddedAt => DateTime.Now;
+        [Required] public DateTime AddedAt;
         [Required] public int AmountAvailable { get; set; }
         [Required] public int BoughtTimes { get; set; }
 
-        [Required] public string FullImagePath { get; set; }
-        [Required] public string ThumbnailPath { get; set; }
+        public string FullImagePath { get; set; }
+        public string ThumbnailPath { get; set; }
 
         [ForeignKey("Categories")] public int CategoryId { get; set; }
         public Category Category { get; set; }
 
         public virtual ICollection<ProductFile> Files { get; set; }
+
+        public Product()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
+        public Product(string name, double pricePln, int categoryId, int amountAvailable, string expertEmail, bool isHidden = false, int taxRate = 23, int discount = 0,
+            int boughtTimes = 0, string fullImagePath = null, string thumbnailPath = null) : this()
+        {
+            AddedAt = DateTime.Now;
+            Name = name;
+            IsHidden = isHidden;
+            ExpertEmail = expertEmail;
+            PricePln = pricePln;
+            TaxRate = taxRate;
+            Discount = discount;
+            AmountAvailable = amountAvailable;
+            BoughtTimes = boughtTimes;
+            FullImagePath = fullImagePath;
+            ThumbnailPath = thumbnailPath;
+            CategoryId = categoryId;
+        }
     }
 }

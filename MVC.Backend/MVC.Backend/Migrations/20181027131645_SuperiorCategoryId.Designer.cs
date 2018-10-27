@@ -3,15 +3,17 @@ using System;
 using MVC.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MVC.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181027131645_SuperiorCategoryId")]
+    partial class SuperiorCategoryId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,15 +33,13 @@ namespace MVC.Backend.Migrations
 
                     b.Property<int>("ProductAmount");
 
-                    b.Property<string>("ProductId1");
-
                     b.Property<int>("UserId");
 
                     b.HasKey("Id", "ProductId");
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductId1");
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
 
@@ -86,7 +86,7 @@ namespace MVC.Backend.Migrations
 
             modelBuilder.Entity("MVC.Backend.Models.Product", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AmountAvailable");
@@ -99,7 +99,8 @@ namespace MVC.Backend.Migrations
 
                     b.Property<string>("ExpertEmail");
 
-                    b.Property<string>("FullImagePath");
+                    b.Property<string>("FullImagePath")
+                        .IsRequired();
 
                     b.Property<bool>("IsHidden");
 
@@ -110,7 +111,8 @@ namespace MVC.Backend.Migrations
 
                     b.Property<int>("TaxRate");
 
-                    b.Property<string>("ThumbnailPath");
+                    b.Property<string>("ThumbnailPath")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -129,11 +131,9 @@ namespace MVC.Backend.Migrations
 
                     b.Property<int>("ProductId");
 
-                    b.Property<string>("ProductId1");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId1");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductFiles");
                 });
@@ -187,7 +187,8 @@ namespace MVC.Backend.Migrations
 
                     b.HasOne("MVC.Backend.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId1");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MVC.Backend.Models.User", "User")
                         .WithMany("ShoppingCart")
@@ -222,7 +223,8 @@ namespace MVC.Backend.Migrations
                 {
                     b.HasOne("MVC.Backend.Models.Product", "Product")
                         .WithMany("Files")
-                        .HasForeignKey("ProductId1");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

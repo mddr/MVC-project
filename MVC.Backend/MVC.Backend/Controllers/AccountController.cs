@@ -35,7 +35,21 @@ namespace MVC.Backend.Controllers
             _usersDb.Users.Add(newUser);
 
             await _usersDb.SaveChangesAsync();
+            return Ok();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> SignupAdmin([FromBody] SignupViewModel viewModel)
+        {
+            var user = _usersDb.Users.SingleOrDefault(u => u.Email == viewModel.Email);
+            if (user != null) return Conflict();
+
+            var salt = AuthHelper.CreateSalt(128);
+            var passwordHash = AuthHelper.CreateHash(viewModel.Password, salt);
+            var newUser = new User(viewModel.Email, passwordHash, salt, viewModel.FirstName, viewModel.LastName, viewModel.Address, role:Enums.Roles.Admin);
+            _usersDb.Users.Add(newUser);
+
+            await _usersDb.SaveChangesAsync();
             return Ok();
         }
 
@@ -48,7 +62,8 @@ namespace MVC.Backend.Controllers
             var userClaims = new[]
             {
                 new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Email)
+                new Claim(ClaimTypes.NameIdentifier, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
             var jwtToken = _tokenService.GenerateAccessToken(userClaims);
