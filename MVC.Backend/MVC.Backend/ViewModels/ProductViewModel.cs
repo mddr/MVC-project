@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MVC.Backend.Helpers;
 using MVC.Backend.Models;
 
 namespace MVC.Backend.ViewModels
@@ -19,9 +20,9 @@ namespace MVC.Backend.ViewModels
         public int AmountAvailable { get; set; }
         public int BoughtTimes { get; set; }
 
-        public string ImageBase64 { get; set; }
-
         public int CategoryId { get; set; }
+
+        public string ImageBase64 { get; set; }
 
         public ProductViewModel()
         {
@@ -39,6 +40,7 @@ namespace MVC.Backend.ViewModels
             Discount = product.Discount;
             AmountAvailable = product.AmountAvailable;
             BoughtTimes = product.BoughtTimes;
+            ImageBase64 = product.GetBase64();
         }
 
         public static List<ProductViewModel> ToList(List<Product> products)
