@@ -45,8 +45,10 @@ namespace MVC.Backend.Services
             var product = new Product(viewModel.Name, viewModel.PricePln, viewModel.CategoryId,
                 viewModel.AmountAvailable, viewModel.ExpertEmail, viewModel.IsHidden, viewModel.TaxRate,
                 viewModel.Discount, viewModel.Discount);
-            //var imagePath = _fileService.SaveImage(product.Id, viewModel.ImageBase64);
-            //var thumbnailPath = _fileService.GenerateThumbnail(product.Id, viewModel.ImageBase64);
+            
+            product.FullImagePath = _fileService.SaveImage(product.Id, viewModel.ImageBase64);
+            product.ThumbnailPath = _fileService.SaveThumbnail(product.Id, viewModel.ImageBase64);
+
             _context.Products.Add(product);
             _context.SaveChanges();
         }

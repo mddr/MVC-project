@@ -7,7 +7,7 @@ namespace MVC.Backend.Services
 {
     public interface IFileService
     {
-        string SaveImage(string productId, string b64);
-        string GenerateThumbnail(string productId, string viewModelImageBase64);
+        string SaveImage(string productId, string base64);
+        string SaveThumbnail(string productId, string base64);
     }
 }
