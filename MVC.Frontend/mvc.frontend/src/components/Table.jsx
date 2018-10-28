@@ -2,54 +2,60 @@ import React, { Component } from "react";
 import TableRow from "./TableRow";
 
 class Table extends Component {
-  //Todo get data from api
-  state = {
-    people: [
-      {
-        id: 1,
-        name: "Damian",
-        surname: "Jaźwiński",
-        email: "damian@mail.com"
-      },
-      {
-        id: 2,
-        name: "Cezary",
-        surname: "Szmurło",
-        email: "cezary@mail.com"
-      },
-      {
-        id: 3,
-        name: "Adam",
-        surname: "Sienkiewicz",
-        email: "adam@mail.com"
-      },
-      {
-        id: 4,
-        name: "Paweł",
-        surname: "Jacewicz",
-        email: "pawel@mail.com"
-      }
-    ]
-  };
+	constructor(props) {
+		super(props);
+	this.state = {
+		data:  []		
+	  };
+	  this.renderHeaders = this.renderHeaders.bind(this);
+	  this.fetchData = this.fetchData.bind(this);
+	}
+	
+	componentDidMount() {		
+		this.fetchData();
+	}
+	
+	componentDidUpdate(prevProps) {
+		if (this.props.apiUrl !== prevProps.apiUrl)
+			this.fetchData();
+
+	}
+	
+	fetchData(){
+		this.props.Auth.fetch(this.props.Auth.domain + this.props.apiUrl.plural, null
+		).then(res=>res.json()).then(data=>{
+							this.setState({ 
+								data: data
+								});
+		});
+	}
+	
+	renderHeaders(){
+		const heads = [];
+  		if (this.state.data.length > 0) {			
+			const keys = Object.keys(this.state.data[0]);
+			for (let i = 0; i < keys.length; i++) {
+			  heads.push(
+				<th key={i} style={{ textAlign: "center" }}>
+				  {keys[i].charAt(0).toUpperCase() + keys[i].slice(1)}
+				</th>
+			  );
+			}
+		}
+		  return heads;
+		
+	}
+	
   render() {
-    const keys = Object.keys(this.state.people[0]);
-    const heads = [];
-    for (let i = 0; i < keys.length; i++) {
-      heads.push(
-        <th style={{ textAlign: "center" }}>
-          {keys[i].charAt(0).toUpperCase() + keys[i].slice(1)}
-        </th>
-      );
-    }
     return (
       <main>
         <table className="table table-striped">
           <thead>
-            <tr>{heads}</tr>
+            <tr>{this.renderHeaders()}</tr>
           </thead>
           <tbody>
-            {this.state.people.map(person => (
-              <TableRow key={person.id} rowData={person} />
+            {this.state.data.map(data => (
+              <TableRow key={data.id} rowData={data} Auth={this.props.Auth} apiUrl={this.props.apiUrl}/>
             ))}
           </tbody>
         </table>

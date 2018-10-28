@@ -9,6 +9,14 @@ class TableRow extends Component {
 		  showRemoveDialog: false,
 		  showEditDialog: false
 		};
+		this.deleteData = this.deleteData.bind(this);
+	}
+	
+	deleteData(){
+		this.props.Auth.fetch(`${this.props.Auth.domain}${this.props.apiUrl.singular}/delete/${this.props.rowData.id}`, {
+		method: 'delete'
+  });
+		this.setState({ showRemoveDialog: false });
 	}
 
   render() {
@@ -16,7 +24,7 @@ class TableRow extends Component {
     const rowKeys = Object.keys(rowData);
     const rows = [];
     for (let i = 0; i < rowKeys.length; i++) {
-      rows.push(<td>{rowData[rowKeys[i]]}</td>);
+      rows.push(<td key={i}>{rowData[rowKeys[i]]}</td>);
     }
 	
     return (
@@ -50,7 +58,7 @@ class TableRow extends Component {
 											<Modal.Body>Czy usunąć?</Modal.Body>
 
 											<Modal.Footer>
-											  <Button >Usuń</Button>
+											  <Button onClick={this.deleteData}>Usuń</Button>
 											  <Button bsStyle="primary" onClick={ ()=> {this.setState({ showRemoveDialog: false })} }>Anuluj</Button>
 											</Modal.Footer>
 										  </Modal>

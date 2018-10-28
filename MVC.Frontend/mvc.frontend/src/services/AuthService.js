@@ -18,7 +18,7 @@ export class AuthService {
                 email,
                 password
             })
-        }).then(res => {
+        }).then(res => res.json()).then( res => {
             this.setToken(res.token, this.accessTokenName);
             this.setToken(res.refreshToken, this.refreshTokenName);
             return Promise.resolve(res);
@@ -78,7 +78,7 @@ export class AuthService {
         return this.fetch(`${this.domain}/token/refresh`, {
             method: 'POST',
             body: body
-        }).then(res => {
+        }).then(res => res.json()).then( res => {
             this.setToken(res.token, this.accessTokenName);
             this.setToken(res.refreshToken, this.refreshTokenName);
         })
