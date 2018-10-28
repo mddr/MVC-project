@@ -24,6 +24,20 @@ class TableRow extends Component {
     const rowKeys = Object.keys(rowData);
     const rows = [];
     for (let i = 0; i < rowKeys.length; i++) {
+		switch(rowKeys[i]){
+					case "name": break;
+					case "isHidden": break;
+					case "expertEmail": break;
+					case "pricePln": break;
+					case "taxRate": break;
+					case "discount": break;
+					case "amountAvailable": break;
+					case "boughtTimes": break;
+					case "imageBase64": break;
+					case "superiorCategoryId": break;
+					case "subCategories": break;
+					default: continue;
+				}
       rows.push(<td key={i}>{rowData[rowKeys[i]]}</td>);
     }
 	

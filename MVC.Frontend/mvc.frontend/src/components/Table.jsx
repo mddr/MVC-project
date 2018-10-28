@@ -35,20 +35,34 @@ class Table extends Component {
   		if (this.state.data.length > 0) {			
 			const keys = Object.keys(this.state.data[0]);
 			for (let i = 0; i < keys.length; i++) {
+				let header = "s";
+				switch(keys[i]){
+					case "name": header = "Nazwa"; break;
+					case "isHidden": header = "Ukryty?"; break;
+					case "expertEmail": header = "Mail eksperta"; break;
+					case "pricePln": header = "Cena PLN"; break;
+					case "taxRate": header = "Stopa podatkowa"; break;
+					case "discount": header = "Zniżka"; break;
+					case "amountAvailable": header = "Dostępne"; break;
+					case "boughtTimes": header = "Kupiono"; break;
+					case "imageBase64": header = "Obrazek"; break;
+					case "superiorCategoryId": header = "Kategoria nadrzędna"; break;
+					case "subCategories": header = "Podkategorie"; break;
+					default: continue;
+				}
 			  heads.push(
 				<th key={i} style={{ textAlign: "center" }}>
-				  {keys[i].charAt(0).toUpperCase() + keys[i].slice(1)}
+				  {header}
 				</th>
 			  );
 			}
 		}
-		  return heads;
-		
+		  return heads;		
 	}
 	
   render() {
     return (
-      <main>
+      <main>	  
         <table className="table table-striped">
           <thead>
             <tr>{this.renderHeaders()}</tr>
