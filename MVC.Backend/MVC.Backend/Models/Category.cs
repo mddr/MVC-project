@@ -9,6 +9,8 @@ namespace MVC.Backend.Models
         [Required] public string Name { get; set; }
 
         public int? SuperiorCategoryId { get; set; }
+        public Category SuperiorCategory { get; set; }
+
         public ICollection<Category> SubCategories { get; set; }
 
 
