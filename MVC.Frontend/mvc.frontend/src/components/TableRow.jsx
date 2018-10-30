@@ -14,17 +14,18 @@ class TableRow extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.renderFormContent = this.renderFormContent.bind(this);
+		this.handleFile = this.handleFile.bind(this);
 		this.renderMenuItems = this.renderMenuItems.bind(this);
 	}
 	
 	componentDidMount() {		
 		const { rowData } = this.props;
 		const rowKeys = Object.keys(rowData);
-		const rows = [];
 		for (let i = 0; i < rowKeys.length; i++) {
 			this.setState( { [rowKeys[i]]: rowData[rowKeys[i]]} );
 		}
 	}
+	
 	
 	
 		handleSubmit(event){
@@ -60,7 +61,15 @@ class TableRow extends Component {
 		this.setState({ showCreateModal: false});
 		window.location.reload(true);
 	}
-	
+	handleFile = e => {
+		const files = Array.from(e.target.files)
+
+		var reader = new FileReader();
+	   reader.readAsDataURL(files[0]);
+	   reader.onload = () => {
+		this.setState({ imageBase64: reader.result });
+		};
+	}
 		renderFormContent(){
 		switch(this.props.apiUrl.singular){
 			case "/product":
@@ -87,7 +96,7 @@ class TableRow extends Component {
 					  <Checkbox checked={this.state.isHiddenChecked} onClick={() => {this.setState( {isHiddenChecked: !this.state.isHiddenChecked} )}}>
 						Ukryty
 					</Checkbox>
-				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryId}. ${this.props.data.name}`} id={`dropdown-basic-0`} >
+				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryName}`} id={`dropdown-basic-0`} >
 					{this.renderMenuItems("product")}
 				</DropdownButton>
 					<FormGroup controlId="amountAvailable">
@@ -117,15 +126,11 @@ class TableRow extends Component {
 						placeholder="Podaj zniżke"
 					  />
 				  </FormGroup>
-				  <FormGroup controlId="imageBase64">
-					  <FormControl
-					  value={this.state.imageBase64}
-						onChange={this.handleChange}
-						type="imageBase64"
-						name="imageBase64"
-						placeholder="Podaj obrazek w base64"
-					  />
-				  </FormGroup>
+				  <div className='button'>
+					  <label htmlFor='single'>Ikona
+					  </label>
+					  <input type='file' id='single' onChange={this.handleFile} /> 
+					</div>
 
 				  
 				  </div>
@@ -142,7 +147,7 @@ class TableRow extends Component {
 						placeholder="Podaj nazwe"
 					  />
 					</FormGroup>
-				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryId}. ${this.props.data.name}`} id={`dropdown-basic-0`} >
+				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryName}`} id={`dropdown-basic-0`} >
 					{this.renderMenuItems("category")}
 				</DropdownButton>
 				  </div>
@@ -153,18 +158,19 @@ class TableRow extends Component {
 	
 	renderMenuItems(type){		
 		const items = [];
-		for (let i = 0; i < this.props.data.length; i++) {
+		for (let i = 0; i < this.props.categories.length; i++) {
 			  switch(type){
 				  case "category":
 					  items.push(
-							<MenuItem eventKey={i} onClick={() => this.setState( {superiorCategoryId: this.props.data[i].id} )} >{this.props.data[i].id}. {this.props.data[i].name}</MenuItem>
+							<MenuItem key={i} eventKey={i} onClick={() => this.setState( {superiorCategoryId: this.props.categories[i].id, superiorCategoryName: this.props.categories[i].name} )} >{this.props.categories[i].id}. {this.props.categories[i].name}</MenuItem>
 						);
 						break;
 				  case "product":
 					  items.push(
-							<MenuItem eventKey={i} onClick={() => this.setState( {categoryId: this.props.data[i].id} )} >{this.props.data[i].id}. {this.props.data[i].name}</MenuItem>
+							<MenuItem key={i} eventKey={i} onClick={() => this.setState( {categoryId: this.props.categories[i].id, superiorCategoryName: this.props.categories[i].name} )} >{this.props.categories[i].id}. {this.props.categories[i].name}</MenuItem>
 						);
 						break;
+					default: break;
 			  }
 		}
 		  return items;	
@@ -193,6 +199,7 @@ class TableRow extends Component {
 		switch(rowKeys[i]){
 					case "id": content = rowData[rowKeys[i]]; break;
 					case "name": content = rowData[rowKeys[i]]; break;
+					case "categoryId": content = rowData[rowKeys[i]]; break;
 					case "isHidden": rowData[rowKeys[i]] ? content = "tak" : content = "nie" ; break;
 					case "expertEmail": content = rowData[rowKeys[i]]; break;
 					case "pricePln": content = rowData[rowKeys[i]]; break;
@@ -200,9 +207,9 @@ class TableRow extends Component {
 					case "discount": content = rowData[rowKeys[i]]; break;
 					case "amountAvailable": content = rowData[rowKeys[i]]; break;
 					case "boughtTimes": content = rowData[rowKeys[i]]; break;
-					case "imageBase64": content = <img src={"data:image/jpeg;base64," + rowData[rowKeys[i]] } />; break;
+					case "imageBase64": content = <img src={"data:image/jpeg;base64," + rowData[rowKeys[i]] } alt="" />; break;
 					case "superiorCategoryId": content = rowData[rowKeys[i]]; break;
-					case "subCategories": content = ""; console.log(rowData[rowKeys[i]]);
+					case "subCategories": content = "";
 											for (let j = 0; j < rowData[rowKeys[i]].length; j++) {
 													content += rowData[rowKeys[i]][j].id + ", ";
 												}; 

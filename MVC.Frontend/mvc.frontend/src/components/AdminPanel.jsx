@@ -10,9 +10,11 @@ class AdminPanel extends Component {
 	this.state = {
 		isHiddenChecked: false,
 		data: [],
+		categories: [],
 		apiUrl: {plural: "/categories", singular: "/category"},
 		apiAction: "",
 		showCreateModal: false,
+		reloadData: false,
 		};
 	this.Auth = new AuthService();
 	this.renderFormContent = this.renderFormContent.bind(this);
@@ -21,16 +23,30 @@ class AdminPanel extends Component {
 	this.handleChange = this.handleChange.bind(this);
 	this.renderMenuItems = this.renderMenuItems.bind(this);
 	this.fetchData = this.fetchData.bind(this);
+	this.handleFile = this.handleFile.bind(this);
+	this.needsReload = this.needsReload.bind(this);
 	}
 	
 	componentDidMount() {		
 		this.fetchData();
+		this.Auth.fetch(this.Auth.domain + "/categories", null
+		).then(res=>res.json()).then(res=>{
+									this.setState({ 
+											categories: res
+											});
+								});	
 	}
 	
 	componentDidUpdate(prevProps, prevState) {
-		if (this.state.apiUrl !== prevState.apiUrl)
+		if (this.state.apiUrl !== prevState.apiUrl || this.state.reloadData){
 			this.fetchData();
+			this.setState( {superiorCategoryName: "", categoryId: "", reloadData: false})
+		}
 
+	}
+	
+	needsReload(){
+		this.setState({reloadData: true});
 	}
 	
 	fetchData(){
@@ -43,34 +59,46 @@ class AdminPanel extends Component {
 	}
 	
 	
-	renderMenuItems(type){		
+	renderMenuItems(type){	
+
 		const items = [];
-		for (let i = 0; i < this.state.data.length; i++) {
+		for (let i = 0; i < this.state.categories.length; i++) {
 			  switch(type){
 				  case "category":
 					  items.push(
-							<MenuItem eventKey={i} onClick={() => this.setState( {superiorCategoryId: this.state.data[i].id} )} >{this.state.data[i].id} {this.state.data[i].name}</MenuItem>
+							<MenuItem key={i} eventKey={i} onClick={() => this.setState( {superiorCategoryId: this.state.categories[i].id, superiorCategoryName: this.state.categories[i].name} )} >{this.state.categories[i].id} {this.state.categories[i].name}</MenuItem>
 						);
 						break;
 				  case "product":
 					  items.push(
-							<MenuItem eventKey={i} onClick={() => this.setState( {categoryId: this.state.data[i].id} )} >{this.state.data[i].id} {this.state.data[i].name}</MenuItem>
+							<MenuItem key={i} eventKey={i} onClick={() => this.setState( {categoryId: this.state.categories[i].id, superiorCategoryName: this.state.categories[i].name} )} >{this.state.categories[i].id} {this.state.categories[i].name}</MenuItem>
 						);
 						break;
+					default: break;
 			  }
 		}
 		  return items;	
+	}
+	
+	handleFile = e => {
+		const files = Array.from(e.target.files)
+
+		var reader = new FileReader();
+	   reader.readAsDataURL(files[0]);
+	   reader.onload = () => {
+		this.setState({ imageBase64: reader.result });
+		};
 	}
 	renderFormContent(){
 		switch(this.state.apiUrl.singular){
 			case "/product":
 				return(		
 				<div>
-					<FormGroup controlId="name">
+					<FormGroup controlId="productName">
 					  <FormControl
 						onChange={this.handleChange}
-						type="name"
-						name="name"
+						type="productName"
+						name="productName"
 						placeholder="Podaj nazwe"
 					  />
 					</FormGroup>
@@ -86,7 +114,7 @@ class AdminPanel extends Component {
 						Ukryty
 					</Checkbox>
 					<FormGroup controlId="categoryId">
-				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryId}. ${this.state.data.name}`} id={`dropdown-basic-0`} >
+				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryName}`} id={`dropdown-basic-0`} >
 					{this.renderMenuItems("product")}
 				</DropdownButton>
 				  </FormGroup>
@@ -114,30 +142,26 @@ class AdminPanel extends Component {
 						placeholder="Podaj zniżke"
 					  />
 				  </FormGroup>
-				  <FormGroup controlId="imageBase64">
-					  <FormControl
-						onChange={this.handleChange}
-						type="imageBase64"
-						name="imageBase64"
-						placeholder="Podaj obrazek w base64"
-					  />
-				  </FormGroup>
-
+				      <div className='button'>
+					  <label htmlFor='single'>Ikona
+					  </label>
+					  <input type='file' id='single' onChange={this.handleFile} /> 
+					</div>
 				  
 				  </div>
 				);
 			case "/category":
 				return(		
 				<div>
-					<FormGroup controlId="name">
+					<FormGroup controlId="categoryName">
 					  <FormControl
 						onChange={this.handleChange}
-						type="name"
-						name="name"
+						type="categoryName"
+						name="categoryName"
 						placeholder="Podaj nazwe"
 					  />
 					</FormGroup>
-				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryId}. ${this.state.data.name}`} id={`dropdown-basic-0`} >
+				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryName}`} id={`dropdown-basic-0`} >
 					{this.renderMenuItems("category")}
 				</DropdownButton>
 				  </div>
@@ -153,7 +177,7 @@ class AdminPanel extends Component {
 		switch(this.state.apiUrl.singular){
 			case "/product":
 				body = JSON.stringify({
-					name: this.state.name,
+					name: this.state.productName,
 					isHidden: this.state.isHiddenChecked,
 					pricePln: this.state.pricePln,
 					categoryId: this.state.categoryId,
@@ -165,7 +189,7 @@ class AdminPanel extends Component {
 				break;
 			case "/category":
 				body = JSON.stringify({
-					name: this.state.name,
+					name: this.state.categoryName,
 					superiorCategoryId: this.state.superiorCategoryId
 				});
 				break;
@@ -231,7 +255,7 @@ class AdminPanel extends Component {
               <div className="panel-body">
 				<Button onClick={ ()=> {this.setState({ showCreateModal: true })} }>Utwórz</Button>
 					{this.renderModal()}
-					<Table apiUrl={this.state.apiUrl} Auth={this.Auth} data={this.state.data}
+					<Table apiUrl={this.state.apiUrl} Auth={this.Auth} data={this.state.data} categories={this.state.categories} needsReload={this.needsReload}
 						handleSubmit={this.handleSubmit} handleChange={this.handleChange}
 						renderFormContent={this.renderFormContent}
 					/>

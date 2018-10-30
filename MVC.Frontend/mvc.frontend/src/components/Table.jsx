@@ -20,6 +20,7 @@ class Table extends Component {
 				switch(keys[i]){
 					case "id": header = "id"; break;
 					case "name": header = "Nazwa"; break;
+					case "categoryId": header = "Kategoria"; break;
 					case "isHidden": header = "Ukryty"; break;
 					case "expertEmail": header = "Mail eksperta"; break;
 					case "pricePln": header = "Cena PLN"; break;
@@ -51,7 +52,7 @@ class Table extends Component {
           </thead>
           <tbody>
             {this.props.data.map(data => (
-              <TableRow key={data.id} rowData={data} Auth={this.props.Auth} apiUrl={this.props.apiUrl} data={this.props.data}
+              <TableRow key={data.id} rowData={data} Auth={this.props.Auth} apiUrl={this.props.apiUrl} data={this.props.data} categories={this.props.categories} needsReload={this.props.needsReload}
 			  handleSubmit={this.props.handleSubmit} handleChange={this.props.handleChange}
 				renderFormContent={this.props.renderFormContent}/>
             ))}
