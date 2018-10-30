@@ -8,7 +8,7 @@ class TableRow extends Component {
 		this.state = {
 			isHiddenChecked: false,
 		  showRemoveDialog: false,
-		  showEditDialog: false
+		  showEditDialog: false,
 		};
 		this.deleteData = this.deleteData.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -16,6 +16,7 @@ class TableRow extends Component {
 		this.renderFormContent = this.renderFormContent.bind(this);
 		this.handleFile = this.handleFile.bind(this);
 		this.renderMenuItems = this.renderMenuItems.bind(this);
+		this.getCategoryName = this.getCategoryName.bind(this);
 	}
 	
 	componentDidMount() {		
@@ -23,12 +24,22 @@ class TableRow extends Component {
 		const rowKeys = Object.keys(rowData);
 		for (let i = 0; i < rowKeys.length; i++) {
 			this.setState( { [rowKeys[i]]: rowData[rowKeys[i]]} );
+			if(rowKeys[i] ==="categoryId") {	this.setState( { superiorCategoryName: this.getCategoryName(rowData[rowKeys[i]]) } );}
+			if(rowKeys[i] ==="superiorCategoryId") {	this.setState( { superiorCategoryName: this.getCategoryName(rowData[rowKeys[i]]) } );}
 		}
+
+
+	}
+	
+	getCategoryName(id){
+		for(let j =0; j<this.props.categories.length;j++){
+											if(this.props.categories[j].id === id)
+												return this.props.categories[j].name;
+										} 
 	}
 	
 	
-	
-		handleSubmit(event){
+	handleSubmit(event){
 		event.preventDefault();
 		let body = "";
 		switch(this.props.apiUrl.singular){
@@ -58,7 +69,7 @@ class TableRow extends Component {
 		method: 'post',
 		body
 		});
-		this.setState({ showCreateModal: false});
+		this.setState({ showEditDialog: false});
 		window.location.reload(true);
 	}
 	handleFile = e => {
@@ -70,7 +81,8 @@ class TableRow extends Component {
 		this.setState({ imageBase64: reader.result });
 		};
 	}
-		renderFormContent(){
+	
+	renderFormContent(){
 		switch(this.props.apiUrl.singular){
 			case "/product":
 				return(		
@@ -96,7 +108,7 @@ class TableRow extends Component {
 					  <Checkbox checked={this.state.isHiddenChecked} onClick={() => {this.setState( {isHiddenChecked: !this.state.isHiddenChecked} )}}>
 						Ukryty
 					</Checkbox>
-				<DropdownButton title={`Kategoria nadrzędna: ${this.state.superiorCategoryName}`} id={`dropdown-basic-0`} >
+				<DropdownButton title={`Kategoria: ${this.state.superiorCategoryName}`} id={`dropdown-basic-0`} >
 					{this.renderMenuItems("product")}
 				</DropdownButton>
 					<FormGroup controlId="amountAvailable">
@@ -175,6 +187,7 @@ class TableRow extends Component {
 		}
 		  return items;	
 	}
+	
 	handleChange = event => {
 		this.setState({
 		[event.target.id]: event.target.value
@@ -197,9 +210,8 @@ class TableRow extends Component {
 	let content = {};
     for (let i = 0; i < rowKeys.length; i++) {
 		switch(rowKeys[i]){
-					case "id": content = rowData[rowKeys[i]]; break;
 					case "name": content = rowData[rowKeys[i]]; break;
-					case "categoryId": content = rowData[rowKeys[i]]; break;
+					case "categoryId": 	content = this.getCategoryName(rowData[rowKeys[i]]); break;
 					case "isHidden": rowData[rowKeys[i]] ? content = "tak" : content = "nie" ; break;
 					case "expertEmail": content = rowData[rowKeys[i]]; break;
 					case "pricePln": content = rowData[rowKeys[i]]; break;
@@ -211,7 +223,7 @@ class TableRow extends Component {
 					case "superiorCategoryId": content = rowData[rowKeys[i]]; break;
 					case "subCategories": content = "";
 											for (let j = 0; j < rowData[rowKeys[i]].length; j++) {
-													content += rowData[rowKeys[i]][j].id + ", ";
+													content += rowData[rowKeys[i]][j].name + ", ";
 												}; 
 											break;
 					default: continue;
@@ -237,7 +249,7 @@ class TableRow extends Component {
 												</form>
 												</Modal.Body>
 											<Modal.Footer>
-											  <Button type="submit" form="editForm" onClick={ ()=> {this.setState({ apiAction: "/update" })} }>Zatwierdź</Button>
+											  <Button type="submit" form="editForm" >Zatwierdź</Button>
 											  <Button bsStyle="primary" onClick={ ()=> {this.setState({ showEditDialog: false })} }>Anuluj</Button>
 											</Modal.Footer>
 										  </Modal>
@@ -253,7 +265,7 @@ class TableRow extends Component {
 
 											<Modal.Footer>
 											  <Button onClick={this.deleteData}>Usuń</Button>
-											  <Button bsStyle="primary" onClick={ ()=> {this.setState({ showRemoveDialog: false })} }>Anuluj</Button>
+											  <Button bsStyle="primary" onClick={ ()=> {this.setState({ showRemoveDialog: false });} }>Anuluj</Button>
 											</Modal.Footer>
 										  </Modal>
         </td>

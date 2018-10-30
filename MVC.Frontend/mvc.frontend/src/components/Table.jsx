@@ -18,7 +18,6 @@ class Table extends Component {
 			for (let i = 0; i < keys.length; i++) {
 				let header = "s";
 				switch(keys[i]){
-					case "id": header = "id"; break;
 					case "name": header = "Nazwa"; break;
 					case "categoryId": header = "Kategoria"; break;
 					case "isHidden": header = "Ukryty"; break;

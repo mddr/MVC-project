@@ -173,7 +173,6 @@ class AdminPanel extends Component {
 	handleSubmit(event){
 		event.preventDefault();
 		let body = "";
-		console.log(this.state.isHiddenChecked);
 		switch(this.state.apiUrl.singular){
 			case "/product":
 				body = JSON.stringify({
@@ -195,6 +194,7 @@ class AdminPanel extends Component {
 				break;
 			default: break;
 		}
+		console.log(body);
 		this.Auth.fetch(`${this.Auth.domain}${this.state.apiUrl.singular}${this.state.apiAction}`, {
 		method: 'post',
 		body
