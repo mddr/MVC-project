@@ -17,11 +17,13 @@ namespace MVC.Backend.Controllers
     {
         private readonly ApplicationDbContext _usersDb;
         private readonly ITokenService _tokenService;
+        private readonly IEmailService _emailService;
 
-        public AccountController(ApplicationDbContext usersDb, ITokenService tokenService)
+        public AccountController(ApplicationDbContext usersDb, ITokenService tokenService, IEmailService emailService)
         {
             _usersDb = usersDb;
             _tokenService = tokenService;
+            _emailService = emailService;
         }
 
         [HttpPost]
@@ -34,8 +36,11 @@ namespace MVC.Backend.Controllers
             var passwordHash = AuthHelper.CreateHash(viewModel.Password, salt);
             var newUser = new User(viewModel.Email, passwordHash, salt, viewModel.FirstName, viewModel.LastName, viewModel.Address);
             _usersDb.Users.Add(newUser);
-
             await _usersDb.SaveChangesAsync();
+
+            var host = Request.Host;
+            _emailService.SendConfirmationEmail(viewModel.Email, host.ToString());
+
             return Ok();
         }
 
@@ -51,6 +56,10 @@ namespace MVC.Backend.Controllers
             _usersDb.Users.Add(newUser);
 
             await _usersDb.SaveChangesAsync();
+
+            var host = Request.Host;
+            _emailService.SendConfirmationEmail(viewModel.Email, host.ToString());
+
             return Ok();
         }
 
@@ -78,6 +87,22 @@ namespace MVC.Backend.Controllers
                 token = jwtToken,
                 refreshToken
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string token)
+        {
+            var claims = _tokenService.GetPrincipalFromExpiredToken(token);
+            var email = claims.Claims.Where(c => c.Type == ClaimTypes.Email)
+                .Select(c => c.Value).SingleOrDefault();
+            var user = _usersDb.Users.SingleOrDefault(u => u.Email == email);
+            if (user == null)
+                return BadRequest();
+
+            user.EmailConfirmed = true;
+            await _usersDb.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

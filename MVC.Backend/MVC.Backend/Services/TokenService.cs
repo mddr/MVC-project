@@ -39,6 +39,26 @@ namespace MVC.Backend.Services
                 return Convert.ToBase64String(randomNumber);
             }
         }
+
+        public string GenerateConfirmationToken(string email)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Secret"]));
+
+            var claims = new []
+            {
+                new Claim(ClaimTypes.Email, email)
+            };
+
+            var jwtToken = new JwtSecurityToken(
+                claims: claims,
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        }
+
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters

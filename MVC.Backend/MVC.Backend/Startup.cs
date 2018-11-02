@@ -32,8 +32,10 @@ namespace MVC.Backend
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IEmailService, EmailService>();
 
             services.Configure<DirectorySettings>(Configuration.GetSection("DirectorySettings"));
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             var appSettingsSection = Configuration.GetSection("AppSettings");
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));

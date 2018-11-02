@@ -7,6 +7,7 @@ namespace MVC.Backend.Services
     {
         string GenerateAccessToken(IEnumerable<Claim> claims);
         string GenerateRefreshToken();
+        string GenerateConfirmationToken(string email);
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 }

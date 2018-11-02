@@ -15,6 +15,7 @@ namespace MVC.Backend.Models
         [Required] public byte[] PasswordSalt { get; set; }
         public string RefreshToken { get; set; }
         [Required] public Enums.Roles Role { get; set; }
+        [Required] public bool EmailConfirmed { get; set; }
 
         [Required] public string FirstName { get; set; }
         [Required] public string LastName { get; set; }
@@ -49,6 +50,7 @@ namespace MVC.Backend.Models
             PrefersNetPrice = prefersNetPrice;
             ProductsPerPage = productsPerPage;
             Role = role;
+            EmailConfirmed = false;
         }
     }
 }
