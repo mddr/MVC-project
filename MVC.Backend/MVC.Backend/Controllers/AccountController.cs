@@ -73,7 +73,8 @@ namespace MVC.Backend.Controllers
             {
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(ClaimTypes.NameIdentifier, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim("Confirmed", user.EmailConfirmed.ToString()), 
             };
 
             var jwtToken = _tokenService.GenerateAccessToken(userClaims);
