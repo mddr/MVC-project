@@ -4,9 +4,6 @@ import TableRow from "./TableRow";
 class Table extends Component {
 	constructor(props) {
 		super(props);
-	this.state = {
-		data:  []		
-	  };
 	  this.renderHeaders = this.renderHeaders.bind(this);
 	}
 	
@@ -42,6 +39,7 @@ class Table extends Component {
 		  return heads;		
 	}
 	
+	
   render() {
     return (
       <main>	  
@@ -51,9 +49,8 @@ class Table extends Component {
           </thead>
           <tbody>
             {this.props.data.map(data => (
-              <TableRow key={data.id} rowData={data} Auth={this.props.Auth} apiUrl={this.props.apiUrl} data={this.props.data} categories={this.props.categories} needsReload={this.props.needsReload}
-			  handleSubmit={this.props.handleSubmit} handleChange={this.props.handleChange}
-				renderFormContent={this.props.renderFormContent}/>
+              <TableRow key={data.id} rowData={data} Auth={this.props.Auth} apiUrl={this.props.apiUrl} categories={this.props.categories}
+				updateData={this.props.updateData}/>
             ))}
           </tbody>
         </table>
