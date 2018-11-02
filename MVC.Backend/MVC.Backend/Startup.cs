@@ -33,6 +33,7 @@ namespace MVC.Backend
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IFileService, FileService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.Configure<DirectorySettings>(Configuration.GetSection("DirectorySettings"));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
