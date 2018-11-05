@@ -45,7 +45,7 @@ namespace MVC.Backend.Services
             var userClaims = new[]
             {
                 new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
                 new Claim("Confirmed", user.EmailConfirmed.ToString()),
             };
