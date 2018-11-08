@@ -3,6 +3,7 @@
   display: inline-flex;
   flex-direction: column;
   width: 15vw;
+  text-align: center;
 }
 
 .greenbox {

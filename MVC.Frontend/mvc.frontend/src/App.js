@@ -1,12 +1,13 @@
-import './App.css';
+import "./App.css";
 
-import React, { Component } from 'react';
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
+import Footer from "./components/Footer";
 
-import Routes from './Routes';
-import AuthService from './services/AuthService';
+import Routes from "./Routes";
+import AuthService from "./services/AuthService";
 
 const auth = new AuthService();
 
@@ -58,6 +59,7 @@ class App extends Component {
           {loginControl}
         </Navbar>
         <Routes />
+        <Footer />
       </div>
     );
   }

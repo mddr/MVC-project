@@ -22,13 +22,20 @@ export default class Home extends Component {
         <div className="categories">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magni, illo?
         </div>
-        <div className="sale">{<ProductSlider />}</div>
-        <div className="news">{/* <ProductSlider /> */}</div>
+        <div className="sale">
+          Promocje
+          <hr />
+          {<ProductSlider />}
+        </div>
+        <div className="news">
+          Nowości
+          <hr />
+          {<ProductSlider />}
+        </div>
         <div className="mostpopular">
           {/* <ProductSlider />
           <ProductSlider /> */}
         </div>
-        <Footer />
       </div>
       // <div className="home">
       //   <div className="container-fluid">

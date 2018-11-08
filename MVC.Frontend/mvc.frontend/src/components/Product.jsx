@@ -2,13 +2,6 @@ import React, { Component } from "react";
 import "./Product.css";
 
 class Product extends Component {
-  state = {
-    imgpath: "placeholder.png",
-    discount: false,
-    name: "Skarbonka NZS",
-    price: 5.5
-  };
-
   extractUnits = price => {
     return Math.floor(price);
   };
@@ -21,17 +14,17 @@ class Product extends Component {
   };
 
   render() {
+    let { imgpath, discount, name, price } = this.props;
+
     return (
       <div className="product thumbnail">
         <a href="#">
           {/*<img src={ this.state.imgpath } alt="zdjęcie"/>*/}
           <div className="greenbox" />
-          <div className="namebox">{this.state.name}</div>
+          <div className="namebox">{name}</div>
           <div className="pricebox">
-            <span className="units">{this.extractUnits(this.state.price)}</span>
-            <span className="decimals">
-              {this.extractDecimals(this.state.price)}
-            </span>
+            <span className="units">{this.extractUnits(price)}</span>
+            <span className="decimals">{this.extractDecimals(price)}</span>
           </div>
         </a>
       </div>
