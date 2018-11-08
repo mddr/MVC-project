@@ -1,0 +1,18 @@
+.productslider {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: center;
+}
+
+.productslider button {
+  border: 0ch;
+  /* background-image: linear-gradient(
+    to right,
+    rgba(173, 216, 230, 0),
+    rgba(255, 255, 255, 1)
+  ); Standard syntax (must be last) */
+  background: none;
+}
