@@ -18,7 +18,6 @@ export default class Home extends Component {
       <div className="home">
         <div className="ad">
           <div className="ad_img" />
-          {/* <img src="img/hangers_long.png" alt="hangers_long" /> */}
         </div>
         <div className="categories">
           <SideNav />
