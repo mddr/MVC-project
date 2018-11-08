@@ -19,7 +19,8 @@ class Product extends Component {
     return (
       <div className="product thumbnail">
         <a href="#">
-          {/*<img src={ this.state.imgpath } alt="zdjęcie"/>*/}
+          {/* TODO - Zdjęcie */}
+          {/*<img src={ imgpath } alt="zdjęcie"/>*/}
           <div className="greenbox" />
           <div className="namebox">{name}</div>
           <div className="pricebox">
