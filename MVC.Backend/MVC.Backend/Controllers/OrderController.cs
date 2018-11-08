@@ -2,33 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Backend.Helpers;
 using MVC.Backend.Services;
-using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Controllers
 {
-    [EmailConfirmed(Roles = "Admin")]
-    public class ProductController : Controller
+    [EmailConfirmed(Roles = "Admin, User")]
+    public class OrderController : Controller
     {
-        private readonly IProductService _productService;
+        private readonly IOrderService _orderService;
 
-        public ProductController(IProductService productService)
+        public OrderController(IOrderService orderService)
         {
-            _productService = productService;
+            _orderService = orderService;
         }
 
         [HttpGet]
-        [Route("products")]
-        public IActionResult Products()
+        [Route("orders")]
+        public IActionResult Orders()
         {
             try
             {
-                var products = _productService.GetProducts();
-                return Ok(ProductViewModel.ToList(products));
+                var orders = _orderService.GetOrders();
+                return Ok(OrderViewModel.ToList(orders));
             }
             catch (Exception)
             {
@@ -37,13 +35,13 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpGet]
-        [Route("products/{categoryId}")]
-        public IActionResult Products(int categoryId)
+        [Route("orders/{userId}")]
+        public IActionResult Orders(int userId)
         {
             try
             {
-                var products = _productService.GetProducts(categoryId);
-                return Ok(ProductViewModel.ToList(products));
+                var orders = _orderService.GetOrders(userId);
+                return Ok(OrderViewModel.ToList(orders));
             }
             catch (Exception)
             {
@@ -52,13 +50,13 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpGet]
-        [Route("product/{id}")]
-        public IActionResult Product(string id)
+        [Route("order/{id}")]
+        public IActionResult Order(int id)
         {
             try
             {
-                var product = _productService.GetProduct(id);
-                return Ok(new ProductViewModel(product));
+                var order = _orderService.GetOrder(id);
+                return Ok(new OrderViewModel(order));
             }
             catch (ArgumentException)
             {
@@ -71,12 +69,12 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpPost]
-        [Route("product/add")]
-        public IActionResult Add([FromBody] ProductViewModel viewModel)
+        [Route("order/add")]
+        public IActionResult Add([FromBody] OrderViewModel viewModel)
         {
             try
             {
-                _productService.AddProduct(viewModel);
+                _orderService.AddOrder(viewModel);
                 return Ok();
             }
             catch (ArgumentException)
@@ -90,12 +88,12 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpPost]
-        [Route("product/update")]
-        public IActionResult Update([FromBody] ProductViewModel viewModel)
+        [Route("order/update")]
+        public IActionResult Update([FromBody] OrderViewModel viewModel)
         {
             try
             {
-                _productService.UpdateProduct(viewModel);
+                _orderService.UpdateOrder(viewModel);
                 return Ok();
             }
             catch (ArgumentException)
@@ -109,12 +107,12 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpDelete]
-        [Route("product/delete/{id}")]
-        public IActionResult Delete(string id)
+        [Route("order/delete/{id}")]
+        public IActionResult Delete(int id)
         {
             try
             {
-                _productService.DeleteProduct(id);
+                _orderService.DeleteOrder(id);
                 return Ok();
             }
             catch (ArgumentException)
@@ -126,6 +124,5 @@ namespace MVC.Backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
     }
 }

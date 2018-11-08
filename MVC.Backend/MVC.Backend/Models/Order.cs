@@ -19,5 +19,16 @@ namespace MVC.Backend.Models
 
         [Required] public double TotalPrice { get; set; }
         [Required] public DateTime CreatedAt => DateTime.Now;
+
+        public Order()
+        {
+        }
+
+        public Order(int userId, string cartId, double totalPrice)
+        {
+            UserId = userId;
+            CartId = cartId;
+            TotalPrice = totalPrice;
+        }
     }
 }
