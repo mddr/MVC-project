@@ -1,0 +1,32 @@
+.product {
+  margin: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  width: 15vw;
+}
+
+.greenbox {
+  background-color: green;
+  height: 150px;
+  flex-basis: 60%;
+}
+
+.namebox {
+  font-size: 17px;
+  background-color: azure;
+  flex-basis: 20%;
+}
+
+.pricebox {
+  background-color: beige;
+  flex-basis: 20%;
+  color: orangered;
+}
+
+.pricebox .units {
+  font-size: 17px;
+}
+
+.pricebox .decimals {
+  font-size: 14px;
+}
