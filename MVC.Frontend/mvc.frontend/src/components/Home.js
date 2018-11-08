@@ -11,12 +11,12 @@ export default class Home extends Component {
     this.state = {
       isUserLogged: false,
       categories: [
-        { id: 1, name: "Odzież męska", superiorCatId: null },
-        { id: 2, name: "Spodnie", superiorCatId: 1 },
-        { id: 3, name: "Buty", superiorCatId: 1 },
-        { id: 4, name: "Buty sportowe", superiorCatId: 3 },
-        { id: 5, name: "Pantofle", superiorCatId: 3 },
-        { id: 6, name: "Odzież damska", superiorCatId: null }
+        { id: 1, name: "Odzież męska", link: "", superiorCatId: null },
+        { id: 2, name: "Spodnie", link: "", superiorCatId: 1 },
+        { id: 3, name: "Buty", link: "", superiorCatId: 1 },
+        { id: 4, name: "Buty sportowe", link: "", superiorCatId: 3 },
+        { id: 5, name: "Pantofle", link: "", superiorCatId: 3 },
+        { id: 6, name: "Odzież damska", link: "", superiorCatId: null }
       ]
     };
   }
@@ -26,7 +26,7 @@ export default class Home extends Component {
       if (category.superiorCatId === parentID) {
         return (
           <Nav key={category.id}>
-            {category.name}
+            <a href={category.link}>{category.name}</a>
             {this.displayCategoriesTree(category.id)}
           </Nav>
         );
