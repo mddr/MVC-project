@@ -11,7 +11,7 @@ export default class Home extends Component {
     this.state = {
       isUserLogged: false,
       categories: [
-        { id: 1, name: "Odzież męskia", superiorCatId: null },
+        { id: 1, name: "Odzież męska", superiorCatId: null },
         { id: 2, name: "Spodnie", superiorCatId: 1 },
         { id: 3, name: "Buty", superiorCatId: 1 },
         { id: 4, name: "Buty sportowe", superiorCatId: 3 },
@@ -20,10 +20,20 @@ export default class Home extends Component {
       ]
     };
   }
-  displayCategories = element => {
-    console.log("" + element);
-    let smth = !element.superiorCatId ? <Nav>{element.name} </Nav> : "";
-    return smth;
+
+  displayCategoriesTree = parentID => {
+    const categories = this.state.categories.map(category => {
+      if (category.superiorCatId === parentID) {
+        return (
+          <Nav key={category.id}>
+            {category.name}
+            {this.displayCategoriesTree(category.id)}
+          </Nav>
+        );
+      }
+    });
+
+    return categories;
   };
 
   render() {
@@ -34,7 +44,8 @@ export default class Home extends Component {
         </div>
         <div className="categories">
           <SideNav className="sidemenu">
-            {this.state.categories.map(this.displayCategories)}
+            {/* wywołanie z nullem bo "najwyższe" kategorie mają null w superiorCatId */}
+            {this.displayCategoriesTree(null)}
           </SideNav>
         </div>
         <div className="sale">
