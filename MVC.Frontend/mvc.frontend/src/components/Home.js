@@ -17,6 +17,38 @@ export default class Home extends Component {
         { id: 4, name: "Buty sportowe", link: "", superiorCatId: 3 },
         { id: 5, name: "Pantofle", link: "", superiorCatId: 3 },
         { id: 6, name: "Odzież damska", link: "", superiorCatId: null }
+      ],
+      Products: [
+        {
+          imgpath: "nie wiem jak to działa",
+          discount: true,
+          name: "Koszulka",
+          price: 10.5
+        },
+        {
+          imgpath: "nie wiem jak to działa",
+          discount: true,
+          name: "Koszulka",
+          price: 20.5
+        },
+        {
+          imgpath: "nie wiem jak to działa",
+          discount: true,
+          name: "Koszulka",
+          price: 30.5
+        },
+        {
+          imgpath: "nie wiem jak to działa",
+          discount: true,
+          name: "Koszulka",
+          price: 40.5
+        },
+        {
+          imgpath: "nie wiem jak to działa",
+          discount: true,
+          name: "Koszulka",
+          price: 50.5
+        }
       ]
     };
   }
@@ -39,8 +71,8 @@ export default class Home extends Component {
   render() {
     return (
       <div className="home">
-        <div className="ad">
-          <div className="ad_img" />
+        <div className="banner">
+          <div className="banner_img" />
         </div>
         <div className="categories">
           <SideNav className="sidemenu">
@@ -51,14 +83,33 @@ export default class Home extends Component {
         <div className="sale">
           Promocje
           <hr />
-          {<ProductSlider />}
+          {
+            <ProductSlider
+              Products={this.state.Products}
+              productsPerSlider={3}
+            />
+          }
         </div>
         <div className="news">
           Nowości
           <hr />
-          {<ProductSlider />}
+          {
+            <ProductSlider
+              Products={this.state.Products}
+              productsPerSlider={3}
+            />
+          }
         </div>
-        <div className="mostpopular">{}</div>
+        <div className="mostpopular">
+          Top 10 produktów
+          <hr />
+          {
+            <ProductSlider
+              Products={this.state.Products}
+              productsPerSlider={4}
+            />
+          }
+        </div>
       </div>
     );
   }

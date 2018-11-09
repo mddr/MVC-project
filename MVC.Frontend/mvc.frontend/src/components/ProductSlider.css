@@ -4,13 +4,12 @@
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .productslider button {
   border: 0ch;
   background: none;
-  flex-grow: 1;
 }
 
 .sliderLeftButton {

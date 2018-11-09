@@ -5,40 +5,7 @@ import "./ProductSlider.css";
 
 class ProductSlider extends Component {
   state = {
-    productsPerSlider: 3,
-    sliderPosition: 0,
-    Products: [
-      {
-        imgpath: "nie wiem jak to działa",
-        discount: true,
-        name: "Koszulka",
-        price: 10.5
-      },
-      {
-        imgpath: "nie wiem jak to działa",
-        discount: true,
-        name: "Koszulka",
-        price: 20.5
-      },
-      {
-        imgpath: "nie wiem jak to działa",
-        discount: true,
-        name: "Koszulka",
-        price: 30.5
-      },
-      {
-        imgpath: "nie wiem jak to działa",
-        discount: true,
-        name: "Koszulka",
-        price: 40.5
-      },
-      {
-        imgpath: "nie wiem jak to działa",
-        discount: true,
-        name: "Koszulka",
-        price: 50.5
-      }
-    ]
+    sliderPosition: 0
   };
 
   handleLeftButtonClick = () => {
@@ -48,17 +15,16 @@ class ProductSlider extends Component {
   };
 
   handleRightButtonClick = () => {
+    const { Products, productsPerSlider } = this.props;
     let sliderPosition = this.state.sliderPosition;
-    Math.floor(this.state.Products.length) / this.state.productsPerSlider <
-    sliderPosition
+    Math.floor(Products.length) / productsPerSlider < sliderPosition
       ? sliderPosition++
-      : (sliderPosition = Math.floor(
-          this.state.Products.length / this.state.productsPerSlider
-        ));
+      : (sliderPosition = Math.floor(Products.length / productsPerSlider));
     this.setState({ sliderPosition });
   };
 
   render() {
+    const { Products, productsPerSlider } = this.props;
     return (
       <div className="productslider">
         <button
@@ -67,12 +33,12 @@ class ProductSlider extends Component {
         >
           <span className="glyphicon glyphicon-chevron-left" />
         </button>
-        {this.state.Products.filter(
+        {Products.filter(
           element =>
-            this.state.Products.indexOf(element) >=
-              this.state.sliderPosition * this.state.productsPerSlider &&
-            this.state.Products.indexOf(element) <
-              (this.state.sliderPosition + 1) * this.state.productsPerSlider
+            Products.indexOf(element) >=
+              this.state.sliderPosition * productsPerSlider &&
+            Products.indexOf(element) <
+              (this.state.sliderPosition + 1) * productsPerSlider
         ).map(element => (
           <Product
             imgpath={element.imgpath}
