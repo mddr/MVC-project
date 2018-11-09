@@ -9,10 +9,14 @@
 
 .productslider button {
   border: 0ch;
-  /* background-image: linear-gradient(
-    to right,
-    rgba(173, 216, 230, 0),
-    rgba(255, 255, 255, 1)
-  ); Standard syntax (must be last) */
   background: none;
+  flex-grow: 1;
+}
+
+.sliderLeftButton {
+  text-align: start;
+}
+
+.sliderRightButton {
+  text-align: end;
 }
