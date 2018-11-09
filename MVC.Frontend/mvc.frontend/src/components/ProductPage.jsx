@@ -31,10 +31,10 @@ class ProductPage extends Component {
         <div className="product">
           <div className="productImageSection">
             <div
-              className="ph600x600"
+              className="ph600x500"
               style={{
                 width: "600px",
-                height: "600px",
+                height: "500px",
                 backgroundColor: "#EEE000"
               }}
             />
