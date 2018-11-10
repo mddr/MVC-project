@@ -57,7 +57,7 @@ export default class Home extends Component {
     const categories = this.state.categories.map(category => {
       if (category.superiorCatId === parentID) {
         return (
-          <Nav key={category.id}>
+          <Nav className="sidenavcategory" key={category.id}>
             <a href={category.link}>{category.name}</a>
             {this.displayCategoriesTree(category.id)}
           </Nav>

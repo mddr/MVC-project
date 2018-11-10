@@ -5,6 +5,7 @@ import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import Footer from "./components/Footer";
+import Cart from "./components/Cart";
 
 import Routes from "./Routes";
 import AuthService from "./services/AuthService";
@@ -25,6 +26,9 @@ class App extends Component {
       loginControl = (
         <Navbar.Collapse>
           <Nav pullRight>
+            <NavItem style={{ padding: "none" }}>
+              <Cart />
+            </NavItem>
             <LinkContainer to="/login">
               <NavItem>Zaloguj się</NavItem>
             </LinkContainer>
@@ -37,6 +41,9 @@ class App extends Component {
     } else {
       loginControl = (
         <Navbar.Collapse>
+          <Nav>
+            <Cart />
+          </Nav>
           <Nav pullRight>
             <NavItem onClick={this.handleLogout.bind(this)}>
               Wyloguj się
@@ -55,7 +62,6 @@ class App extends Component {
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
-
           {loginControl}
         </Navbar>
         <Routes />

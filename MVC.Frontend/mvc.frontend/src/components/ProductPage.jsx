@@ -1,4 +1,5 @@
 import "./ProductPage.css";
+import "./Home.css";
 
 import React, { Component } from "react";
 import { Button, Glyphicon } from "react-bootstrap";
@@ -28,7 +29,7 @@ class ProductPage extends Component {
         <div className="banner">
           <div className="banner_img" />
         </div>
-        <div className="product">
+        <div className="productSection">
           <div className="productImageSection">
             <div
               className="ph600x500"
