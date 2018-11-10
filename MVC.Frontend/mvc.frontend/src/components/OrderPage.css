@@ -1,0 +1,47 @@
+.orderpage {
+  margin: auto;
+  display: grid;
+  display: -ms-grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 220px auto;
+  grid-gap: 1em;
+  margin-left: 8em;
+  margin-right: 8em;
+}
+
+.orderpage > div {
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 4px 1px rgba(120, 120, 120, 0.5);
+  -moz-box-shadow: 0px 0px 4px 1px rgba(120, 120, 120, 0.5);
+  box-shadow: 0px 0px 4px 1px rgba(120, 120, 120, 0.5);
+  border: 1px solid rgb(235, 235, 235);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.orderpage p {
+  margin: 0.6em 1em auto 1em;
+  font-size: 22px;
+}
+
+.ordersum {
+  display: flex;
+  margin: 8px auto;
+  align-items: center;
+  margin-right: 1em;
+  font-size: 20px;
+}
+
+.ordersumtext {
+  flex-grow: 1;
+  text-align: right;
+  margin-right: 5px;
+}
+
+input {
+  margin-bottom: 5px;
+}
