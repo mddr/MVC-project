@@ -17,12 +17,6 @@
   border: 1px solid rgb(235, 235, 235);
 }
 
-.banner {
-  padding: 0px !important;
-  overflow: hidden;
-  width: 100%;
-}
-
 .productSection {
   display: grid;
   grid-template-columns: 4fr 3fr;
@@ -47,10 +41,10 @@
 .currencySign {
   font-size: 2em;
 }
-.priceAndButtonWrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+.priceAndButtonsWrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 }
 .productPrice {
   margin: auto;
@@ -74,5 +68,16 @@
   color: white;
 }
 .buyButtonWrapper {
+  width: 200px;
   margin: auto;
+}
+
+.buyButtonWrapper button {
+  width: 200px;
+}
+
+.numberPicker {
+  margin: auto;
+  width: 100px;
+  align-self: center;
 }

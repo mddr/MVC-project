@@ -4,47 +4,24 @@ import "./Cart.css";
 import "./ProductPage.css";
 
 class Cart extends Component {
-  state = {
-    Items: [
-      {
-        product: {
-          imgpath: "nadal nie wiem jak to działa",
-          name: "Nazwa produktu 1",
-          price: 49.99
-        },
-        count: 2
-      },
-
-      {
-        product: {
-          imgpath: "nadal nie wiem jak to działa",
-          name: "Nazwa produktu 2",
-          price: 24.99
-        },
-        count: 1
-      }
-    ]
-  };
-
   render() {
+    const { Items } = this.props;
     const priceSum = () => {
       let output = 0;
-      for (let i = 0; i < this.state.Items.length; i++) {
+      for (let i = 0; i < Items.length; i++) {
         output +=
-          Math.round(
-            this.state.Items[i].count * this.state.Items[i].product.price * 100
-          ) / 100;
+          Math.round(Items[i].count * Items[i].product.price * 100) / 100;
       }
       return output;
     };
     const popoverClickRootClose =
-      this.state.Items.length > 0 ? (
+      Items.length > 0 ? (
         <Popover
           id="popover-trigger-click-root-close"
           title="Koszyk"
           arrowOffsetTop="80"
         >
-          {this.state.Items.map(item => (
+          {Items.map(item => (
             <div className="item">
               <div className="orangebox" />
               <span className="namespan">
@@ -87,8 +64,8 @@ class Cart extends Component {
         >
           <button style={{ background: "none", border: "none", padding: 0 }}>
             <i class="fa fa-shopping-cart cart" style={{ fontSize: 22 }} />
-            {this.state.Items.length > 0 && (
-              <div className="basketitems">{this.state.Items.length}</div>
+            {Items.length > 0 && (
+              <div className="basketitems">{Items.length}</div>
             )}
           </button>
         </OverlayTrigger>

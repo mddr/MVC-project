@@ -36,7 +36,7 @@ class ProductSlider extends Component {
         {Products.filter(
           element =>
             Products.indexOf(element) >=
-              this.state.sliderPosition * productsPerSlider &&
+              this.state.sliderPosition * Products.length &&
             Products.indexOf(element) <
               (this.state.sliderPosition + 1) * productsPerSlider
         ).map(element => (

@@ -19,6 +19,25 @@ class App extends Component {
   }
 
   render() {
+    const CartItems = [
+      {
+        product: {
+          imgpath: "nadal nie wiem jak to działa",
+          name: "Nazwa produktu 1",
+          price: 49.99
+        },
+        count: 2
+      },
+
+      {
+        product: {
+          imgpath: "nadal nie wiem jak to działa",
+          name: "Nazwa produktu 2",
+          price: 24.99
+        },
+        count: 1
+      }
+    ];
     const isUserLogged = auth.loggedInWithRefresh();
     let loginControl;
 
@@ -27,7 +46,7 @@ class App extends Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
-              <Cart />
+              <Cart Items={CartItems} />
             </NavItem>
             <LinkContainer to="/login">
               <NavItem>Zaloguj się</NavItem>
@@ -42,7 +61,7 @@ class App extends Component {
       loginControl = (
         <Navbar.Collapse>
           <Nav>
-            <Cart />
+            <Cart Items={CartItems} />
           </Nav>
           <Nav pullRight>
             <NavItem onClick={this.handleLogout.bind(this)}>
