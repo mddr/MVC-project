@@ -44,7 +44,7 @@ class OrderPage extends Component {
           <p>Zamówienie:</p>
           <hr style={{ width: "95%" }} />
           {OrderItems.map(item => (
-            <div className="item" style={{ marginLeft: "2em" }}>
+            <div className="item" style={{ marginLeft: "2em", width: "90%" }}>
               <div className="orangebox" />
               <span className="namespan">
                 {item.count} x {item.product.name}

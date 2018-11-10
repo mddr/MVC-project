@@ -84,7 +84,6 @@ class App extends Component {
           {loginControl}
         </Navbar>
         <Routes />
-        <Footer />
       </div>
     );
   }
