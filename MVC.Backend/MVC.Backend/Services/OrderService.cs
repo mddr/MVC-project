@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MVC.Backend.Data;
 using MVC.Backend.Models;
+using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Services
 {

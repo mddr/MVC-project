@@ -103,7 +103,7 @@ namespace MVC.Backend.Controllers
             {
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }

@@ -105,7 +105,7 @@ namespace MVC.Backend.Services
         private string GetImage(string base64)
         {
             var split = base64.Split(',');
-            return split[1];
+            return split.Length == 1 ? base64 : split[1];
         }
 
         #endregion
