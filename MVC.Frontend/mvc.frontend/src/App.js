@@ -13,31 +13,28 @@ import AuthService from "./services/AuthService";
 const auth = new AuthService();
 
 class App extends Component {
-  async handleLogout() {
-    auth.logout();
-    await window.location.reload();
-  }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            CartItems: [],
+        };
+
+        this.addToCart = this.addToCart.bind(this);
+    }
+
+    async handleLogout() {
+        auth.logout();
+        await window.location.reload();
+    }
+
+    addToCart(item) {
+        let tmp = this.state.CartItems;
+        tmp.push(item);
+        this.setState({ CartItems: tmp });
+    }
 
   render() {
-    const CartItems = [
-      {
-        product: {
-          imgpath: "nadal nie wiem jak to działa",
-          name: "Nazwa produktu 1",
-          price: 49.99
-        },
-        count: 2
-      },
-
-      {
-        product: {
-          imgpath: "nadal nie wiem jak to działa",
-          name: "Nazwa produktu 2",
-          price: 24.99
-        },
-        count: 1
-      }
-    ];
     const isUserLogged = auth.loggedInWithRefresh();
     let loginControl;
 
@@ -46,7 +43,7 @@ class App extends Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
-              <Cart Items={CartItems} />
+              <Cart Items={this.state.CartItems} />
             </NavItem>
             <LinkContainer to="/login">
               <NavItem>Zaloguj się</NavItem>
@@ -61,7 +58,7 @@ class App extends Component {
       loginControl = (
         <Navbar.Collapse>
           <Nav>
-            <Cart Items={CartItems} />
+            <Cart Items={this.state.CartItems} />
           </Nav>
           <Nav pullRight>
             <NavItem onClick={this.handleLogout.bind(this)}>

@@ -4,58 +4,43 @@ import React, { Component } from "react";
 import ProductSlider from "./ProductSlider";
 import { SideNav, Nav } from "react-sidenav";
 
+import AuthService from '../services/AuthService';
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isUserLogged: false,
-      categories: [
-        { id: 1, name: "Odzież męska", link: "", superiorCatId: null },
-        { id: 2, name: "Spodnie", link: "", superiorCatId: 1 },
-        { id: 3, name: "Buty", link: "", superiorCatId: 1 },
-        { id: 4, name: "Buty sportowe", link: "", superiorCatId: 3 },
-        { id: 5, name: "Pantofle", link: "", superiorCatId: 3 },
-        { id: 6, name: "Odzież damska", link: "", superiorCatId: null }
-      ],
-      Products: [
-        {
-          imgpath: "nie wiem jak to działa",
-          discount: true,
-          name: "Koszulka",
-          price: 10.5
-        },
-        {
-          imgpath: "nie wiem jak to działa",
-          discount: true,
-          name: "Koszulka",
-          price: 20.5
-        },
-        {
-          imgpath: "nie wiem jak to działa",
-          discount: true,
-          name: "Koszulka",
-          price: 30.5
-        },
-        {
-          imgpath: "nie wiem jak to działa",
-          discount: true,
-          name: "Koszulka",
-          price: 40.5
-        },
-        {
-          imgpath: "nie wiem jak to działa",
-          discount: true,
-          name: "Koszulka",
-          price: 50.5
-        }
-      ]
-    };
-  }
+      categories: [],
+      Products: []
+      };
+
+    this.Auth = new AuthService();
+    }
+
+    componentDidMount() {
+        this.fetchData();
+    }
+
+    fetchData() {
+        this.Auth.fetch(`${this.Auth.domain}/products`, null
+        ).then(res => res.json()).then(res => {
+            this.setState({
+                Products: res
+            });
+        });
+        this.Auth.fetch(`${this.Auth.domain}/categories`, null
+        ).then(res => res.json()).then(res => {
+            this.setState({
+                categories: res,
+            });
+        });
+    }
 
   displayCategoriesTree = parentID => {
     const categories = this.state.categories.map(category => {
-      if (category.superiorCatId === parentID) {
+      if (category.superiorCategoryId === parentID) {
         return (
           <Nav className="sidenavcategory" key={category.id}>
             <a href={category.link}>{category.name}</a>

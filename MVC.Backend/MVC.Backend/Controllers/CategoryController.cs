@@ -10,8 +10,7 @@ using MVC.Backend.Services;
 using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Controllers
-{
-    [EmailConfirmed(Roles = "Admin")]
+{    
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -58,6 +57,7 @@ namespace MVC.Backend.Controllers
 
         [HttpPost]
         [Route("category/add")]
+        [EmailConfirmed(Roles = "Admin")]
         public IActionResult Add([FromBody] CategoryViewModel viewModel)
         {
             try
@@ -77,6 +77,7 @@ namespace MVC.Backend.Controllers
 
         [HttpPost]
         [Route("category/update")]
+        [EmailConfirmed(Roles = "Admin")]
         public IActionResult Update([FromBody] CategoryViewModel viewModel)
         {
             try
@@ -96,6 +97,7 @@ namespace MVC.Backend.Controllers
 
         [HttpDelete]
         [Route("category/delete/{id}")]
+        [EmailConfirmed(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             try

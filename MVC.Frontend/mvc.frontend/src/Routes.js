@@ -14,7 +14,7 @@ export default () => (
     <Route exact path="/login" component={Login} />
     <Route exact path="/register" component={Register} />
     <Route exact path="/admin" component={AdminPanel} />
-    <Route exact path="/product" component={ProductPage} />
+    <Route exact path="/product/:id" component={ProductPage} />
     <Route exact path="/order" component={OrderPage} />
   </Switch>
 );

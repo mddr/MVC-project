@@ -11,7 +11,6 @@ using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Controllers
 {
-    [EmailConfirmed(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -72,6 +71,7 @@ namespace MVC.Backend.Controllers
 
         [HttpPost]
         [Route("product/add")]
+        [EmailConfirmed(Roles = "Admin")]
         public IActionResult Add([FromBody] ProductViewModel viewModel)
         {
             try
@@ -91,6 +91,7 @@ namespace MVC.Backend.Controllers
 
         [HttpPost]
         [Route("product/update")]
+        [EmailConfirmed(Roles = "Admin")]
         public IActionResult Update([FromBody] ProductViewModel viewModel)
         {
             try
@@ -110,6 +111,7 @@ namespace MVC.Backend.Controllers
 
         [HttpDelete]
         [Route("product/delete/{id}")]
+        [EmailConfirmed(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
             try

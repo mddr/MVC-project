@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+
 import Product from "./Product";
 
 import "./ProductSlider.css";
@@ -33,19 +35,21 @@ class ProductSlider extends Component {
         >
           <span className="glyphicon glyphicon-chevron-left" />
         </button>
-        {Products.filter(
-          element =>
-            Products.indexOf(element) >=
-              this.state.sliderPosition * Products.length &&
-            Products.indexOf(element) <
-              (this.state.sliderPosition + 1) * productsPerSlider
-        ).map(element => (
-          <Product
-            imgpath={element.imgpath}
-            discount={element.discount}
-            name={element.name}
-            price={element.price}
-          />
+            {Products.filter(
+                element =>
+                    Products.indexOf(element) >=
+                    this.state.sliderPosition * Products.length &&
+                    Products.indexOf(element) <
+                    (this.state.sliderPosition + 1) * productsPerSlider
+            ).map(element => (
+                <Link to={`/product/${element.id}`}>
+                <Product
+                imgpath={element.imgpath}
+                discount={element.discount}
+                name={element.name}
+                price={element.price}
+                />
+            </Link>
         ))}
         <button
           className="sliderRightButton"

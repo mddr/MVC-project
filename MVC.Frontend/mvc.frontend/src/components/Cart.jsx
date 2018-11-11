@@ -4,16 +4,54 @@ import "./Cart.css";
 import "./ProductPage.css";
 
 class Cart extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            totalPrice: this.getTotalPrice(),
+        };
+        this.getTotalPrice = this.getTotalPrice.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props !== prevProps) {
+            this.setState({
+                totalPrice: this.getTotalPrice(),
+            });
+        } 
+    }
+
+    getTotalPrice(Items) {
+        let output = 0;
+        for (let i = 0; i < this.props.Items.length; i++) {
+            output +=
+                Math.round(this.props.Items[i].count * this.props.Items[i].product.price * 100) / 100;
+        }
+        return output;
+    }
+
+    handleSubmit() {
+        let body = "";
+        const obj = {
+            userId: this.state.id,
+            //TODO vv
+            cartId: this.state.name,
+            //TODO ^^
+            totalPrice: this.state.totalPrice,
+        };
+
+        body = JSON.stringify(obj);
+
+        this.props.Auth.fetch(`${this.props.Auth.domain}/order/add`, {
+            method: 'post',
+            body
+        });
+    }
+
   render() {
     const { Items } = this.props;
-    const priceSum = () => {
-      let output = 0;
-      for (let i = 0; i < Items.length; i++) {
-        output +=
-          Math.round(Items[i].count * Items[i].product.price * 100) / 100;
-      }
-      return output;
-    };
+
     const popoverClickRootClose =
       Items.length > 0 ? (
         <Popover
@@ -36,11 +74,11 @@ class Cart extends Component {
           ))}
           <hr />
           <div className="cartsummary">
-            <Button bsStyle="buyButton" onClick="" bsSize="medium">
+            <Button bsStyle="buyButton" onClick="{handleSubmit}" bsSize="medium">
               <Glyphicon glyph="ok" /> Złóż zamówienie
             </Button>
             <div className="sumatext">Suma: </div>
-            <div>{priceSum()}zł</div>
+            <div>{this.getTotalPrice()}zł</div>
           </div>
         </Popover>
       ) : (

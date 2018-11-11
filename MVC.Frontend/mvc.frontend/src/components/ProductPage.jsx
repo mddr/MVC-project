@@ -4,15 +4,59 @@ import "./Home.css";
 import React, { Component } from "react";
 import { Button, Glyphicon, InputGroup, FormControl } from "react-bootstrap";
 
+import AuthService from '../services/AuthService';
+
 class ProductPage extends Component {
-  state = {
-    price: 100.01,
-    name: "NAJNOWSZA RZECZ PROSTO Z FABRYKI",
-    description:
-      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quam ex illo assumenda veritatis illum soluta, perspiciatis sint adipisci autem iusto deleniti necessitatibus provident quo debitis excepturi aliquam, atque, odit tempora consectetur architecto. Repudiandae vitae atque exercitationem, repellat voluptatum numquam at iste distinctio voluptate recusandae tempora commodi sed reprehenderit consequatur eos?",
-    timesBought: 12,
-    count: 1
-  };
+
+   constructor(props) {
+        super(props);
+
+        this.state = {
+            pricePln: -1,
+            name: "",
+            description: "",
+            boughtTimes: -1,
+            count: 0
+        };
+
+       this.Auth = new AuthService();
+       this.fetchData = this.fetchData.bind(this);
+       this.placeOrder = this.placeOrder.bind(this);
+    }
+
+    componentDidMount() {
+        this.fetchData();
+    }
+
+    fetchData() {
+        this.Auth.fetch(`${this.Auth.domain}/product/${this.props.match.params.id}`, null
+        ).then(res => res.json()).then(res => {
+            this.setState({
+                pricePln: res.pricePln,
+                name: res.name,
+                description: res.description,
+                boughtTimes: res.boughtTimes,
+            });
+        });
+    }
+
+    placeOrder() {
+        let body = "";
+        const obj = {
+            userId: this.state.id,
+            //TODO vv
+            cartId: this.state.name,
+            //TODO ^^
+            totalPrice: this.state.pricePln,
+        };
+
+        body = JSON.stringify(obj);
+
+        this.props.Auth.fetch(`${this.props.Auth.domain}/order/add`, {
+            method: 'post',
+            body
+        });
+    }
 
   extractUnits = price => {
     return Math.floor(price);
@@ -65,10 +109,10 @@ class ProductPage extends Component {
             <div className="priceAndButtonsWrapper">
               <div className="productPrice">
                 <span className="unitsPriceValue">
-                  {this.extractUnits(this.state.price)}
+                  {this.extractUnits(this.state.pricePln)}
                 </span>
                 <span className="decimalPriceValue">
-                  {this.extractDecimals(this.state.price)}
+                    {this.extractDecimals(this.state.pricePln)}
                 </span>
                 <span className="currencySign">zł</span>
               </div>
@@ -123,7 +167,7 @@ class ProductPage extends Component {
 
             <div className="boughtCounter">
               <span style={{ color: "gray" }}>
-                ten przedmiot kupiono {this.state.timesBought} razy
+                            ten przedmiot kupiono {this.state.boughtTimes} razy
               </span>
             </div>
             <hr />
