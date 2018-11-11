@@ -58,7 +58,7 @@ class App extends Component {
       loginControl = (
         <Navbar.Collapse>
           <Nav>
-            <Cart Items={this.state.CartItems} />
+                  <Cart Items={this.state.CartItems} Auth={auth} />
           </Nav>
           <Nav pullRight>
             <NavItem onClick={this.handleLogout.bind(this)}>

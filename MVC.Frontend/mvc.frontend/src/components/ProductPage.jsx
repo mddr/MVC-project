@@ -36,6 +36,7 @@ class ProductPage extends Component {
                 name: res.name,
                 description: res.description,
                 boughtTimes: res.boughtTimes,
+                imageBase64: res.imageBase64,
             });
         });
     }
@@ -90,15 +91,8 @@ class ProductPage extends Component {
           <div className="banner_img" />
         </div>
         <div className="productSection">
-          <div className="productImageSection">
-            <div
-              className="ph600x500"
-              style={{
-                width: "600px",
-                height: "500px",
-                backgroundColor: "#EEE000"
-              }}
-            />
+                <div className="productImageSection">
+                    <img src={"data:image/jpeg;base64," + this.state.imageBase64} alt={this.state.name} />
           </div>
           <div className="productDescribeSection">
             <div className="productTitle">

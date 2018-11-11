@@ -19,9 +19,7 @@ class Product extends Component {
     return (
       <div className="product thumbnail">
         <a href="#">
-          {/* TODO - Zdjęcie */}
-          {/*<img src={ imgpath } alt="zdjęcie"/>*/}
-          <div className="greenbox" />
+                <img src={"data:image/jpeg;base64," + this.props.imageBase64} alt={this.props.name} />
           <div className="namebox">{name}</div>
           <div className="pricebox">
             <span className="units">{this.extractUnits(price)}</span>

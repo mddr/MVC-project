@@ -34,7 +34,7 @@ class Cart extends Component {
     handleSubmit() {
         let body = "";
         const obj = {
-            userId: this.state.id,
+            userId: this.props.auth.getProfile().id,
             //TODO vv
             cartId: this.state.name,
             //TODO ^^

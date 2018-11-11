@@ -44,10 +44,10 @@ class ProductSlider extends Component {
             ).map(element => (
                 <Link to={`/product/${element.id}`}>
                 <Product
-                imgpath={element.imgpath}
-                discount={element.discount}
-                name={element.name}
-                price={element.price}
+                    imageBase64={element.imageBase64}
+                    discount={element.discount}
+                    name={element.name}
+                    price={element.pricePln}
                 />
             </Link>
         ))}

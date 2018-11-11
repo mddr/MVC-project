@@ -76,11 +76,12 @@ export default class ProductForm extends React.Component{
 		
 			body = JSON.stringify(obj);
 				
-		this.props.Auth.fetch(`${this.props.Auth.domain}/${this.props.apiUrl.singular}/${this.props.apiAction}`, {
-			method: 'post',
-			body
-		});
-		this.props.updateData(obj);
+        this.props.Auth.fetch(`${this.props.Auth.domain}/${this.props.apiUrl.singular}/${this.props.apiAction}`, {
+            method: 'post',
+            body
+        }).then(() => {
+            this.props.updateData(obj);
+        });
 	}
 	
 	renderMenuItems(){

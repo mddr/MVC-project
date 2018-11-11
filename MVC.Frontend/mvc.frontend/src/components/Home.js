@@ -16,7 +16,7 @@ export default class Home extends Component {
       Products: []
       };
 
-    this.Auth = new AuthService();
+      this.Auth = new AuthService();      
     }
 
     componentDidMount() {

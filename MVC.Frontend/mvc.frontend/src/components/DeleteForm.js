@@ -11,9 +11,11 @@ export default class DeleteForm extends React.Component{
   	deleteData(){
 		this.props.Auth.fetch(`${this.props.Auth.domain}/${this.props.apiUrl.singular}/${this.props.apiAction}/${this.props.modelProps.id}`, {
 		method: 'delete'
-		});
-		this.props.hideForm();
-		this.props.updateData(this.props.modelProps.id);
+        }).then(() => {
+		    this.props.hideForm();
+            this.props.updateData(this.props.modelProps.id);
+        });
+		
 	}
   
 	render(){		

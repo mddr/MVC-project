@@ -55,7 +55,7 @@ class TableRow extends Component {
 					case "discount": content = rowData[rowKeys[i]]; break;
 					case "amountAvailable": content = rowData[rowKeys[i]]; break;
 					case "boughtTimes": content = rowData[rowKeys[i]]; break;
-					case "imageBase64": content = <img src={"data:image/jpeg;base64," + rowData[rowKeys[i]] } alt="" />; break;
+                    case "imageBase64": content = <img src={"data:image/jpeg;base64," + rowData[rowKeys[i]]} alt=""  />; break;
 					case "superiorCategoryId": content = rowData[rowKeys[i]]; break;
 					case "subCategories": content = "";
 											for (let j = 0; j < rowData[rowKeys[i]].length; j++) {
