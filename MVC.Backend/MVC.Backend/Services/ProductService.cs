@@ -75,6 +75,12 @@ namespace MVC.Backend.Services
             product.PricePln = viewModel.PricePln;
             product.TaxRate = viewModel.TaxRate;
 
+            if (!string.IsNullOrEmpty(viewModel.ImageBase64))
+            {
+                product.FullImagePath = _fileService.SaveImage(product.Id, viewModel.ImageBase64);
+                product.ThumbnailPath = _fileService.SaveThumbnail(product.Id, viewModel.ImageBase64);
+            }
+
             _context.SaveChanges();
         }
 

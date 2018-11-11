@@ -1,7 +1,7 @@
-﻿using MVC.Backend.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using MVC.Backend.Models;
 
-namespace MVC.Backend.Services
+namespace MVC.Backend.ViewModels
 {
     public class OrderViewModel
     {
