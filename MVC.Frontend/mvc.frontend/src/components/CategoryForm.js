@@ -1,4 +1,4 @@
-import * as React from "react";
+﻿import * as React from "react";
 import { Button, FormControl, FormGroup, Modal, DropdownButton, MenuItem } from 'react-bootstrap';
 
 
@@ -18,7 +18,7 @@ export default class ProductForm extends React.Component{
   }
 
 	validateForm() {
-		if (!(this.state.name.length > 0 && this.state.superiorCategoryId > 0))
+		if (!(this.state.name.length > 0))
 		  return false;
 		return true;
 	}
@@ -56,8 +56,9 @@ export default class ProductForm extends React.Component{
 		this.props.Auth.fetch(`${this.props.Auth.domain}/${this.props.apiUrl.singular}/${this.props.apiAction}`, {
 			method: 'post',
 			body
-		});
-		this.props.updateData(obj);
+        }).then(() => {
+            this.props.updateData(obj);
+        });
 	}
 	
 	renderMenuItems(){

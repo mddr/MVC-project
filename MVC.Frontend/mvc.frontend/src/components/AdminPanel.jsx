@@ -60,8 +60,13 @@ class AdminPanel extends Component {
 		window.location.reload(true);
 	}
 	
-  render() {	 
-    return (
+  render() {
+      const roleKey = Object.keys(this.Auth.getProfile())[2];
+      const claims = this.Auth.getProfile();
+      const role = claims[roleKey];
+      if (role != "Admin") return (<div>404</div>);
+
+      return (
       /*whole layouy*/
       <div className="container-fluid">
         <div className="row content">
