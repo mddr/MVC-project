@@ -24,11 +24,12 @@ namespace MVC.Backend.Models
         {
         }
 
-        public Order(int userId, string cartId, double totalPrice)
+        public Order(int userId, string cartId, double totalPrice, List<CartItem> cart)
         {
             UserId = userId;
             CartId = cartId;
             TotalPrice = totalPrice;
+            ShoppingCart = cart;
         }
     }
 }

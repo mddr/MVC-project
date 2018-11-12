@@ -21,7 +21,12 @@ namespace MVC.Backend.Services
         {
             if (viewModel == null)
                 throw new ArgumentException();
-            var order = new Order(viewModel.UserId, viewModel.CartId, viewModel.TotalPrice);
+
+            var cart = _context.CartItems.Where(i => i.Id == viewModel.CartId).ToList();
+            if (cart.Any(c => c.UserId != viewModel.UserId))
+                throw new ArgumentException($"Invalid user");
+
+            var order = new Order(viewModel.UserId, viewModel.CartId, viewModel.TotalPrice, cart);
 
             _context.Orders.Add(order);
             _context.SaveChanges();
@@ -68,8 +73,14 @@ namespace MVC.Backend.Services
             if (order == null)
                 throw new ArgumentException();
 
+            var cart = _context.CartItems.Where(i => i.Id == viewModel.CartId).ToList();
+            if (cart.Any(c => c.UserId != viewModel.UserId))
+                throw new ArgumentException($"Invalid user");
+
             order.TotalPrice = viewModel.TotalPrice;
             order.CartId = viewModel.CartId;
+            order.ShoppingCart = cart;
+
 
             _context.SaveChanges();
         }
