@@ -19,7 +19,7 @@ class ProductSlider extends Component {
   handleRightButtonClick = () => {
     const { Products, productsPerSlider } = this.props;
     let sliderPosition = this.state.sliderPosition;
-    Math.floor(Products.length) / productsPerSlider < sliderPosition
+    Math.floor(Products.length / productsPerSlider) < sliderPosition
       ? sliderPosition++
       : (sliderPosition = Math.floor(Products.length / productsPerSlider));
     this.setState({ sliderPosition });
@@ -27,6 +27,7 @@ class ProductSlider extends Component {
 
   render() {
     const { Products, productsPerSlider } = this.props;
+    console.log(Products.length);
     return (
       <div className="productslider">
         <button
@@ -35,21 +36,26 @@ class ProductSlider extends Component {
         >
           <span className="glyphicon glyphicon-chevron-left" />
         </button>
-            {Products.filter(
-                element =>
-                    Products.indexOf(element) >=
-                    this.state.sliderPosition * Products.length &&
-                    Products.indexOf(element) <
-                    (this.state.sliderPosition + 1) * productsPerSlider
-            ).map(element => (
-                <Link to={`/product/${element.id}`}>
-                <Product
-                    imageBase64={element.imageBase64}
-                    discount={element.discount}
-                    name={element.name}
-                    price={element.pricePln}
-                />
-            </Link>
+        {Products.filter(
+          element =>
+            Products.indexOf(element) >=
+              (productsPerSlider * (this.state.sliderPosition + 1) >
+              Products.length
+                ? productsPerSlider * this.state.sliderPosition -
+                  (productsPerSlider - (Products.length % productsPerSlider))
+                : productsPerSlider * this.state.sliderPosition) &&
+            Products.indexOf(element) <
+              (this.state.sliderPosition + 1) * productsPerSlider
+        ).map(element => (
+          <Link to={`/product/${element.id}`}>
+            <Product
+              key={element.id}
+              imageBase64={element.imageBase64}
+              discount={element.discount}
+              name={element.name}
+              price={element.pricePln}
+            />
+          </Link>
         ))}
         <button
           className="sliderRightButton"
