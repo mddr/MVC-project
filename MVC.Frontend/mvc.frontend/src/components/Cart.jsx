@@ -22,7 +22,7 @@ class Cart extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.cartItems !== prevProps.cartItems) {
-            this.getTotalPrice()
+            this.getTotalPrice();
         } 
     }
 
@@ -54,7 +54,8 @@ class Cart extends Component {
                     <span />
                 </div>)
                 })
-            });
+        });
+        
         return items;
     }
 

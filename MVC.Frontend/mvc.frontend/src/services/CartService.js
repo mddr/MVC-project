@@ -6,12 +6,17 @@ export class CartService {
         this.Auth = new AuthService();
         this.ProductService = new ProductService();
         this.getCart = this.getCart.bind(this)
+        this.getCartt = this.getCartt.bind(this)
 
         this.refreshTokenName = 'refresh_token'
     }
 
     getCart() {
         return this.Auth.fetch(`${this.Auth.domain}/cart`, null);
+    }
+
+    getCartt() {
+        return this.Auth.fetch(`${this.Auth.domain}/cart`, null).then(res => res.json());
     }
 
     addItem(id, amount) {

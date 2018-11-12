@@ -55,7 +55,9 @@ class ProductPage extends Component {
         this.Auth.fetch(`${this.Auth.domain}/cart/add`, {
             method: 'post',
             body
-        });
+        }).then(() => window.location.reload());
+
+        
     }
 
     validate() {

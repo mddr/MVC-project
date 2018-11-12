@@ -15,29 +15,26 @@ class OrderPage extends Component {
         };
         this.getTotalPrice = this.getTotalPrice.bind(this);
         this.placeOrder = this.placeOrder.bind(this);
-        this.rendercartItems = this.rendercartItems.bind(this);
+        this.renderItems = this.renderItems.bind(this);
         this.CartService = new CartService();
         this.ProductService = new ProductService();
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.cartItems !== prevProps.cartItems) {
-            this.setState({
-                totalPrice: this.getTotalPrice(),
-            });
+            this.getTotalPrice();
         }
     }
 
     getTotalPrice() {
-        let output = 0;
         if (this.props.cartItems.length < 1) return 0;
         for (let i = 0; i < this.props.cartItems.length; i++) {
             this.ProductService.getProduct(this.props.cartItems[i].productId).then(res => res.json()).then(res => {
-                output +=
-                    Math.round(this.props.cartItems[i].productAmount * res.price * 100) / 100;
+                this.setState({
+                    totalPrice: this.state.totalPrice + Math.round(this.props.cartItems[i].productAmount * res.pricePln * 100) / 100
+                });
             });
         }
-        return output;
     }
         
     placeOrder() {
@@ -56,8 +53,8 @@ class OrderPage extends Component {
         });
     }
 
-    rendercartItems() {
-        if (this.props.cartItems == null) return;
+    renderItems() {
+        if (this.props.cartItems.length < 1) return;
         let items = []
         this.props.cartItems.map(item => {
             this.ProductService.getProduct(item.productId).then(res => res.json()).then(res => {
@@ -71,13 +68,16 @@ class OrderPage extends Component {
                         zł
                       </span>
                     <span />
-                </div>)
+                </div>);
+                
             })
         });
+        
         return items;
     }
 
-  render() {
+    render() {
+        const items = this.props.cartItems.length > 0 ? this.renderItems() : (<div>dupa</div>);
     return (
       <div className="orderpage">
         <div className="banner">
@@ -86,7 +86,7 @@ class OrderPage extends Component {
         <div className="summary">
           <p>Zamówienie:</p>
             <hr style={{ width: "95%" }} />
-                {this.rendercartItems()}
+                {items}
           <hr style={{ width: "95%" }} />
           <div className="ordersum">
                     <div className="ordersumtext">Suma: </div>
