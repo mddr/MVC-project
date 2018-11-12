@@ -1,84 +1,80 @@
 import React, { Component } from "react";
 import { OverlayTrigger, Popover, Glyphicon, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+
 import "./Cart.css";
 import "./ProductPage.css";
+import CartService from "../services/CartService";
+import ProductService from "../services/ProductService";
 
 class Cart extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            totalPrice: this.getTotalPrice(),
+            totalPrice: 0,
         };
         this.getTotalPrice = this.getTotalPrice.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.renderItems = this.renderItems.bind(this);
+        this.CartService = new CartService();
+        this.ProductService = new ProductService();
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props !== prevProps) {
-            this.setState({
-                totalPrice: this.getTotalPrice(),
-            });
+        if (this.props.cartItems !== prevProps.cartItems) {
+            this.getTotalPrice()
         } 
     }
 
-    getTotalPrice(Items) {
-        let output = 0;
-        for (let i = 0; i < this.props.Items.length; i++) {
-            output +=
-                Math.round(this.props.Items[i].count * this.props.Items[i].product.price * 100) / 100;
+    getTotalPrice() {
+        if (this.props.cartItems.length < 1) return 0;
+        for (let i = 0; i < this.props.cartItems.length; i++) {
+            this.ProductService.getProduct(this.props.cartItems[i].productId).then(res => res.json()).then(res => {
+                this.setState({
+                    totalPrice: this.state.totalPrice + Math.round(this.props.cartItems[i].productAmount * res.pricePln * 100) / 100
+                });
+            });
         }
-        return output;
     }
 
-    handleSubmit() {
-        let body = "";
-        const obj = {
-            userId: this.props.auth.getProfile().id,
-            //TODO vv
-            cartId: this.state.name,
-            //TODO ^^
-            totalPrice: this.state.totalPrice,
-        };
-
-        body = JSON.stringify(obj);
-
-        this.props.Auth.fetch(`${this.props.Auth.domain}/order/add`, {
-            method: 'post',
-            body
-        });
+    renderItems() {
+        if (this.props.cartItems.length < 1) return;
+        let items = []
+        this.props.cartItems.map(item => {
+            this.ProductService.getProduct(item.productId).then(res => res.json()).then(res => {
+                items.push(<div className="item">
+                    <img src={"data:image/jpeg;base64," + res.imageBase64} alt={res.name} height="64" width="64" />
+                    <span className="namespan">
+                        {item.productAmount} x {res.name}
+                    </span>
+                    <span>
+                        {Math.round(res.pricePln * item.productAmount * 100) / 100}
+                        zł
+                      </span>
+                    <span />
+                </div>)
+                })
+            });
+        return items;
     }
 
-  render() {
-    const { Items } = this.props;
-
+    render() {
+        const { cartItems } = this.props;
     const popoverClickRootClose =
-      Items.length > 0 ? (
+      cartItems.length > 0 ? (
         <Popover
           id="popover-trigger-click-root-close"
           title="Koszyk"
           arrowOffsetTop="80"
         >
-          {Items.map(item => (
-            <div className="item">
-              <div className="orangebox" />
-              <span className="namespan">
-                {item.count} x {item.product.name}
-              </span>
-              <span>
-                {Math.round(item.product.price * item.count * 100) / 100}
-                zł
-              </span>
-              <span />
-            </div>
-          ))}
+        {this.renderItems()}
           <hr />
           <div className="cartsummary">
-            <Button bsStyle="buyButton" onClick="{handleSubmit}" bsSize="medium">
+            <Link to="/order"><Button bsStyle="buyButton" bsSize="medium">
               <Glyphicon glyph="ok" /> Złóż zamówienie
-            </Button>
-            <div className="sumatext">Suma: </div>
-            <div>{this.getTotalPrice()}zł</div>
+            </Button></Link>
+                    <div className="sumatext">Suma: </div>
+                    <div>{this.state.totalPrice}zł</div>
           </div>
         </Popover>
       ) : (
@@ -101,9 +97,9 @@ class Cart extends Component {
           overlay={popoverClickRootClose}
         >
           <button style={{ background: "none", border: "none", padding: 0 }}>
-            <i class="fa fa-shopping-cart cart" style={{ fontSize: 22 }} />
-            {Items.length > 0 && (
-              <div className="basketitems">{Items.length}</div>
+            <i className="fa fa-shopping-cart cart" style={{ fontSize: 22 }} />
+            {cartItems.length > 0 && (
+              <div className="basketitems">{cartItems.length}</div>
             )}
           </button>
         </OverlayTrigger>

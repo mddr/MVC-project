@@ -60,11 +60,11 @@ class AdminPanel extends Component {
 		window.location.reload(true);
 	}
 	
-  render() {
-      const roleKey = Object.keys(this.Auth.getProfile())[2];
+    render() {        
       const claims = this.Auth.getProfile();
+      const roleKey = Object.keys(claims)[2];
       const role = claims[roleKey];
-      if (role != "Admin") return (<div>404</div>);
+      if (role !== "Admin") return (<div>404</div>);
 
       return (
       /*whole layouy*/

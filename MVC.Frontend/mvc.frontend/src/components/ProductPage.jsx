@@ -21,7 +21,8 @@ class ProductPage extends Component {
 
        this.Auth = new AuthService();
        this.fetchData = this.fetchData.bind(this);
-       this.placeOrder = this.placeOrder.bind(this);
+       this.buyNow = this.buyNow.bind(this);
+       this.addToCart = this.addToCart.bind(this);
     }
 
     componentDidMount() {
@@ -37,26 +38,33 @@ class ProductPage extends Component {
                 description: res.description,
                 boughtTimes: res.boughtTimes,
                 imageBase64: res.imageBase64,
+                id: res.id
             });
         });
     }
 
-    placeOrder() {
+    addToCart() {
         let body = "";
         const obj = {
-            userId: this.state.id,
-            //TODO vv
-            cartId: this.state.name,
-            //TODO ^^
-            totalPrice: this.state.pricePln,
+            productId: this.state.id,
+            productAmount: this.state.count,
         };
 
         body = JSON.stringify(obj);
 
-        this.props.Auth.fetch(`${this.props.Auth.domain}/order/add`, {
+        this.Auth.fetch(`${this.Auth.domain}/cart/add`, {
             method: 'post',
             body
         });
+    }
+
+    validate() {
+        return this.state.count < 1;
+    }
+
+    buyNow() {
+        this.addToCart();
+        this.props.history.replace("/order");
     }
 
   extractUnits = price => {
@@ -115,8 +123,8 @@ class ProductPage extends Component {
                 style={{
                   marginBottom: "3px"
                 }}
-              >
-                <Button bsStyle="buyButton" onClick="" bsSize="large">
+                        >
+                            <Button bsStyle="buyButton" onClick={this.addToCart} bsSize="large" disabled={this.validate()} >
                   <Glyphicon glyph="plus" /> Dodaj do koszyka
                 </Button>
               </div>
@@ -152,8 +160,8 @@ class ProductPage extends Component {
                 style={{
                   marginTop: "3px"
                 }}
-              >
-                <Button bsStyle="buyButton" onClick="" bsSize="large">
+                        >
+                <Button bsStyle="buyButton" onClick={this.buyNow} bsSize="large" disabled={this.validate()}>
                   <Glyphicon glyph="ok" /> Kup teraz
                 </Button>
               </div>

@@ -4,11 +4,11 @@ import React, { Component } from "react";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
-import Footer from "./components/Footer";
 import Cart from "./components/Cart";
 
 import Routes from "./Routes";
 import AuthService from "./services/AuthService";
+import CartService from "./services/CartService";
 
 const auth = new AuthService();
 
@@ -17,10 +17,24 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            CartItems: [],
+            cartItems: [],
+            cartItemsChanged: false,
         };
+        this.CartService = new CartService();
+    }
 
-        this.addToCart = this.addToCart.bind(this);
+    componentDidMount() {
+        this.CartService.getCart().then(res => res.json()).then(res => this.setState({ cartItems: res }));
+    }
+
+    componentDidUpdate() {
+        if (this.state.ItemsChanged) {
+            this.CartService.getCart().then(res => res.json()).then(res => this.setState({
+                cartItems: res,
+                cartItemsChanged: false,
+            })
+            );
+        }
     }
 
     async handleLogout() {
@@ -28,22 +42,15 @@ class App extends Component {
         await window.location.reload();
     }
 
-    addToCart(item) {
-        let tmp = this.state.CartItems;
-        tmp.push(item);
-        this.setState({ CartItems: tmp });
-    }
-
   render() {
-    const isUserLogged = auth.loggedInWithRefresh();
-    let loginControl;
-
+      const isUserLogged = auth.loggedInWithRefresh();
+      let loginControl;
     if (!isUserLogged) {
       loginControl = (
         <Navbar.Collapse>
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
-              <Cart Items={this.state.CartItems} />
+                      <Cart cartItems={this.state.cartItems} />
             </NavItem>
             <LinkContainer to="/login">
               <NavItem>Zaloguj się</NavItem>
@@ -57,8 +64,8 @@ class App extends Component {
     } else {
       loginControl = (
         <Navbar.Collapse>
-          <Nav>
-                  <Cart Items={this.state.CartItems} Auth={auth} />
+              <Nav>
+                  <Cart cartItems={this.state.cartItems} />
           </Nav>
           <Nav pullRight>
             <NavItem onClick={this.handleLogout.bind(this)}>
@@ -79,8 +86,8 @@ class App extends Component {
             <Navbar.Toggle />
           </Navbar.Header>
           {loginControl}
-        </Navbar>
-        <Routes />
+            </Navbar>
+            <Routes cartItems={this.state.cartItems} />
       </div>
     );
   }

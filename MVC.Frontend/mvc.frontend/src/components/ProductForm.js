@@ -26,7 +26,8 @@ export default class ProductForm extends React.Component{
 
 	validateForm() {
 		if (!(this.state.name.length > 0 && this.state.pricePln > 0 && this.state.categoryId > 0 
-			&& this.state.amountAvailable > -1 && this.state.discount >= 0 && this.state.discount <= 100))
+            && this.state.amountAvailable > -1 && this.state.discount >= 0 && this.state.discount <= 100
+            && this.state.discount.length > 0 && this.state.amountAvailable.length > 0))
 		  return false;
 		return true;
 	}
