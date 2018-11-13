@@ -27,7 +27,6 @@ class ProductSlider extends Component {
 
   render() {
     const { Products, productsPerSlider } = this.props;
-    console.log(Products.length);
     return (
       <div className="productslider">
         <button

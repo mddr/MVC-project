@@ -71,31 +71,29 @@ class OrderPage extends Component {
         });
     };
   renderItems() {
-    if (this.props.cartItems.length < 1) return;
-    let items = [];
-    this.props.cartItems.map(item => {
-      this.ProductService.getProduct(item.productId)
-        .then(res => res.json())
-        .then(res => {
-          items.push(
+      if (!this.props.cartItems ||
+          !this.props.cartItemsInfo) return;
+        let items = [];
+      this.props.cartItems.map((item, i) => {
+          console.log(this.props.cartItemsInfo[i]);
+        items.push(
             <div className="item">
               <img
-                src={"data:image/jpeg;base64," + res.imageBase64}
-                alt={res.name}
+                    src={"data:image/jpeg;base64," + this.props.cartItemsInfo[i].imageBase64}
+                    alt={this.props.cartItemsInfo[i].name}
                 height="64"
                 width="64"
               />
               <span className="namespan">
-                {item.productAmount} x {res.name}
+                {item.productAmount} x {this.props.cartItemsInfo[i].name}
               </span>
               <span>
-                {Math.round(res.pricePln * item.productAmount * 100) / 100}
+                {Math.round(this.props.cartItemsInfo[i].pricePln * item.productAmount * 100) / 100}
                 zł
               </span>
               <span />
             </div>
           );
-        });
     });
 
     return items;

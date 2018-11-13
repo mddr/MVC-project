@@ -9,6 +9,7 @@ import Cart from "./components/Cart";
 import Routes from "./Routes";
 import AuthService from "./services/AuthService";
 import CartService from "./services/CartService";
+import ProductService from "./services/ProductService";
 
 const auth = new AuthService();
 
@@ -17,27 +18,45 @@ class App extends Component {
     super(props);
     this.state = {
       cartItems: [],
-      cartItemsChanged: false
+      cartItemsInfo: [],
+        cartItemsChanged: false,
     };
-    this.CartService = new CartService();
+      this.CartService = new CartService();
+      this.ProductService = new ProductService();
   }
 
-  componentDidMount() {
-    this.CartService.getCart()
-      .then(res => res.json())
-      .then(res => this.setState({ cartItems: res }));
-  }
+    componentDidMount() {
+        const requestCartInfo = async () => {
+            this.state.cartItems.map(async (cartItem, i) => {
+                const response = await this.ProductService.getProduct(cartItem.productId);
+                const json = await response.json();
+                let infos = this.state.cartItemsInfo;
+                infos.push(json);
+                this.setState({ cartItemsInfo: infos });
+            });
+        }
+        const requestCart = async () => {
+            await this.CartService.getCart()
+                .then(res => res.json())
+                .then(data => this.setState({ cartItems: data, cartItemsChanged: true }, requestCartInfo));
+        }
+
+        requestCart();
+    }
 
   componentDidUpdate() {
-    if (this.state.ItemsChanged) {
-      this.CartService.getCart()
-        .then(res => res.json())
-        .then(res =>
-          this.setState({
-            cartItems: res,
-            cartItemsChanged: false
-          })
-        );
+      if (this.state.ItemsChanged) {
+          this.state.cartItems.map(cartItem => {
+              const promise = this.ProductService.getProduct(cartItem.id);
+              console.log(promise);
+              promise.then(res => res.json())
+                  .then(data => {
+                      console.log(data);
+                      //let items = this.state.cartItems;
+                      //let item;
+                      //for(int jitems.
+                  });
+          });
     }
   }
 
@@ -92,8 +111,9 @@ class App extends Component {
             <Navbar.Toggle />
           </Navbar.Header>
           {loginControl}
-        </Navbar>
-        <Routes cartItems={this.state.cartItems} />
+            </Navbar>
+            <Routes cartItems={this.state.cartItems.sort((a, b) => a.productId.localeCompare(b.productId))}
+                cartItemsInfo={this.state.cartItemsInfo.sort((a, b) => a.id.localeCompare(b.id))} />
       </div>
     );
   }

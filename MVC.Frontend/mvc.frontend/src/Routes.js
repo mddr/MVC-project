@@ -17,7 +17,7 @@ class Routes extends Component {
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/admin" component={AdminPanel} />
                 <Route exact path="/product/:id" render={(props) => <ProductPage {...props} cartItems={this.props.cartItems} />} />
-                <Route exact path="/order" render={(props) => <OrderPage {...props} cartItems={this.props.cartItems} />}  />
+                <Route exact path="/order" render={(props) => <OrderPage {...props} cartItems={this.props.cartItems} cartItemsInfo={this.props.cartItemsInfo} />} />
             </Switch>
         );
     }
