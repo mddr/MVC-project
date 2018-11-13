@@ -13,44 +13,48 @@ import CartService from "./services/CartService";
 const auth = new AuthService();
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cartItems: [],
+      cartItemsChanged: false
+    };
+    this.CartService = new CartService();
+  }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            cartItems: [],
-            cartItemsChanged: false,
-        };
-        this.CartService = new CartService();
-    }
+  componentDidMount() {
+    this.CartService.getCart()
+      .then(res => res.json())
+      .then(res => this.setState({ cartItems: res }));
+  }
 
-    componentDidMount() {
-        this.CartService.getCart().then(res => res.json()).then(res => this.setState({ cartItems: res }));
+  componentDidUpdate() {
+    if (this.state.ItemsChanged) {
+      this.CartService.getCart()
+        .then(res => res.json())
+        .then(res =>
+          this.setState({
+            cartItems: res,
+            cartItemsChanged: false
+          })
+        );
     }
+  }
 
-    componentDidUpdate() {
-        if (this.state.ItemsChanged) {
-            this.CartService.getCart().then(res => res.json()).then(res => this.setState({
-                cartItems: res,
-                cartItemsChanged: false,
-            })
-            );
-        }
-    }
-
-    async handleLogout() {
-        auth.logout();
-        await window.location.reload();
-    }
+  async handleLogout() {
+    auth.logout();
+    await window.location.reload();
+  }
 
   render() {
-      const isUserLogged = auth.loggedInWithRefresh();
-      let loginControl;
+    const isUserLogged = auth.loggedInWithRefresh();
+    let loginControl;
     if (!isUserLogged) {
       loginControl = (
         <Navbar.Collapse>
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
-                      <Cart cartItems={this.state.cartItems} />
+              <Cart cartItems={this.state.cartItems} />
             </NavItem>
             <LinkContainer to="/login">
               <NavItem>Zaloguj się</NavItem>
@@ -64,13 +68,15 @@ class App extends Component {
     } else {
       loginControl = (
         <Navbar.Collapse>
-              <Nav>
-                  <Cart cartItems={this.state.cartItems} />
-          </Nav>
           <Nav pullRight>
-            <NavItem onClick={this.handleLogout.bind(this)}>
-              Wyloguj się
+            <NavItem style={{ padding: "none" }}>
+              <Cart cartItems={this.state.cartItems} />
             </NavItem>
+            <Nav pullRight>
+              <NavItem onClick={this.handleLogout.bind(this)}>
+                Wyloguj się
+              </NavItem>
+            </Nav>
           </Nav>
         </Navbar.Collapse>
       );
@@ -86,8 +92,8 @@ class App extends Component {
             <Navbar.Toggle />
           </Navbar.Header>
           {loginControl}
-            </Navbar>
-            <Routes cartItems={this.state.cartItems} />
+        </Navbar>
+        <Routes cartItems={this.state.cartItems} />
       </div>
     );
   }

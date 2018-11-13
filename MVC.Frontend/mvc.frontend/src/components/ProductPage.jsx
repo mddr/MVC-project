@@ -4,70 +4,71 @@ import "./Home.css";
 import React, { Component } from "react";
 import { Button, Glyphicon, InputGroup, FormControl } from "react-bootstrap";
 
-import AuthService from '../services/AuthService';
+import AuthService from "../services/AuthService";
 
 class ProductPage extends Component {
+  constructor(props) {
+    super(props);
 
-   constructor(props) {
-        super(props);
+    this.state = {
+      pricePln: -1,
+      name: "",
+      description: "",
+      boughtTimes: -1,
+      count: 0
+    };
 
-        this.state = {
-            pricePln: -1,
-            name: "",
-            description: "",
-            boughtTimes: -1,
-            count: 0
-        };
+    this.Auth = new AuthService();
+    this.fetchData = this.fetchData.bind(this);
+    this.buyNow = this.buyNow.bind(this);
+    this.addToCart = this.addToCart.bind(this);
+  }
 
-       this.Auth = new AuthService();
-       this.fetchData = this.fetchData.bind(this);
-       this.buyNow = this.buyNow.bind(this);
-       this.addToCart = this.addToCart.bind(this);
-    }
+  componentDidMount() {
+    this.fetchData();
+  }
 
-    componentDidMount() {
-        this.fetchData();
-    }
-
-    fetchData() {
-        this.Auth.fetch(`${this.Auth.domain}/product/${this.props.match.params.id}`, null
-        ).then(res => res.json()).then(res => {
-            this.setState({
-                pricePln: res.pricePln,
-                name: res.name,
-                description: res.description,
-                boughtTimes: res.boughtTimes,
-                imageBase64: res.imageBase64,
-                id: res.id
-            });
+  fetchData() {
+    this.Auth.fetch(
+      `${this.Auth.domain}/product/${this.props.match.params.id}`,
+      null
+    )
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          pricePln: res.pricePln,
+          name: res.name,
+          description: res.description,
+          boughtTimes: res.boughtTimes,
+          imageBase64: res.imageBase64,
+          id: res.id
         });
-    }
+      });
+  }
 
-    addToCart() {
-        let body = "";
-        const obj = {
-            productId: this.state.id,
-            productAmount: this.state.count,
-        };
+  addToCart() {
+    let body = "";
+    const obj = {
+      productId: this.state.id,
+      productAmount: this.state.count
+    };
 
-        body = JSON.stringify(obj);
+    body = JSON.stringify(obj);
 
-        this.Auth.fetch(`${this.Auth.domain}/cart/add`, {
-            method: 'post',
-            body
-        }).then(() => window.location.reload());
+    this.Auth.fetch(`${this.Auth.domain}/cart/add`, {
+      method: "post",
+      body
+    }).then(() => window.location.reload());
+  }
 
-        
-    }
+  validate() {
+    return this.state.count < 1;
+  }
 
-    validate() {
-        return this.state.count < 1;
-    }
-
-    buyNow() {
-        this.addToCart();
-        this.props.history.replace("/order");
-    }
+  buyNow() {
+    this.addToCart();
+    this.props.history.replace("/order");
+  }
 
   extractUnits = price => {
     return Math.floor(price);
@@ -101,8 +102,11 @@ class ProductPage extends Component {
           <div className="banner_img" />
         </div>
         <div className="productSection">
-                <div className="productImageSection">
-                    <img src={"data:image/jpeg;base64," + this.state.imageBase64} alt={this.state.name} />
+          <div className="productImageSection">
+            <img
+              src={"data:image/jpeg;base64," + this.state.imageBase64}
+              alt={this.state.name}
+            />
           </div>
           <div className="productDescribeSection">
             <div className="productTitle">
@@ -116,7 +120,7 @@ class ProductPage extends Component {
                   {this.extractUnits(this.state.pricePln)}
                 </span>
                 <span className="decimalPriceValue">
-                    {this.extractDecimals(this.state.pricePln)}
+                  {this.extractDecimals(this.state.pricePln)}
                 </span>
                 <span className="currencySign">zł</span>
               </div>
@@ -125,8 +129,13 @@ class ProductPage extends Component {
                 style={{
                   marginBottom: "3px"
                 }}
-                        >
-                            <Button bsStyle="buyButton" onClick={this.addToCart} bsSize="large" disabled={this.validate()} >
+              >
+                <Button
+                  bsStyle="buyButton"
+                  onClick={this.addToCart}
+                  bsSize="large"
+                  disabled={this.validate()}
+                >
                   <Glyphicon glyph="plus" /> Dodaj do koszyka
                 </Button>
               </div>
@@ -162,8 +171,13 @@ class ProductPage extends Component {
                 style={{
                   marginTop: "3px"
                 }}
-                        >
-                <Button bsStyle="buyButton" onClick={this.buyNow} bsSize="large" disabled={this.validate()}>
+              >
+                <Button
+                  bsStyle="buyButton"
+                  onClick={this.buyNow}
+                  bsSize="large"
+                  disabled={this.validate()}
+                >
                   <Glyphicon glyph="ok" /> Kup teraz
                 </Button>
               </div>
@@ -171,7 +185,7 @@ class ProductPage extends Component {
 
             <div className="boughtCounter">
               <span style={{ color: "gray" }}>
-                            ten przedmiot kupiono {this.state.boughtTimes} razy
+                ten przedmiot kupiono {this.state.boughtTimes} razy
               </span>
             </div>
             <hr />

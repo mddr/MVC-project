@@ -79,3 +79,10 @@
   flex-grow: 1;
   text-align: right;
 }
+#popover-trigger-click-root-close {
+  right: 40px !important;
+}
+#popover-trigger-click-root-close .arrow {
+  /* left: 200px !important; */
+  display: none;
+}
