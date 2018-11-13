@@ -32,33 +32,20 @@ class App extends Component {
                 const json = await response.json();
                 let infos = this.state.cartItemsInfo;
                 infos.push({ ...json });
-                this.setState({ cartItemsInfo: infos });
+                this.setState({ cartItemsInfo: infos.sort((a, b) => a.id.localeCompare(b.id)) });
             });
         }
         const requestCart = async () => {
             await this.CartService.getCart()
                 .then(res => res.json())
-                .then(data => this.setState({ cartItems: data, cartItemsChanged: true }, requestCartInfo));
+                .then(data => this.setState({
+                    cartItems: data.sort((a, b) => a.productId.localeCompare(b.productId)),
+                    cartItemsChanged: true
+                }, requestCartInfo));
         }
 
         requestCart();
     }
-
-  componentDidUpdate() {
-      if (this.state.ItemsChanged) {
-          this.state.cartItems.map(cartItem => {
-              const promise = this.ProductService.getProduct(cartItem.id);
-              console.log(promise);
-              promise.then(res => res.json())
-                  .then(data => {
-                      console.log(data);
-                      //let items = this.state.cartItems;
-                      //let item;
-                      //for(int jitems.
-                  });
-          });
-    }
-  }
 
   async handleLogout() {
     auth.logout();
@@ -73,7 +60,10 @@ class App extends Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
-              <Cart cartItems={this.state.cartItems} />
+                <Cart
+                    cartItems={this.state.cartItems}
+                    cartItemsInfo={this.state.cartItemsInfo}
+                />
             </NavItem>
             <LinkContainer to="/login">
               <NavItem>Zaloguj się</NavItem>
@@ -89,7 +79,10 @@ class App extends Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
-              <Cart cartItems={this.state.cartItems} />
+                      <Cart
+                          cartItems={this.state.cartItems}
+                          cartItemsInfo={this.state.cartItemsInfo}
+                      />
             </NavItem>
             <Nav pullRight>
               <NavItem onClick={this.handleLogout.bind(this)}>
@@ -112,8 +105,8 @@ class App extends Component {
           </Navbar.Header>
           {loginControl}
             </Navbar>
-            <Routes cartItems={this.state.cartItems.sort((a, b) => a.productId.localeCompare(b.productId))}
-                cartItemsInfo={this.state.cartItemsInfo.sort((a, b) => a.id.localeCompare(b.id))} />
+            <Routes cartItems={this.state.cartItems}
+                cartItemsInfo={this.state.cartItemsInfo} />
       </div>
     );
   }

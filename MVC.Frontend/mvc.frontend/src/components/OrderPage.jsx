@@ -30,24 +30,13 @@ class OrderPage extends Component {
         this.OrderService = new OrderService();
     }
 
-    componentDidMount() {
-        this.getTotalPrice();
-    }
-  componentDidUpdate(prevProps) {
-      if (this.props.cartItemsInfo !== prevProps.cartItemsInfo) {
-      this.getTotalPrice();
-    }
-  }
-
   getTotalPrice() {
-      if (!this.props.cartItemsInfo.length) return 0;
+      if (this.props.cartItemsInfo.length < 1) return 0;
       let price = 0;
       for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
           price += this.props.cartItemsInfo[i].pricePln * this.props.cartItems[i].productAmount;
-          }
-      this.setState({
-          totalPrice: price
-      });
+      }
+      return price;
   }
 
     placeOrder() {
@@ -66,12 +55,12 @@ class OrderPage extends Component {
             [event.target.id]: event.target.value
         });
     };
-  renderItems() {
-      if (!this.props.cartItems ||
-          !this.props.cartItemsInfo) return;
+    renderItems() {
+        if (this.props.cartItems.length < 1) return;
+        if (this.props.cartItemsInfo.length < 1) return;
+        if (this.props.cartItemsInfo.length != this.props.cartItems.length) return;
         let items = [];
       this.props.cartItems.map((item, i) => {
-          console.log(this.props.cartItemsInfo[i]);
         items.push(
             <div className="item">
               <img
@@ -114,7 +103,7 @@ class OrderPage extends Component {
           <hr style={{ width: "95%" }} />
           <div className="ordersum">
             <div className="ordersumtext">Suma: </div>
-            <div>{this.state.totalPrice}zł</div>
+            <div>{this.getTotalPrice()}zł</div>
           </div>
         </div>
         <div className="shippinginfo">
