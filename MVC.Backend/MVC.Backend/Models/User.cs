@@ -19,6 +19,7 @@ namespace MVC.Backend.Models
 
         [Required] public string FirstName { get; set; }
         [Required] public string LastName { get; set; }
+        [ForeignKey("Addresses")] public int? AddressId { get; set; }
         public Address Address;
 
         [Required] public Enums.Currency Currency { get; set; }
@@ -34,13 +35,13 @@ namespace MVC.Backend.Models
         }
 
         public User(string email, byte[] passwordHash, byte[] passwordSalt,
-            string firstName, string lastName, Address address,
+            string firstName, string lastName, int? addressId,
             bool prefersNetPrice = false, int productsPerPage = 10,
             Enums.Roles role = Enums.Roles.User, Enums.Currency currency = Enums.Currency.PLN,
             bool acceptsNewsletters = true)
         {
             AcceptsNewsletters = acceptsNewsletters;
-            Address = address;
+            AddressId = addressId;
             Currency = currency;
             Email = email;
             FirstName = firstName;

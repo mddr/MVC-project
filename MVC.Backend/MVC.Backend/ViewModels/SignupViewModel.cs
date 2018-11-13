@@ -14,6 +14,7 @@ namespace MVC.Backend.ViewModels
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Address Address;
+
+        public int? AddressId;
     }
 }

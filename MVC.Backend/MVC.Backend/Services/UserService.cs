@@ -30,7 +30,7 @@ namespace MVC.Backend.Services
 
             var salt = AuthHelper.CreateSalt(128);
             var passwordHash = AuthHelper.CreateHash(viewModel.Password, salt);
-            var newUser = new User(viewModel.Email, passwordHash, salt, viewModel.FirstName, viewModel.LastName, viewModel.Address, role: role);
+            var newUser = new User(viewModel.Email, passwordHash, salt, viewModel.FirstName, viewModel.LastName, viewModel.AddressId, role: role);
             _context.Users.Add(newUser);
 
             await _context.SaveChangesAsync();

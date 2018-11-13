@@ -9,7 +9,7 @@ namespace MVC.Backend.ViewModels
 
         public int UserId { get; set; }
 
-        public string CartId { get; set; }
+        public int? AddressId { get; set; }
 
         public double TotalPrice { get; set; }
 
@@ -21,7 +21,7 @@ namespace MVC.Backend.ViewModels
         {
             Id = order.Id;
             UserId = order.UserId;
-            CartId = order.CartId;
+            AddressId = order.AddressId;
             TotalPrice = order.TotalPrice;
         }
 

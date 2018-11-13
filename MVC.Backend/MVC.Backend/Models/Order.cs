@@ -13,6 +13,8 @@ namespace MVC.Backend.Models
 
         [ForeignKey("Users")] public int UserId { get; set; }
         public User User { get; set; }
+        [ForeignKey("Addresses")] public int? AddressId { get; set; }
+        public Address Address { get; set; }
 
         [Required] public string CartId { get; set; }
         public List<CartItem> ShoppingCart { get; set; }
@@ -24,9 +26,10 @@ namespace MVC.Backend.Models
         {
         }
 
-        public Order(int userId, string cartId, double totalPrice, List<CartItem> cart)
+        public Order(int userId, int? addressId, string cartId, double totalPrice, List<CartItem> cart)
         {
             UserId = userId;
+            AddressId = addressId;
             CartId = cartId;
             TotalPrice = totalPrice;
             ShoppingCart = cart;

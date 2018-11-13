@@ -12,8 +12,8 @@ namespace MVC.Backend.Services
         List<Order> GetOrders();
         List<Order> GetOrders(int userId);
         Order GetOrder(int id);
-        void AddOrder(OrderViewModel viewModel);
-        void UpdateOrder(OrderViewModel viewModel);
+        void AddOrder(int userId);
+        void UpdateOrder(OrderViewModel viewModel, int userId);
         void DeleteOrder(int id);
     }
 }

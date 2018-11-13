@@ -17,17 +17,31 @@ namespace MVC.Backend.Services
             _context = context;
         }
 
-        public void AddOrder(OrderViewModel viewModel)
+        public void AddOrder(int userId)
         {
-            if (viewModel == null)
-                throw new ArgumentException();
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+                throw new ArgumentException($"User not found. Id: {userId}");
 
-            var cart = _context.CartItems.Where(i => i.Id == viewModel.CartId).ToList();
-            if (cart.Any(c => c.UserId != viewModel.UserId))
+            var cart = _context.CartItems.Where(i => i.Id == user.CartId).ToList();
+            if (cart == null)
+                throw new ArgumentException($"User cart not found. Id: {userId}");
+
+            if (cart.Any(c => c.UserId != userId))
                 throw new ArgumentException($"Invalid user");
 
-            var order = new Order(viewModel.UserId, viewModel.CartId, viewModel.TotalPrice, cart);
+            double totalPrice = 0;
+            foreach(var item in cart)
+            {
+                var product = _context.Products.FirstOrDefault(u => u.Id == item.ProductId);
+                if (product == null)
+                    throw new ArgumentException($"Product not found. Id: {item.ProductId}");
+                totalPrice += product.PricePln;
+            }
 
+            var order = new Order(userId, user.AddressId, user.CartId, totalPrice, cart);
+
+            user.CartId = null;
             _context.Orders.Add(order);
             _context.SaveChanges();
         }
@@ -64,7 +78,7 @@ namespace MVC.Backend.Services
             return orders.ToList();
         }
 
-        public void UpdateOrder(OrderViewModel viewModel)
+        public void UpdateOrder(OrderViewModel viewModel, int userId)
         {
             if (viewModel == null)
                 throw new ArgumentException();
@@ -73,12 +87,17 @@ namespace MVC.Backend.Services
             if (order == null)
                 throw new ArgumentException();
 
-            var cart = _context.CartItems.Where(i => i.Id == viewModel.CartId).ToList();
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+                throw new ArgumentException($"User not found. Id: {userId}");
+
+
+            var cart = _context.CartItems.Where(i => i.Id == user.CartId).ToList();
             if (cart.Any(c => c.UserId != viewModel.UserId))
                 throw new ArgumentException($"Invalid user");
 
             order.TotalPrice = viewModel.TotalPrice;
-            order.CartId = viewModel.CartId;
+            order.CartId = user.CartId;
             order.ShoppingCart = cart;
 
 

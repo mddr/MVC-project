@@ -11,24 +11,43 @@ using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Controllers
 {
-    [EmailConfirmed(Roles = "Admin, User")]
-    public class OrderController : Controller
+    public class AddressController : Controller
     {
-        private readonly IOrderService _orderService;
+        private readonly IAddressService _addressService;
 
-        public OrderController(IOrderService orderService)
+        public AddressController(IAddressService addressService)
         {
-            _orderService = orderService;
+            _addressService = addressService;
         }
 
         [HttpGet]
-        [Route("orders")]
-        public IActionResult Orders()
+        [Route("addresses")]
+        public IActionResult Addresses()
         {
             try
             {
-                var orders = _orderService.GetOrders();
-                return Ok(OrderViewModel.ToList(orders));
+                var addresses = _addressService.GetAddresses();
+                return Ok(AddressViewModel.ToList(addresses));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("address/{id}")]
+        public IActionResult Address(int id)
+        {
+            try
+            {
+                var address = _addressService.GetAddress(id);
+                return Ok(new AddressViewModel(address));
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
             }
             catch (Exception)
             {
@@ -37,28 +56,13 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpGet]
-        [Route("orders/{userId}")]
-        public IActionResult Orders(int userId)
+        [Route("userAddress/")]
+        public IActionResult UserAddress()
         {
             try
             {
-                var orders = _orderService.GetOrders(userId);
-                return Ok(OrderViewModel.ToList(orders));
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpGet]
-        [Route("order/{id}")]
-        public IActionResult Order(int id)
-        {
-            try
-            {
-                var order = _orderService.GetOrder(id);
-                return Ok(new OrderViewModel(order));
+                var address = _addressService.GetUserAddress(CurrentUserId());
+                return Ok(new AddressViewModel(address));
             }
             catch (ArgumentException)
             {
@@ -71,12 +75,12 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpPost]
-        [Route("order/add")]
-        public IActionResult Add()
+        [Route("address/add")]
+        public IActionResult Add([FromBody] AddressViewModel viewModel)
         {
             try
             {
-                _orderService.AddOrder(CurrentUserId());
+                _addressService.AddAddress(viewModel, CurrentUserId());
                 return Ok();
             }
             catch (ArgumentException)
@@ -90,12 +94,13 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpPost]
-        [Route("order/update")]
-        public IActionResult Update([FromBody] OrderViewModel viewModel)
+        [Route("address/update")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult Update([FromBody] AddressViewModel viewModel)
         {
             try
             {
-                _orderService.UpdateOrder(viewModel, CurrentUserId());
+                _addressService.UpdateAddress(viewModel);
                 return Ok();
             }
             catch (ArgumentException)
@@ -109,12 +114,13 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpDelete]
-        [Route("order/delete/{id}")]
+        [Route("address/delete/{id}")]
+        [EmailConfirmed(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             try
             {
-                _orderService.DeleteOrder(id);
+                _addressService.DeleteAddress(id);
                 return Ok();
             }
             catch (ArgumentException)
