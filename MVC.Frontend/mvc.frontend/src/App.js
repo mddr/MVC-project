@@ -31,7 +31,7 @@ class App extends Component {
                 const response = await this.ProductService.getProduct(cartItem.productId);
                 const json = await response.json();
                 let infos = this.state.cartItemsInfo;
-                infos.push(json);
+                infos.push({ ...json });
                 this.setState({ cartItemsInfo: infos });
             });
         }

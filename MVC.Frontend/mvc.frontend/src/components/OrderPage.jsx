@@ -30,28 +30,24 @@ class OrderPage extends Component {
         this.OrderService = new OrderService();
     }
 
+    componentDidMount() {
+        this.getTotalPrice();
+    }
   componentDidUpdate(prevProps) {
-    if (this.props.cartItems !== prevProps.cartItems) {
+      if (this.props.cartItemsInfo !== prevProps.cartItemsInfo) {
       this.getTotalPrice();
     }
   }
 
   getTotalPrice() {
-    if (this.props.cartItems.length < 1) return 0;
-    for (let i = 0; i < this.props.cartItems.length; i++) {
-      this.ProductService.getProduct(this.props.cartItems[i].productId)
-        .then(res => res.json())
-        .then(res => {
-          this.setState({
-            totalPrice:
-              this.state.totalPrice +
-              Math.round(
-                this.props.cartItems[i].productAmount * res.pricePln * 100
-              ) /
-                100
-          });
-        });
-    }
+      if (!this.props.cartItemsInfo.length) return 0;
+      let price = 0;
+      for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
+          price += this.props.cartItemsInfo[i].pricePln * this.props.cartItems[i].productAmount;
+          }
+      this.setState({
+          totalPrice: price
+      });
   }
 
     placeOrder() {
