@@ -13,7 +13,8 @@ export default class Home extends Component {
     this.state = {
       isUserLogged: false,
       categories: [],
-      Products: []
+      Products: [],
+      category: -1
       };
 
       this.Auth = new AuthService();      
@@ -42,8 +43,8 @@ export default class Home extends Component {
     const categories = this.state.categories.map(category => {
       if (category.superiorCategoryId === parentID) {
         return (
-          <Nav className="sidenavcategory" key={category.id}>
-            <a href={category.link}>{category.name}</a>
+          <Nav className="sidenavcategory" key={category.id} >
+            <a href={category.link} onClick={() => this.handleNavClick(category)}>{category.name}</a>
             {this.displayCategoriesTree(category.id)}
           </Nav>
         );
@@ -52,6 +53,20 @@ export default class Home extends Component {
 
     return categories;
   };
+
+  handleNavClick = (category) => {
+    this.setState({
+      category: category
+    })
+  }
+
+  getFilteredProducts() {
+    let products = this.state.Products;
+    if (this.state.category === -1 || !this.state.category.superiorCategoryId) return products;
+    return products.filter(product => {
+      return product.categoryId === this.state.category.id;
+    });
+  }
 
   render() {
     return (
@@ -70,7 +85,7 @@ export default class Home extends Component {
           <hr />
           {
             <ProductSlider
-              Products={this.state.Products}
+              Products={this.getFilteredProducts()}
               productsPerSlider={3}
             />
           }
