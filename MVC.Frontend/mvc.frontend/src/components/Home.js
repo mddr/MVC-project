@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import ProductSlider from "./ProductSlider";
 import { SideNav, Nav } from "react-sidenav";
 
-import AuthService from '../services/AuthService';
+import AuthService from "../services/AuthService";
 
 export default class Home extends Component {
   constructor(props) {
@@ -15,36 +15,44 @@ export default class Home extends Component {
       categories: [],
       Products: [],
       category: -1
-      };
+    };
 
-      this.Auth = new AuthService();      
-    }
+    this.Auth = new AuthService();
+  }
 
-    componentDidMount() {
-        this.fetchData();
-    }
+  componentDidMount() {
+    this.fetchData();
+  }
 
-    fetchData() {
-        this.Auth.fetch(`${this.Auth.domain}/products`, null
-        ).then(res => res.json()).then(res => {
-            this.setState({
-                Products: res
-            });
+  fetchData() {
+    this.Auth.fetch(`${this.Auth.domain}/products`, null)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          Products: res
         });
-        this.Auth.fetch(`${this.Auth.domain}/categories`, null
-        ).then(res => res.json()).then(res => {
-            this.setState({
-                categories: res,
-            });
+      });
+    this.Auth.fetch(`${this.Auth.domain}/categories`, null)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          categories: res
         });
-    }
+      });
+  }
 
   displayCategoriesTree = parentID => {
+    // eslint-disable-next-line
     const categories = this.state.categories.map(category => {
       if (category.superiorCategoryId === parentID) {
         return (
-          <Nav className="sidenavcategory" key={category.id} >
-            <a href={category.link} onClick={() => this.handleNavClick(category)}>{category.name}</a>
+          <Nav className="sidenavcategory" key={category.id}>
+            <a
+              href={category.link}
+              onClick={() => this.handleNavClick(category)}
+            >
+              {category.name}
+            </a>
             {this.displayCategoriesTree(category.id)}
           </Nav>
         );
@@ -54,15 +62,16 @@ export default class Home extends Component {
     return categories;
   };
 
-  handleNavClick = (category) => {
+  handleNavClick = category => {
     this.setState({
       category: category
-    })
-  }
+    });
+  };
 
   getFilteredProducts() {
     let products = this.state.Products;
-    if (this.state.category === -1 || !this.state.category.superiorCategoryId) return products;
+    if (this.state.category === -1 || !this.state.category.superiorCategoryId)
+      return products;
     return products.filter(product => {
       return product.categoryId === this.state.category.id;
     });
@@ -81,7 +90,7 @@ export default class Home extends Component {
           </SideNav>
         </div>
         <div className="sale">
-          Promocje
+          Produkty
           <hr />
           {
             <ProductSlider

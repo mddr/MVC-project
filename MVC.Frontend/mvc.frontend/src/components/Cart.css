@@ -1,5 +1,5 @@
 .item {
-  width: 360px;
+  width: 500px;
   margin-top: 5px;
   margin-bottom: 5px;
   display: flex;
@@ -80,9 +80,19 @@
   text-align: right;
 }
 #popover-trigger-click-root-close {
+  max-width: 600px;
   right: 40px !important;
 }
 #popover-trigger-click-root-close .arrow {
   /* left: 200px !important; */
   display: none;
+}
+
+.cart-amount-picker {
+  margin: auto;
+  width: 120px;
+  align-self: center;
+}
+.btn-removeItem {
+  background-color: red;
 }

@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { OverlayTrigger, Popover, Glyphicon, Button } from "react-bootstrap";
+import {
+  OverlayTrigger,
+  Popover,
+  Glyphicon,
+  Button,
+  InputGroup,
+  FormControl
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import "./Cart.css";
@@ -17,40 +24,91 @@ class Cart extends Component {
     this.ProductService = new ProductService();
   }
 
-
-
-    getTotalPrice() {
-        if (this.props.cartItemsInfo.length < 1) return 0;
-        let price = 0;
-        for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
-            price += this.props.cartItemsInfo[i].pricePln * this.props.cartItems[i].productAmount;
-        }
-        return price;
+  getTotalPrice() {
+    if (this.props.cartItemsInfo.length < 1) return 0;
+    let price = 0;
+    for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
+      price +=
+        this.props.cartItemsInfo[i].pricePln *
+        this.props.cartItems[i].productAmount;
     }
+    return price;
+  }
+  addValue = id => {
+    let cartElement = this.props.cartItems.find(elem => elem.productId === id);
+    this.CartService.updateItem(
+      cartElement.productId,
+      cartElement.productAmount + 1
+    );
+  };
+
+  subtractValue = id => {
+    let cartElement = this.props.cartItems.find(elem => elem.productId === id);
+    this.CartService.updateItem(
+      cartElement.productId,
+      cartElement.productAmount - 1
+    );
+  };
 
   renderItems() {
     if (this.props.cartItems.length < 1) return;
     if (this.props.cartItemsInfo.length < 1) return;
+    // eslint-disable-next-line
     if (this.props.cartItemsInfo.length != this.props.cartItems.length) return;
     let items = [];
-    this.props.cartItems.map( (item,i) => {
-          items.push(
-            <div className="item">
-              <img
-                src={"data:image/jpeg;base64," + this.props.cartItemsInfo[i].imageBase64}
-                alt={this.props.cartItemsInfo[i].name}
-                height="64"
-                width="64"
+    // eslint-disable-next-line
+    this.props.cartItems.map((item, i) => {
+      items.push(
+        <div className="item">
+          <img
+            src={
+              "data:image/jpeg;base64," +
+              this.props.cartItemsInfo[i].imageBase64
+            }
+            alt={this.props.cartItemsInfo[i].name}
+            height="64"
+            width="64"
+          />
+          <span className="namespan">
+            {item.productAmount} x {this.props.cartItemsInfo[i].name}
+          </span>
+          <span style={{ width: "50px" }}>
+            {Math.round(
+              this.props.cartItemsInfo[i].pricePln * item.productAmount * 100
+            ) / 100}
+            zł
+          </span>
+          <div className="cart-amount-picker">
+            <InputGroup style={{ margin: "auto" }}>
+              <InputGroup.Button>
+                <Button onClick={this.addValue(item.productId)}>
+                  <Glyphicon glyph="chevron-up" />
+                </Button>
+              </InputGroup.Button>
+              <FormControl
+                value={item.productAmount}
+                style={{ width: "50px", textAlign: "center" }}
+                /* onChange={(x: React.FormEvent<FormControl & HTMLInputElement>) => {
+                  this.setState({
+                    count: isNaN(parseInt(x.currentTarget.value))
+                      ? 1
+                      : parseInt(x.currentTarget.value)
+                  });
+                }
+              }*/
               />
-              <span className="namespan">
-                {item.productAmount} x {this.props.cartItemsInfo[i].name}
-              </span>
-              <span>
-                {Math.round(this.props.cartItemsInfo[i].pricePln * item.productAmount * 100) / 100}
-                zł
-              </span>
-            </div>
-          );
+              <InputGroup.Button>
+                <Button onClick={this.subtractValue(item.productId)}>
+                  <Glyphicon glyph="chevron-down" />
+                </Button>
+              </InputGroup.Button>
+            </InputGroup>
+          </div>
+          <a href="">
+            <Glyphicon glyph="trash" style={{ color: "red" }} />
+          </a>
+        </div>
+      );
     });
 
     return items;

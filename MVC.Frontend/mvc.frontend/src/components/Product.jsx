@@ -14,16 +14,20 @@ class Product extends Component {
   };
 
   render() {
+    //eslint-disable-next-line
     let { discount, name, price } = this.props;
 
     return (
       <div className="product thumbnail">
-                <img src={"data:image/jpeg;base64," + this.props.imageBase64} alt={this.props.name} />
-          <div className="namebox">{name}</div>
-          <div className="pricebox">
-            <span className="units">{this.extractUnits(price)}</span>
-            <span className="decimals">{this.extractDecimals(price)}</span>
-          </div>
+        <img
+          src={"data:image/jpeg;base64," + this.props.imageBase64}
+          alt={this.props.name}
+        />
+        <div className="namebox">{name}</div>
+        <div className="pricebox">
+          <span className="units">{this.extractUnits(price)}</span>
+          <span className="decimals">{this.extractDecimals(price)}</span>
+        </div>
       </div>
     );
   }
