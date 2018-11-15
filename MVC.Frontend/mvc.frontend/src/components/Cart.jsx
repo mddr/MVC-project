@@ -25,7 +25,9 @@ class Cart extends Component {
   }
 
   getTotalPrice() {
+    if (this.props.cartItems.length < 1) return 0;
     if (this.props.cartItemsInfo.length < 1) return 0;
+    if (this.props.cartItemsInfo.length != this.props.cartItems.length) return 0;
     let price = 0;
     for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
       price +=
@@ -34,20 +36,31 @@ class Cart extends Component {
     }
     return price;
   }
+
   addValue = id => {
-    let cartElement = this.props.cartItems.find(elem => elem.productId === id);
-    this.CartService.updateItem(
-      cartElement.productId,
-      cartElement.productAmount + 1
-    );
+      let cartElement = this.props.cartItems.find(elem => elem.productId === id);
+      cartElement.productAmount++;
+      this.CartService.updateItem(
+          cartElement.productId,
+          cartElement.productAmount
+      ).then(() => {
+          this.props.cartItemChanged(cartElement);
+      });
   };
 
   subtractValue = id => {
-    let cartElement = this.props.cartItems.find(elem => elem.productId === id);
+      let cartElement = this.props.cartItems.find(elem => elem.productId === id);
+      cartElement.productAmount--;
+      //TODO handle in app.js componentDidUpdate() -> remove from local dataset
+      //if (cartElement.productAmount < 1) {
+      //    this.CartService.removeItem(cartElement.productId);
+      //}
     this.CartService.updateItem(
       cartElement.productId,
-      cartElement.productAmount - 1
-    );
+      cartElement.productAmount
+    ).then(() => {
+        this.props.cartItemsChanged();
+    });
   };
 
   renderItems() {
@@ -80,8 +93,8 @@ class Cart extends Component {
           </span>
           <div className="cart-amount-picker">
             <InputGroup style={{ margin: "auto" }}>
-              <InputGroup.Button>
-                <Button onClick={this.addValue(item.productId)}>
+                <InputGroup.Button>
+                <Button onClick={() => this.addValue(item.productId)}>
                   <Glyphicon glyph="chevron-up" />
                 </Button>
               </InputGroup.Button>
@@ -97,8 +110,8 @@ class Cart extends Component {
                 }
               }*/
               />
-              <InputGroup.Button>
-                <Button onClick={this.subtractValue(item.productId)}>
+            <InputGroup.Button>
+                <Button onClick={() => this.subtractValue(item.productId)}>
                   <Glyphicon glyph="chevron-down" />
                 </Button>
               </InputGroup.Button>

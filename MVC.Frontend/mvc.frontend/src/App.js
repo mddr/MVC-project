@@ -19,33 +19,58 @@ class App extends Component {
     this.state = {
       cartItems: [],
       cartItemsInfo: [],
-        cartItemsChanged: false,
+        cartItemChanged: -1,
     };
       this.CartService = new CartService();
       this.ProductService = new ProductService();
+      this.loadCart = this.loadCart.bind(this);
+      this.cartItemChanged = this.cartItemChanged.bind(this);
   }
 
     componentDidMount() {
-        const requestCartInfo = async () => {
-            this.state.cartItems.map(async (cartItem, i) => {
-                const response = await this.ProductService.getProduct(cartItem.productId);
-                const json = await response.json();
-                let infos = this.state.cartItemsInfo;
-                infos.push({ ...json });
-                this.setState({ cartItemsInfo: infos.sort((a, b) => a.id.localeCompare(b.id)) });
-            });
+        this.loadCart();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.cartItemChanged !== -1) {
+            let items = this.state.cartItems;
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].productId === this.state.cartItemChanged.productId) {
+                        items[i] = { ...this.state.cartItemChanged };
+                    }
+                }
+                
+                this.setState({
+                    cartItems: items,
+                    cartItemChanged: -1
+                });
         }
-        const requestCart = async () => {
-            await this.CartService.getCart()
-                .then(res => res.json())
-                .then(data => this.setState({
-                    cartItems: data.sort((a, b) => a.productId.localeCompare(b.productId)),
-                    cartItemsChanged: true
-                }, requestCartInfo));
+    }
+
+    cartItemChanged(item) {
+        this.setState({
+            cartItemChanged: item
+        })
+    }
+
+    async loadCart() {
+        const loadCartInfo = async () => {
+                let infos = [];
+                this.state.cartItems.map(async (cartItem, i) => {
+                    const response = await this.ProductService.getProduct(cartItem.productId);
+                    const json = await response.json();
+                    infos.push({ ...json });
+                    this.setState({ cartItemsInfo: infos.sort((a, b) => a.id.localeCompare(b.id)) });
+                });
         }
 
-        requestCart();
+        await this.CartService.getCart()
+            .then(res => res.json())
+            .then(data => this.setState({
+                cartItems: data.sort((a, b) => a.productId.localeCompare(b.productId)),
+            }, loadCartInfo));
     }
+
 
   async handleLogout() {
     auth.logout();
@@ -61,7 +86,8 @@ class App extends Component {
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
                 <Cart
-                    cartItems={this.state.cartItems}
+                          cartItems={this.state.cartItems}
+                          cartItemChanged={this.cartItemChanged}
                     cartItemsInfo={this.state.cartItemsInfo}
                 />
             </NavItem>
@@ -81,6 +107,7 @@ class App extends Component {
             <NavItem style={{ padding: "none" }}>
                       <Cart
                           cartItems={this.state.cartItems}
+                          cartItemChanged={this.cartItemChanged}
                           cartItemsInfo={this.state.cartItemsInfo}
                       />
             </NavItem>
@@ -106,6 +133,7 @@ class App extends Component {
           {loginControl}
             </Navbar>
             <Routes cartItems={this.state.cartItems}
+                cartItemChanged={this.cartItemChanged   }
                 cartItemsInfo={this.state.cartItemsInfo} />
       </div>
     );

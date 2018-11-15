@@ -31,7 +31,9 @@ class OrderPage extends Component {
     }
 
   getTotalPrice() {
+      if (this.props.cartItems.length < 1) return 0;
       if (this.props.cartItemsInfo.length < 1) return 0;
+      if (this.props.cartItemsInfo.length != this.props.cartItems.length) return 0;
       let price = 0;
       for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
           price += this.props.cartItemsInfo[i].pricePln * this.props.cartItems[i].productAmount;
