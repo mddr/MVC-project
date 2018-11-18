@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import { Button, Glyphicon, InputGroup, FormControl } from "react-bootstrap";
 
 import AuthService from "../services/AuthService";
+import CartService from "../services/CartService";
 
 class ProductPage extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class ProductPage extends Component {
     };
 
     this.Auth = new AuthService();
+    this.CartService = new CartService();
     this.fetchData = this.fetchData.bind(this);
     this.buyNow = this.buyNow.bind(this);
     this.addToCart = this.addToCart.bind(this);
@@ -46,19 +48,16 @@ class ProductPage extends Component {
       });
   }
 
-  addToCart() {
-    let body = "";
-    const obj = {
-      productId: this.state.id,
-      productAmount: this.state.count
-    };
-
-    body = JSON.stringify(obj);
-
-    this.Auth.fetch(`${this.Auth.domain}/cart/add`, {
-      method: "post",
-      body
-    }).then(() => window.location.reload());
+    addToCart() {
+        for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
+            if (this.props.cartItemsInfo[i].id === this.state.id) {
+                this.CartService.updateItem(this.state.id, this.state.count + this.props.cartItems[i].productAmount)
+                    .then(() => window.location.reload());
+                return;
+            }
+        }
+    this.CartService.addItem(this.state.id, this.state.count)
+        .then(() => window.location.reload());
   }
 
   validate() {
