@@ -51,15 +51,11 @@ class Cart extends Component {
   subtractValue = id => {
       let cartElement = this.props.cartItems.find(elem => elem.productId === id);
       cartElement.productAmount--;
-      //TODO handle in app.js componentDidUpdate() -> remove from local dataset
-      //if (cartElement.productAmount < 1) {
-      //    this.CartService.removeItem(cartElement.productId);
-      //}
     this.CartService.updateItem(
       cartElement.productId,
       cartElement.productAmount
     ).then(() => {
-        this.props.cartItemsChanged();
+        this.props.cartItemChanged(cartElement);
     });
   };
 
@@ -111,14 +107,14 @@ class Cart extends Component {
               }*/
               />
             <InputGroup.Button>
-                <Button onClick={() => this.subtractValue(item.productId)}>
+                <Button onClick={() => this.subtractValue(item.productId)} disabled={item.productAmount < 2}>
                   <Glyphicon glyph="chevron-down" />
                 </Button>
               </InputGroup.Button>
             </InputGroup>
           </div>
-          <a href="">
-            <Glyphicon glyph="trash" style={{ color: "red" }} />
+              <a href="">
+                  <Glyphicon glyph="trash" style={{ color: "red" }} onClick={() => this.CartService.removeItem(item.productId)} />
           </a>
         </div>
       );
