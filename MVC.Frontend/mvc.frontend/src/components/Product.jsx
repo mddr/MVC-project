@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import "./Product.css";
 
 class Product extends Component {
-  extractUnits = price => {
-    return Math.floor(price);
+  extractUnits = (price, discount) => {
+    price = discount ? price - (discount * price) / 100 : price;
+    return Math.floor(price, discount);
   };
 
   extractDecimals = price => {
@@ -19,13 +20,16 @@ class Product extends Component {
 
     return (
       <div className="product thumbnail">
-        <img
-          src={"data:image/jpeg;base64," + this.props.imageBase64}
-          alt={this.props.name}
-        />
+        <div className="productimage">
+          {discount ? <div className="discount"> P R O M O C J A </div> : ""}
+          <img
+            src={"data:image/jpeg;base64," + this.props.imageBase64}
+            alt={this.props.name}
+          />
+        </div>
         <div className="namebox">{name}</div>
         <div className="pricebox">
-          <span className="units">{this.extractUnits(price)}</span>
+          <span className="units">{this.extractUnits(price, discount)}</span>
           <span className="decimals">{this.extractDecimals(price)}</span>
         </div>
       </div>

@@ -27,35 +27,40 @@ class Cart extends Component {
   getTotalPrice() {
     if (this.props.cartItems.length < 1) return 0;
     if (this.props.cartItemsInfo.length < 1) return 0;
-    if (this.props.cartItemsInfo.length != this.props.cartItems.length) return 0;
+    if (this.props.cartItemsInfo.length != this.props.cartItems.length)
+      return 0;
     let price = 0;
     for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
       price +=
         this.props.cartItemsInfo[i].pricePln *
-        this.props.cartItems[i].productAmount;
+          this.props.cartItems[i].productAmount -
+        (this.props.cartItemsInfo[i].discount *
+          this.props.cartItemsInfo[i].pricePln *
+          this.props.cartItems[i].productAmount) /
+          100;
     }
     return price;
   }
 
   addValue = id => {
-      let cartElement = this.props.cartItems.find(elem => elem.productId === id);
-      cartElement.productAmount++;
-      this.CartService.updateItem(
-          cartElement.productId,
-          cartElement.productAmount
-      ).then(() => {
-          this.props.cartItemChanged(cartElement);
-      });
-  };
-
-  subtractValue = id => {
-      let cartElement = this.props.cartItems.find(elem => elem.productId === id);
-      cartElement.productAmount--;
+    let cartElement = this.props.cartItems.find(elem => elem.productId === id);
+    cartElement.productAmount++;
     this.CartService.updateItem(
       cartElement.productId,
       cartElement.productAmount
     ).then(() => {
-        this.props.cartItemChanged(cartElement);
+      this.props.cartItemChanged(cartElement);
+    });
+  };
+
+  subtractValue = id => {
+    let cartElement = this.props.cartItems.find(elem => elem.productId === id);
+    cartElement.productAmount--;
+    this.CartService.updateItem(
+      cartElement.productId,
+      cartElement.productAmount
+    ).then(() => {
+      this.props.cartItemChanged(cartElement);
     });
   };
 
@@ -83,13 +88,18 @@ class Cart extends Component {
           </span>
           <span style={{ width: "50px" }}>
             {Math.round(
-              this.props.cartItemsInfo[i].pricePln * item.productAmount * 100
+              (this.props.cartItemsInfo[i].pricePln * item.productAmount -
+                (this.props.cartItemsInfo[i].discount *
+                  this.props.cartItemsInfo[i].pricePln *
+                  this.props.cartItems[i].productAmount) /
+                  100) *
+                100
             ) / 100}
             zł
           </span>
           <div className="cart-amount-picker">
             <InputGroup style={{ margin: "auto" }}>
-                <InputGroup.Button>
+              <InputGroup.Button>
                 <Button onClick={() => this.addValue(item.productId)}>
                   <Glyphicon glyph="chevron-up" />
                 </Button>
@@ -106,15 +116,22 @@ class Cart extends Component {
                 }
               }*/
               />
-            <InputGroup.Button>
-                <Button onClick={() => this.subtractValue(item.productId)} disabled={item.productAmount < 2}>
+              <InputGroup.Button>
+                <Button
+                  onClick={() => this.subtractValue(item.productId)}
+                  disabled={item.productAmount < 2}
+                >
                   <Glyphicon glyph="chevron-down" />
                 </Button>
               </InputGroup.Button>
             </InputGroup>
           </div>
-              <a href="">
-                  <Glyphicon glyph="trash" style={{ color: "red" }} onClick={() => this.CartService.removeItem(item.productId)} />
+          <a href="">
+            <Glyphicon
+              glyph="trash"
+              style={{ color: "red" }}
+              onClick={() => this.CartService.removeItem(item.productId)}
+            />
           </a>
         </div>
       );

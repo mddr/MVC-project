@@ -12,6 +12,21 @@
   flex-basis: 60%;
 }
 
+.productimage {
+  position: relative;
+}
+
+.discount {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: #ff5a00;
+  font-weight: 600;
+  color: white;
+  border-radius: 2px;
+}
+
 .namebox {
   font-size: 17px;
   background-color: azure;

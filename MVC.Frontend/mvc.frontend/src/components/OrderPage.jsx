@@ -10,77 +10,94 @@ import AddressService from "../services/AddressService";
 import OrderService from "../services/OrderService";
 
 class OrderPage extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            totalPrice: 0,
-            street: "",
-            houseNumber: "",
-            postalCode: "",
-            city: "",
-        };
-        this.getTotalPrice = this.getTotalPrice.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.placeOrder = this.placeOrder.bind(this);
-        this.renderItems = this.renderItems.bind(this);
-        this.CartService = new CartService();
-        this.ProductService = new ProductService();
-        this.AddressService = new AddressService();
-        this.OrderService = new OrderService();
-    }
-
-  getTotalPrice() {
-      if (this.props.cartItems.length < 1) return 0;
-      if (this.props.cartItemsInfo.length < 1) return 0;
-      if (this.props.cartItemsInfo.length != this.props.cartItems.length) return 0;
-      let price = 0;
-      for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
-          price += this.props.cartItemsInfo[i].pricePln * this.props.cartItems[i].productAmount;
-      }
-      return price;
+  constructor(props) {
+    super(props);
+    this.state = {
+      totalPrice: 0,
+      street: "",
+      houseNumber: "",
+      postalCode: "",
+      city: ""
+    };
+    this.getTotalPrice = this.getTotalPrice.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.placeOrder = this.placeOrder.bind(this);
+    this.renderItems = this.renderItems.bind(this);
+    this.CartService = new CartService();
+    this.ProductService = new ProductService();
+    this.AddressService = new AddressService();
+    this.OrderService = new OrderService();
   }
 
-    placeOrder() {
-        this.AddressService.addAddres(
-            this.state.city,
-            this.state.postalCode,
-            this.state.street,
-            this.state.houseNumber
-        ).then(() => {
-                this.OrderService.order();
-            }).then(() => window.location.reload());
+  getTotalPrice() {
+    if (this.props.cartItems.length < 1) return 0;
+    if (this.props.cartItemsInfo.length < 1) return 0;
+    if (this.props.cartItemsInfo.length != this.props.cartItems.length)
+      return 0;
+    let price = 0;
+    for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
+      price +=
+        (this.props.cartItemsInfo[i].pricePln -
+          (this.props.cartItemsInfo[i].discount *
+            this.props.cartItemsInfo[i].pricePln) /
+            100) *
+        this.props.cartItems[i].productAmount;
     }
-	
-	handleChange = event => {
-        this.setState({
-            [event.target.id]: event.target.value
-        });
-    };
-    renderItems() {
-        if (this.props.cartItems.length < 1) return;
-        if (this.props.cartItemsInfo.length < 1) return;
-        if (this.props.cartItemsInfo.length != this.props.cartItems.length) return;
-        let items = [];
-      this.props.cartItems.map((item, i) => {
-        items.push(
-            <div className="item">
-              <img
-                    src={"data:image/jpeg;base64," + this.props.cartItemsInfo[i].imageBase64}
-                    alt={this.props.cartItemsInfo[i].name}
-                height="64"
-                width="64"
-              />
-              <span className="namespan">
-                {item.productAmount} x {this.props.cartItemsInfo[i].name}
-              </span>
-              <span>
-                {Math.round(this.props.cartItemsInfo[i].pricePln * item.productAmount * 100) / 100}
-                zł
-              </span>
-              <span />
-            </div>
-          );
+    return price;
+  }
+
+  placeOrder() {
+    this.AddressService.addAddres(
+      this.state.city,
+      this.state.postalCode,
+      this.state.street,
+      this.state.houseNumber
+    )
+      .then(() => {
+        this.OrderService.order();
+      })
+      .then(() => window.location.reload());
+  }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
+  };
+  renderItems() {
+    if (this.props.cartItems.length < 1) return;
+    if (this.props.cartItemsInfo.length < 1) return;
+    if (this.props.cartItemsInfo.length != this.props.cartItems.length) return;
+    let items = [];
+    this.props.cartItems.map((item, i) => {
+      items.push(
+        <div className="item">
+          <img
+            src={
+              "data:image/jpeg;base64," +
+              this.props.cartItemsInfo[i].imageBase64
+            }
+            alt={this.props.cartItemsInfo[i].name}
+            height="64"
+            width="64"
+          />
+          <span className="namespan">
+            {item.productAmount} x {this.props.cartItemsInfo[i].name}
+          </span>
+          <span>
+            {Math.round(
+              (this.props.cartItemsInfo[i].pricePln -
+                (this.props.cartItemsInfo[i].discount *
+                  this.props.cartItemsInfo[i].pricePln) /
+                  100) *
+                item.productAmount *
+                100
+            ) / 100}
+            zł
+          </span>
+          <span />
+        </div>
+      );
     });
 
     return items;
@@ -110,44 +127,61 @@ class OrderPage extends Component {
         </div>
         <div className="shippinginfo">
           <p>Dane wysyłki:</p>
-                <hr style={{ width: "95%" }} />
-                    <FormGroup style={{ margin: "auto", width: "80%" }} controlId="street">
-                        <FormControl
-                                value={this.state.street}
-                                onChange={this.handleChange}
-                                type="street"
-                                name="steet"
-                                placeholder="Ulica" />
-                    </FormGroup>
-                    <FormGroup style={{ margin: "auto", width: "80%" }} controlId="houseNumber">
-                            <FormControl
-                                value={this.state.houseNumber}
-                                onChange={this.handleChange}
-                                type="houseNumber"
-                            name="houseNumber" placeholder="Numer domu" />
-                    </FormGroup>
-                    <FormGroup style={{ margin: "auto", width: "80%" }} controlId="city">
-                            <FormControl
-                                value={this.state.city}
-                                onChange={this.handleChange}
-                                type="city"
-                            name="city" placeholder="Miasto " />
-                    </FormGroup>
-                    <FormGroup style={{ margin: "auto", width: "80%" }} controlId="postalCode">
-                            <FormControl
-                                value={this.state.postalCode}
-                                onChange={this.handleChange}
-                                type="postalCode"
-                            name="postalCode" placeholder="Kod pocztowy" />
-                    </FormGroup>
+          <hr style={{ width: "95%" }} />
+          <FormGroup
+            style={{ margin: "auto", width: "80%" }}
+            controlId="street"
+          >
+            <FormControl
+              value={this.state.street}
+              onChange={this.handleChange}
+              type="street"
+              name="steet"
+              placeholder="Ulica"
+            />
+          </FormGroup>
+          <FormGroup
+            style={{ margin: "auto", width: "80%" }}
+            controlId="houseNumber"
+          >
+            <FormControl
+              value={this.state.houseNumber}
+              onChange={this.handleChange}
+              type="houseNumber"
+              name="houseNumber"
+              placeholder="Numer domu"
+            />
+          </FormGroup>
+          <FormGroup style={{ margin: "auto", width: "80%" }} controlId="city">
+            <FormControl
+              value={this.state.city}
+              onChange={this.handleChange}
+              type="city"
+              name="city"
+              placeholder="Miasto "
+            />
+          </FormGroup>
+          <FormGroup
+            style={{ margin: "auto", width: "80%" }}
+            controlId="postalCode"
+          >
+            <FormControl
+              value={this.state.postalCode}
+              onChange={this.handleChange}
+              type="postalCode"
+              name="postalCode"
+              placeholder="Kod pocztowy"
+            />
+          </FormGroup>
 
-                <Button
-                    onClick={this.placeOrder}
-                      bsStyle="buyButton"
-                      bsSize="large"
-                      style={{ marginTop: 18 }}>
-                    <Glyphicon glyph="shopping-cart" /> Kup
-                    </Button>
+          <Button
+            onClick={this.placeOrder}
+            bsStyle="buyButton"
+            bsSize="large"
+            style={{ marginTop: 18 }}
+          >
+            <Glyphicon glyph="shopping-cart" /> Kup
+          </Button>
         </div>
       </div>
     );

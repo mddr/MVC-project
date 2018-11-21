@@ -13,6 +13,7 @@ class ProductPage extends Component {
 
     this.state = {
       pricePln: -1,
+      discount: 0,
       name: "",
       description: "",
       boughtTimes: -1,
@@ -39,6 +40,7 @@ class ProductPage extends Component {
       .then(res => {
         this.setState({
           pricePln: res.pricePln,
+          discount: res.discount,
           name: res.name,
           description: res.description,
           boughtTimes: res.boughtTimes,
@@ -48,16 +50,19 @@ class ProductPage extends Component {
       });
   }
 
-    addToCart() {
-        for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
-            if (this.props.cartItemsInfo[i].id === this.state.id) {
-                this.CartService.updateItem(this.state.id, this.state.count + this.props.cartItems[i].productAmount)
-                    .then(() => window.location.reload());
-                return;
-            }
-        }
-    this.CartService.addItem(this.state.id, this.state.count)
-        .then(() => window.location.reload());
+  addToCart() {
+    for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
+      if (this.props.cartItemsInfo[i].id === this.state.id) {
+        this.CartService.updateItem(
+          this.state.id,
+          this.state.count + this.props.cartItems[i].productAmount
+        ).then(() => window.location.reload());
+        return;
+      }
+    }
+    this.CartService.addItem(this.state.id, this.state.count).then(() =>
+      window.location.reload()
+    );
   }
 
   validate() {
@@ -70,11 +75,14 @@ class ProductPage extends Component {
   }
 
   extractUnits = price => {
-    return Math.floor(price);
+    return Math.floor(price - (this.state.discount * price) / 100);
   };
 
   extractDecimals = price => {
-    let decimals = "" + Math.round((price % 1) * 100) / 100;
+    let decimals =
+      "" +
+      Math.round(((price - (this.state.discount * price) / 100) % 1) * 100) /
+        100;
     decimals = decimals.substr(1);
     if (decimals.length === 2) decimals += "0";
     return decimals;
@@ -85,7 +93,6 @@ class ProductPage extends Component {
       const count = this.state.count + 1;
       this.setState({ count });
     };
-
     const subtractValue = () => {
       const count = this.state.count > 1 ? this.state.count - 1 : 1;
       this.setState({ count });
@@ -115,6 +122,21 @@ class ProductPage extends Component {
 
             <div className="priceAndButtonsWrapper">
               <div className="productPrice">
+                {this.state.discount ? (
+                  <div
+                    style={{
+                      textDecoration: "line-through",
+                      fontSize: "20px",
+                      color: "darkgrey",
+                      fontWeight: "400",
+                      margin: "0"
+                    }}
+                  >
+                    {this.state.pricePln}zł
+                  </div>
+                ) : (
+                  ""
+                )}
                 <span className="unitsPriceValue">
                   {this.extractUnits(this.state.pricePln)}
                 </span>
