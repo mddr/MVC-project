@@ -7,6 +7,7 @@ import Register from "./components/Register";
 import AdminPanel from "./components/AdminPanel";
 import ProductPage from "./components/ProductPage";
 import OrderPage from "./components/OrderPage";
+import SearchResultsPage from "./components/SearchResultsPage";
 import ConfirmEmailPage from "./components/ConfirmEmailPage";
 import RequireEmail from "./components/RequireEmail";
 
@@ -40,6 +41,7 @@ class Routes extends Component {
             />
           )}
         />
+        <Route exact path="/search-results" component={SearchResultsPage} />
         <Route exact path="/email-confirmed" component={ConfirmEmailPage} />
         <Route exact path="/email-require" component={RequireEmail} />
       </Switch>
