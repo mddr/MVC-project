@@ -25,6 +25,9 @@ class Product extends Component {
           <img
             src={"data:image/jpeg;base64," + this.props.imageBase64}
             alt={this.props.name}
+            style={{
+              flexBasis: "60%"
+            }}
           />
         </div>
         <div className="namebox">{name}</div>

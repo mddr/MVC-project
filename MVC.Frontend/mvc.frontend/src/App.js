@@ -19,13 +19,15 @@ class App extends Component {
     this.state = {
       cartItems: [],
       cartItemsInfo: [],
-      cartItemChanged: -1
+      cartItemChanged: -1,
+      searchInput: ""
     };
     this.CartService = new CartService();
     this.ProductService = new ProductService();
     this.loadCart = this.loadCart.bind(this);
     this.cartItemChanged = this.cartItemChanged.bind(this);
   }
+
   componentDidMount() {
     this.loadCart();
   }
@@ -46,9 +48,6 @@ class App extends Component {
     }
   }
 
-  metoda() {
-    alert("Alert kurwa!");
-  }
   cartItemChanged(item) {
     this.setState({
       cartItemChanged: item
@@ -88,27 +87,28 @@ class App extends Component {
     auth.logout();
     await window.location.reload();
   }
-  handleSearch() {
-    //this.props.history.replace("/searchresults");
-  }
 
   render() {
     const isUserLogged = auth.loggedInWithRefresh();
+    const searchBox = (
+      <Navbar.Form pullLeft>
+        <FormControl
+          id="search_input"
+          type="text"
+          placeholder="Wpisz nazwę..."
+          style={{ margin: "auto", width: "25em" }}
+          onChange={e => this.setState({ searchInput: e.target.value })}
+        />{" "}
+        <Link to="/search-results">
+          <Button style={{ margin: "auto" }}>Szukaj</Button>
+        </Link>
+      </Navbar.Form>
+    );
     let loginControl;
     if (!isUserLogged) {
       loginControl = (
         <Navbar.Collapse>
-          <Navbar.Form pullLeft>
-            <FormControl
-              id="search_input"
-              type="text"
-              placeholder="Wpisz nazwę..."
-              style={{ margin: "auto", width: "25em" }}
-            />{" "}
-            <Button style={{ margin: "auto" }} onClick={null}>
-              Szukaj
-            </Button>
-          </Navbar.Form>
+          {searchBox}
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
               <Cart
@@ -129,6 +129,7 @@ class App extends Component {
     } else {
       loginControl = (
         <Navbar.Collapse>
+          {searchBox}
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
               <Cart
@@ -162,6 +163,7 @@ class App extends Component {
           cartItems={this.state.cartItems}
           cartItemChanged={this.cartItemChanged}
           cartItemsInfo={this.state.cartItemsInfo}
+          searchInput={this.state.searchInput}
         />
       </div>
     );

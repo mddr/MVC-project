@@ -9,8 +9,8 @@ class SearchResultsPage extends Component {
     super(props);
     this.state = {
       Products: [],
-      categories: [],
-      keyword: "k"
+      categories: []
+      // todo: dostawać keyword z inputa
     };
     this.Auth = new AuthService();
   }
@@ -36,8 +36,9 @@ class SearchResultsPage extends Component {
   }
 
   render() {
+    const keyword = this.props.searchInput;
     const results = this.state.Products.filter(product =>
-      product.name.toLowerCase().includes(this.state.keyword)
+      product.name.toLowerCase().includes(keyword)
     ).map(product => (
       <Link to={`/product/${product.id}`}>
         <Product
@@ -53,7 +54,7 @@ class SearchResultsPage extends Component {
     return (
       <div className="searchresults">
         <div className="banner">{}</div>
-        <div className="side">{}</div>
+        <div className="side">{this.props.searchInput}</div>
         <div className="results">{results}</div>
       </div>
     );

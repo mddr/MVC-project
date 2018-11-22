@@ -41,7 +41,16 @@ class Routes extends Component {
             />
           )}
         />
-        <Route exact path="/search-results" component={SearchResultsPage} />
+        <Route
+          exact
+          path="/search-results"
+          render={props => (
+            <SearchResultsPage
+              {...props}
+              searchInput={this.props.searchInput}
+            />
+          )}
+        />
         <Route exact path="/email-confirmed" component={ConfirmEmailPage} />
         <Route exact path="/email-require" component={RequireEmail} />
       </Switch>
