@@ -1,4 +1,7 @@
+import "./SearchResultsPage.css";
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import Product from "./Product";
 import AuthService from "../services/AuthService";
 
 class SearchResultsPage extends Component {
@@ -6,7 +9,8 @@ class SearchResultsPage extends Component {
     super(props);
     this.state = {
       Products: [],
-      categories: []
+      categories: [],
+      keyword: "k"
     };
     this.Auth = new AuthService();
   }
@@ -32,7 +36,27 @@ class SearchResultsPage extends Component {
   }
 
   render() {
-    return <div className="search_results">TEST</div>;
+    const results = this.state.Products.filter(product =>
+      product.name.toLowerCase().includes(this.state.keyword)
+    ).map(product => (
+      <Link to={`/product/${product.id}`}>
+        <Product
+          key={product.id}
+          imageBase64={product.imageBase64}
+          discount={product.discount}
+          name={product.name}
+          price={product.pricePln}
+        />
+      </Link>
+    ));
+
+    return (
+      <div className="searchresults">
+        <div className="banner">{}</div>
+        <div className="side">{}</div>
+        <div className="results">{results}</div>
+      </div>
+    );
   }
 }
 
