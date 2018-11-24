@@ -20,7 +20,8 @@ class App extends Component {
       cartItems: [],
       cartItemsInfo: [],
       cartItemChanged: -1,
-      searchInput: ""
+      searchInput: "",
+      user: { firstName: "Zilean" }
     };
     this.CartService = new CartService();
     this.ProductService = new ProductService();
@@ -88,6 +89,8 @@ class App extends Component {
     await window.location.reload();
   }
 
+  handleInput;
+
   render() {
     const isUserLogged = auth.loggedInWithRefresh();
     const searchBox = (
@@ -100,7 +103,9 @@ class App extends Component {
           onChange={e => this.setState({ searchInput: e.target.value })}
         />{" "}
         <Link to="/search-results">
-          <Button style={{ margin: "auto" }}>Szukaj</Button>
+          <Button type="submit" style={{ margin: "auto" }}>
+            Szukaj
+          </Button>
         </Link>
       </Navbar.Form>
     );
@@ -139,6 +144,9 @@ class App extends Component {
               />
             </NavItem>
             <Nav pullRight>
+              <LinkContainer to="/user">
+                <NavItem>Cześć {this.state.user.firstName}!</NavItem>
+              </LinkContainer>
               <NavItem onClick={this.handleLogout.bind(this)}>
                 Wyloguj się
               </NavItem>

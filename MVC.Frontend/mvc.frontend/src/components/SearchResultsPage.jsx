@@ -10,7 +10,6 @@ class SearchResultsPage extends Component {
     this.state = {
       Products: [],
       categories: []
-      // todo: dostawać keyword z inputa
     };
     this.Auth = new AuthService();
   }
@@ -38,7 +37,7 @@ class SearchResultsPage extends Component {
   render() {
     const keyword = this.props.searchInput;
     const results = this.state.Products.filter(product =>
-      product.name.toLowerCase().includes(keyword)
+      product.name.toLowerCase().includes(keyword.toLowerCase())
     ).map(product => (
       <Link to={`/product/${product.id}`}>
         <Product
@@ -53,9 +52,19 @@ class SearchResultsPage extends Component {
 
     return (
       <div className="searchresults">
-        <div className="banner">{}</div>
-        <div className="side">{this.props.searchInput}</div>
-        <div className="results">{results}</div>
+        <div className="banner" />
+        <div className="side">{}</div>
+        <div className="results">
+          {keyword ? (
+            <h2 style={{ textAlign: "left", marginLeft: "20px" }}>
+              Wyniki wyszukiwania dla <i>"{this.props.searchInput}"</i>:
+            </h2>
+          ) : (
+            ""
+          )}
+          <hr />
+          {results}
+        </div>
       </div>
     );
   }

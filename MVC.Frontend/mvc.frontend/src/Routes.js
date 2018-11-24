@@ -10,6 +10,7 @@ import OrderPage from "./components/OrderPage";
 import SearchResultsPage from "./components/SearchResultsPage";
 import ConfirmEmailPage from "./components/ConfirmEmailPage";
 import RequireEmail from "./components/RequireEmail";
+import UserPanel from "./components/UserPanel";
 
 class Routes extends Component {
   render() {
@@ -53,6 +54,7 @@ class Routes extends Component {
         />
         <Route exact path="/email-confirmed" component={ConfirmEmailPage} />
         <Route exact path="/email-require" component={RequireEmail} />
+        <Route exact path="/user" component={UserPanel} />
       </Switch>
     );
   }
