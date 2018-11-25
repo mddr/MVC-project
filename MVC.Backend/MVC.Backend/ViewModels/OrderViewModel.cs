@@ -12,6 +12,8 @@ namespace MVC.Backend.ViewModels
         public int? AddressId { get; set; }
 
         public double TotalPrice { get; set; }
+        
+        public DateTime CreatedAt { get; set; }
 
         public OrderViewModel()
         {
@@ -23,6 +25,7 @@ namespace MVC.Backend.ViewModels
             UserId = order.UserId;
             AddressId = order.AddressId;
             TotalPrice = order.TotalPrice;
+            CreatedAt = order.CreatedAt;
         }
 
         public static List<OrderViewModel> ToList(List<Order> orders)

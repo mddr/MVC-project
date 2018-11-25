@@ -47,14 +47,14 @@ class OrderPage extends Component {
   }
 
   placeOrder() {
-    this.AddressService.addAddres(
+    this.AddressService.add(
       this.state.city,
       this.state.postalCode,
       this.state.street,
       this.state.houseNumber
     )
       .then(() => {
-        this.OrderService.order();
+        this.OrderService.add();
       })
       .then(() => window.location.reload());
   }
