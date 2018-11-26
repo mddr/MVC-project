@@ -12,56 +12,61 @@ import {
   Radio,
   Button
 } from "react-bootstrap";
+import OrderService from "../services/OrderService";
 
 class UserPanel extends Component {
   //todo dodać get i post state'a
-  state = {
-    currentUserInfo: {
-      id: 0,
-      emailConfirmed: true,
-      firstName: "",
-      lastName: "",
-      address: {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentUserInfo: {
         id: 0,
-        city: "",
-        postalCode: "",
-        street: "",
-        houseNumber: ""
+        emailConfirmed: true,
+        firstName: "",
+        lastName: "",
+        address: {
+          id: 0,
+          city: "",
+          postalCode: "",
+          street: "",
+          houseNumber: ""
+        },
+        currency: "",
+        prefersNetPrice: null,
+        acceptsNewsletters: true,
+        productsPerPage: 0
       },
-      currency: "",
-      prefersNetPrice: null,
-      acceptsNewsletters: true,
-      productsPerPage: 0
-    },
-    Orders: [
-      {
-        shoppingCart: [
-          {
-            productId: "e1f22019-c191-49df-95f4-e110f986ee39",
-            productAmount: 2
-          },
-          {
-            productId: "afcc9a77-9cd2-475e-9b4a-f21d5e5b16a0",
-            productAmount: 1
-          }
-        ],
-        totalPrice: 850,
-        createdAt: new Date()
-      },
-      {
-        shoppingCart: [
-          {
-            productId: "e1f22019-c191-49df-95f4-e110f986ee39",
-            productAmount: 4
-          }
-        ],
-        totalPrice: 1200,
-        createdAt: new Date()
-      }
-    ]
-  };
+      Orders: [
+        {
+          shoppingCart: [
+            {
+              productId: "e1f22019-c191-49df-95f4-e110f986ee39",
+              productAmount: 2
+            },
+            {
+              productId: "afcc9a77-9cd2-475e-9b4a-f21d5e5b16a0",
+              productAmount: 1
+            }
+          ],
+          totalPrice: 850,
+          createdAt: new Date().toLocaleDateString()
+        },
+        {
+          shoppingCart: [
+            {
+              productId: "e1f22019-c191-49df-95f4-e110f986ee39",
+              productAmount: 4
+            }
+          ],
+          totalPrice: 1200,
+          createdAt: new Date().toLocaleDateString()
+        }
+      ]
+    };
+    this.OrderService = new OrderService();
+  }
+
   componentDidMount() {
-    console.log(this.props.userInfo);
     this.setState({ currentUserInfo: this.props.userInfo });
   }
 
@@ -236,13 +241,26 @@ class UserPanel extends Component {
             <hr />
             {this.state.Orders.map(order => (
               <div className="orderitems">
+                <h3>Zamówienie nr {this.state.Orders.indexOf(order) + 1}</h3>
                 {order.shoppingCart.map(item => (
                   <div className="orderitem">
-                    {item.productId} {item.productAmount}
+                    <label>ID produktu: </label>
+                    {item.productId} <br />
+                    <label>Ilość porduktu: </label>
+                    {item.productAmount}
+                    <br />
                   </div>
                 ))}
-                <div className="totalprice">{order.totalPrice}</div>
-                <div className="orderdate">{order.createdAt.toString()}</div>
+                <div className="totalprice">
+                  <label>Całkowita cena: </label>
+                  {order.totalPrice}
+                  <br />
+                </div>
+                <div className="orderdate">
+                  <label>Data dokonania zakupu: </label>
+                  {order.createdAt.toString()}
+                  <br />
+                </div>
                 <hr />
               </div>
             ))}
