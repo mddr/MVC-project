@@ -16,19 +16,22 @@ import {
 class UserPanel extends Component {
   //todo dodać get i post state'a
   state = {
-    currentUser: {
-      firstName: "Czarek",
-      lastName: "Szmurło",
-      email: "sznurek05@gmail.com",
-      prefersNetPrice: true,
-      acceptsNewsletter: false,
-      productsPerPage: 10,
+    currentUserInfo: {
+      id: 0,
+      emailConfirmed: true,
+      firstName: "",
+      lastName: "",
       address: {
-        city: "Białystok",
-        postalCode: "15-333",
-        street: "Zwierzyniecka",
-        houseNumber: 14
-      }
+        id: 0,
+        city: "",
+        postalCode: "",
+        street: "",
+        houseNumber: ""
+      },
+      currency: "",
+      prefersNetPrice: null,
+      acceptsNewsletters: true,
+      productsPerPage: 0
     },
     Orders: [
       {
@@ -57,11 +60,17 @@ class UserPanel extends Component {
       }
     ]
   };
+  componentDidMount() {
+    console.log(this.props.userInfo);
+    this.setState({ currentUserInfo: this.props.userInfo });
+  }
 
   render() {
-    let tempUser = { ...this.state.currentUser };
+    let tempUser = { ...this.state.currentUserInfo };
 
     const regexPostalCode = () => {
+      if (!tempUser.address) return "error";
+
       if (/\d{2}-\d{3}/.test(tempUser.address.postalCode)) return null;
       else return "error";
     };
@@ -78,7 +87,7 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="text"
-                    defaultValue={this.state.currentUser.firstName}
+                    defaultValue={this.state.currentUserInfo.firstName}
                     onChange={e => (tempUser.firstName = e.target.value)}
                   />
                 </Col>
@@ -90,7 +99,7 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="text"
-                    defaultValue={this.state.currentUser.lastName}
+                    defaultValue={this.state.currentUserInfo.lastName}
                     onChange={e => (tempUser.lastName = e.target.value)}
                   />
                 </Col>
@@ -102,7 +111,11 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="text"
-                    defaultValue={this.state.currentUser.address.city}
+                    defaultValue={
+                      this.state.currentUserInfo.address
+                        ? this.state.currentUserInfo.address.city
+                        : ""
+                    }
                     onChange={e => (tempUser.address.city = e.target.value)}
                   />
                 </Col>
@@ -117,7 +130,11 @@ class UserPanel extends Component {
                     onChange={e => {
                       tempUser.address.postalCode = e.target.value;
                     }}
-                    defaultValue={this.state.currentUser.address.postalCode}
+                    defaultValue={
+                      this.state.currentUserInfo.address
+                        ? this.state.currentUserInfo.address.postalCode
+                        : ""
+                    }
                   />
                 </Col>
               </FormGroup>
@@ -128,7 +145,11 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="text"
-                    defaultValue={this.state.currentUser.address.street}
+                    defaultValue={
+                      this.state.currentUserInfo.address
+                        ? this.state.currentUserInfo.address.street
+                        : ""
+                    }
                     onChange={e => (tempUser.address.street = e.target.value)}
                   />
                 </Col>
@@ -140,7 +161,11 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="number"
-                    defaultValue={this.state.currentUser.address.houseNumber}
+                    defaultValue={
+                      this.state.currentUserInfo.address
+                        ? this.state.currentUserInfo.address.houseNumber
+                        : ""
+                    }
                     onChange={e =>
                       (tempUser.address.houseNumber = e.target.value)
                     }
@@ -154,7 +179,7 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="number"
-                    defaultValue={this.state.currentUser.productsPerPage}
+                    defaultValue={this.state.currentUserInfo.productsPerPage}
                     onChange={e => (tempUser.productsPerPage = e.target.value)}
                   />
                 </Col>
@@ -173,9 +198,11 @@ class UserPanel extends Component {
                 <FormGroup>
                   <ControlLabel>Akceptujesz nasz newsletter</ControlLabel>
                   <Checkbox
-                    defaultChecked={this.state.currentUser.acceptsNewsletter}
+                    defaultChecked={
+                      this.state.currentUserInfo.acceptsNewsletters
+                    }
                     onChange={e =>
-                      (tempUser.acceptsNewsletter = e.target.checked)
+                      (tempUser.acceptsNewsletters = e.target.checked)
                     }
                   />
                 </FormGroup>
@@ -183,21 +210,23 @@ class UserPanel extends Component {
                   <ControlLabel>Preferowane wyświetlanie ceny</ControlLabel>
                   <Radio
                     name="radioGroup"
-                    defaultChecked={this.state.currentUser.prefersNetPrice}
+                    defaultChecked={this.state.currentUserInfo.prefersNetPrice}
                     onChange={e => (tempUser.prefersNetPrice = true)}
                   >
                     Netto
                   </Radio>
                   <Radio
                     name="radioGroup"
-                    defaultChecked={!this.state.currentUser.prefersNetPrice}
+                    defaultChecked={!this.state.currentUserInfo.prefersNetPrice}
                     onChange={e => (tempUser.prefersNetPrice = false)}
                   >
                     Brutto
                   </Radio>
                 </FormGroup>
               </div>
-              <Button onClick={() => this.setState({ currentUser: tempUser })}>
+              <Button
+                onClick={() => this.setState({ currentUserInfo: tempUser })}
+              >
                 Zatwierdź
               </Button>
             </Form>

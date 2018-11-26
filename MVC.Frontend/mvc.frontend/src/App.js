@@ -17,6 +17,7 @@ import Routes from "./Routes";
 import AuthService from "./services/AuthService";
 import CartService from "./services/CartService";
 import ProductService from "./services/ProductService";
+import UserService from "./services/UserService";
 
 const auth = new AuthService();
 
@@ -28,16 +29,22 @@ class App extends Component {
       cartItemsInfo: [],
       cartItemChanged: -1,
       searchInput: "",
-      user: { firstName: "Zilean" }
+      userInfo: {}
     };
     this.CartService = new CartService();
     this.ProductService = new ProductService();
+    this.UserService = new UserService();
     this.loadCart = this.loadCart.bind(this);
     this.cartItemChanged = this.cartItemChanged.bind(this);
   }
 
   componentDidMount() {
     this.loadCart();
+    this.UserService.getUserInfo()
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ userInfo: { ...data } });
+      });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -152,7 +159,7 @@ class App extends Component {
             </NavItem>
             <Nav pullRight>
               <LinkContainer to="/user">
-                <NavItem>Cześć {this.state.user.firstName}!</NavItem>
+                <NavItem>Cześć {this.state.userInfo.firstName}!</NavItem>
               </LinkContainer>
               <NavItem onClick={this.handleLogout.bind(this)}>
                 Wyloguj się
@@ -179,6 +186,7 @@ class App extends Component {
           cartItemChanged={this.cartItemChanged}
           cartItemsInfo={this.state.cartItemsInfo}
           searchInput={this.state.searchInput}
+          userInfo={this.state.userInfo}
         />
       </div>
     );
