@@ -23,13 +23,24 @@ class OrderPage extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.placeOrder = this.placeOrder.bind(this);
     this.renderItems = this.renderItems.bind(this);
+    this.disableSubmit = this.disableSubmit.bind(this);
     this.CartService = new CartService();
     this.ProductService = new ProductService();
     this.AddressService = new AddressService();
     this.OrderService = new OrderService();
   }
 
-  getTotalPrice() {
+    componentDidMount() {
+        this.AddressService.userAddress()
+            .then(res => res.json())
+            .then(data => {
+                this.setState({
+                    ...data
+                })
+            })
+    }
+
+    getTotalPrice() {
     if (this.props.cartItems.length < 1) return 0;
     if (this.props.cartItemsInfo.length < 1) return 0;
     if (this.props.cartItemsInfo.length != this.props.cartItems.length)
@@ -46,7 +57,7 @@ class OrderPage extends Component {
     return price;
   }
 
-  placeOrder() {
+    placeOrder() {
     this.AddressService.add(
       this.state.city,
       this.state.postalCode,
@@ -59,12 +70,13 @@ class OrderPage extends Component {
       .then(() => window.location.reload());
   }
 
-  handleChange = event => {
+    handleChange = event => {
     this.setState({
       [event.target.id]: event.target.value
     });
   };
-  renderItems() {
+
+    renderItems() {
     if (this.props.cartItems.length < 1) return;
     if (this.props.cartItemsInfo.length < 1) return;
     if (this.props.cartItemsInfo.length != this.props.cartItems.length) return;
@@ -103,6 +115,13 @@ class OrderPage extends Component {
     return items;
   }
 
+    disableSubmit() {
+        return this.state.city.length < 1 ||
+            this.props.cartItems.length < 1 ||
+            this.state.postalCode.length < 1 ||
+            this.state.houseNumber.length < 1 ||
+            this.state.street.length < 1;
+    }
   render() {
     const items =
       this.props.cartItems.length > 0 ? (
@@ -175,7 +194,8 @@ class OrderPage extends Component {
           </FormGroup>
 
           <Button
-            onClick={this.placeOrder}
+                    onClick={this.placeOrder}
+                    disabled={this.disableSubmit()}
             bsStyle="buyButton"
             bsSize="large"
             style={{ marginTop: 18 }}

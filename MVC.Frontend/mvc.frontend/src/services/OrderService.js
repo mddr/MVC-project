@@ -3,7 +3,7 @@ import AuthService from "./AuthService";
 export class OrderService {
     constructor() {
         this.Auth = new AuthService();
-        this.add = this.order.bind(this)
+        this.add = this.add.bind(this)
         this.userOrders = this.order.bind(this)
         this.orders = this.orders.bind(this)
         this.order = this.order.bind(this)
