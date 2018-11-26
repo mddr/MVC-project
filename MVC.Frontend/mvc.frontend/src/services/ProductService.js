@@ -12,6 +12,15 @@ export class ProductService {
         return this.Auth.fetch(`${this.Auth.domain}/product/${id}`, null);
     }
 
+    getTop(amount) {
+        return this.Auth.fetch(`${this.Auth.domain}/products/top`, {
+            method: 'POST',
+            body: JSON.stringify({
+                amount
+            })
+        });
+    }
+
 
 
 }

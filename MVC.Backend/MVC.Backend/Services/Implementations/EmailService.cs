@@ -30,7 +30,7 @@ namespace MVC.Backend.Services
             message.Subject = "Potwierdzenie rejestracji";
 
             var token = _tokenService.GenerateConfirmationToken(address);
-            var url = @"http://" + host + "/Account/ConfirmEmail?token=" + token;
+            var url = @"http://" + host + "/Account/ConfirmEmail/" + token;
             var builder = new BodyBuilder
             {
                 TextBody = @"<p>Kliknij w poniższy link aby dokończyć rejestrację:<br></p>

@@ -85,7 +85,7 @@ namespace MVC.Backend.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> ConfirmEmail(string token)
         {
             try
