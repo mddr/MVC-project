@@ -37,6 +37,7 @@ namespace MVC.Backend.Services
                 if (product == null)
                     throw new ArgumentException($"Product not found. Id: {item.ProductId}");
                 totalPrice += product.PricePln;
+                product.BoughtTimes += item.ProductAmount;
             }
 
             var order = new Order(userId, user.AddressId, user.CartId, totalPrice, cart);
@@ -54,8 +55,17 @@ namespace MVC.Backend.Services
             var order = _context.Orders.SingleOrDefault(o => o.Id == id);
             if (order == null)
                 throw new ArgumentException();
+            var cart = order.ShoppingCart;
+            foreach (var item in cart)
+            {
+                var product = _context.Products.FirstOrDefault(p => p.Id == item.ProductId);
+                if (product == null)
+                    throw new ArgumentException($"Product not found. Id: {item.ProductId}");
+                product.BoughtTimes -= item.ProductAmount;
+            }
 
             _context.Orders.Remove(order);
+            _context.CartItems.RemoveRange(cart);
             _context.SaveChanges();
         }
 
