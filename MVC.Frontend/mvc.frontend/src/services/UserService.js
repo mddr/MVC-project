@@ -3,11 +3,8 @@ import AuthService from "./AuthService";
 export class UserService {
     constructor() {
         this.Auth = new AuthService();
-        this.add = this.add.bind(this)
-        this.getCurrentUserInfo = this.getCurrentUserInfo.bind(this)
-        this.orders = this.orders.bind(this)
-        this.order = this.order.bind(this)
-        this.delete = this.order.bind(this)
+        this.getUserInfo = this.getUserInfo.bind(this)
+        this.getUserOrders = this.getUserOrders.bind(this)
 
     }
 
@@ -18,7 +15,7 @@ export class UserService {
     }
 
     getUserOrders() {
-        return this.Auth.fetch(`${this.Auth.domain}/user/`, {
+        return this.Auth.fetch(`${this.Auth.domain}/products/history`, {
             method: 'get',
         });
     }
