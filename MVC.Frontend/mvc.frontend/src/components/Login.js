@@ -1,9 +1,9 @@
-import './Login.css';
+import "./Login.css";
 
-import React, { Component } from 'react';
-import { Button, FormControl, FormGroup, Panel } from 'react-bootstrap';
+import React, { Component } from "react";
+import { Button, FormControl, FormGroup, Panel } from "react-bootstrap";
 
-import AuthService from '../services/AuthService';
+import AuthService from "../services/AuthService";
 
 export class Login extends Component {
   constructor(props) {
@@ -37,6 +37,7 @@ export class Login extends Component {
     this.Auth.login(this.state.email, this.state.password)
       .then(() => {
         this.props.history.replace("/");
+        window.location.reload();
       })
       .catch(() => {
         //todo: change it
@@ -48,9 +49,7 @@ export class Login extends Component {
     return (
       <div className="LoginForm">
         <Panel>
-          <Panel.Heading>
-            Logowanie
-          </Panel.Heading>
+          <Panel.Heading>Logowanie</Panel.Heading>
           <form onSubmit={this.handleSubmit}>
             <FormGroup controlId="email">
               <FormControl
