@@ -24,12 +24,6 @@ export class AddressService {
         });
     }
 
-    userAddress() {
-        return this.Auth.fetch(`${this.Auth.domain}/userAddress`, {
-            method: 'get',
-        });
-    }
-
     addresses() {
         return this.Auth.fetch(`${this.Auth.domain}/addresses`, {
             method: 'get',
@@ -42,8 +36,8 @@ export class AddressService {
         });
     }
 
-    update(id) {
-        return this.Auth.fetch(`${this.Auth.domain}/address/update/${id}`, {
+    update() {
+        return this.Auth.fetch(`${this.Auth.domain}/address/update/`, {
             method: 'post',
         });
     }

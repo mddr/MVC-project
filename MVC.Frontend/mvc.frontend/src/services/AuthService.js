@@ -39,6 +39,15 @@ export class AuthService {
         })
     }
 
+    confirmMail(token) {
+        return this.fetch(`${this.domain}/account/ConfirmEmail`, {
+            method: 'POST',
+            body: JSON.stringify({
+                token
+            })
+        });
+    }
+
     loggedInWithRefresh() {
         let token = this.getToken(this.accessTokenName)
         if (!!token && this.isTokenExpired(token)) {

@@ -52,7 +52,7 @@ class Routes extends Component {
             />
           )}
         />
-        <Route exact path="/email-confirmed" component={ConfirmEmailPage} />
+        <Route exact path="/Account/ConfirmEmail/:token" component={ConfirmEmailPage} />
         <Route exact path="/email-require" component={RequireEmail} />
         <Route exact path="/user" component={UserPanel} />
       </Switch>
