@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Helpers;
 using MVC.Backend.Models;
@@ -75,6 +76,18 @@ namespace MVC.Backend.Services
 
             user.EmailConfirmed = true;
             await _context.SaveChangesAsync();
+        }
+
+        public UserViewModel GetUserData(int userId)
+        {
+            var user = _context.Users
+                .FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+                throw new ArgumentException($"User with id {userId} not found");
+            if (user.AddressId.HasValue)
+                user.Address = _context.Addresses.First(a => a.Id == user.AddressId);
+            var result = new UserViewModel(user);
+            return result;
         }
     }
 }

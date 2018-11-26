@@ -14,5 +14,6 @@ namespace MVC.Backend.Services
         Task AddUser(SignupViewModel viewModel, Enums.Roles role = Enums.Roles.User);
         Task<ObjectResult> Login(LoginViewModel viewModel);
         Task ConfirmEmail(string token);
+        UserViewModel GetUserData(int userId);
     }
 }
