@@ -1,6 +1,7 @@
 ﻿using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MVC.Backend.Services
 {
@@ -8,9 +9,8 @@ namespace MVC.Backend.Services
     {
         List<Address> GetAddresses();
         Address GetAddress(int id);
-        Address GetUserAddress(int userId);
         void AddAddress(AddressViewModel viewModel, int userId);
-        void UpdateAddress(AddressViewModel viewModel);
+        Task UpdateAddress(int userId, AddressViewModel viewModel);
         void DeleteAddress(int id);
     }
 }

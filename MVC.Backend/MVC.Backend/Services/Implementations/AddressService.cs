@@ -55,30 +55,20 @@ namespace MVC.Backend.Services
             return _context.Addresses.ToList();
         }
 
-        public Address GetUserAddress(int userId)
-        {
-            var user = _context.Users.SingleOrDefault(p => p.Id == userId);
-            if (user == null)
-                throw new ArgumentException("Invalid id");
-            var addres = _context.Addresses.SingleOrDefault(p => p.Id == user.AddressId);
-            return addres;
-        }
-
-        public void UpdateAddress(AddressViewModel viewModel)
+        public async Task UpdateAddress(int userId, AddressViewModel viewModel)
         {
             if (viewModel == null)
                 throw new ArgumentException();
 
-            var address = _context.Addresses.SingleOrDefault(p => p.Id == viewModel.Id);
-            if (address == null)
-                throw new ArgumentException();
+            var user = _context.Users.Single(u => u.Id == userId);
+            var address = _context.Addresses.Single(p => p.Id == user.AddressId);
 
             address.City = viewModel.City;
             address.PostalCode = viewModel.PostalCode;
             address.Street = viewModel.Street;
             address.HouseNumber = viewModel.HouseNumber;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

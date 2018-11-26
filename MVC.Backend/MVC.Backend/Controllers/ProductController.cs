@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,21 @@ namespace MVC.Backend.Controllers
             try
             {
                 var products = _productService.GetProducts();
+                return Ok(ProductViewModel.ToList(products));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("products/top")]
+        public IActionResult TopProducts(int amount)
+        {
+            try
+            {
+                var products = _productService.GetMostPopular(amount);
                 return Ok(ProductViewModel.ToList(products));
             }
             catch (Exception)
@@ -68,6 +84,29 @@ namespace MVC.Backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet]
+        [Route("products/history")]
+        public IActionResult GetUserHistory()
+        {
+            try
+            {
+                var userId = CurrentUserId();
+                var history = _productService.GetUserHistory(userId);
+                var results = history.Select(p => new ProductViewModel(p)).ToList();
+                return Ok(results);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        
 
         [HttpPost]
         [Route("product/add")]
@@ -129,5 +168,9 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        private int CurrentUserId()
+        {
+            return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        }
     }
 }
