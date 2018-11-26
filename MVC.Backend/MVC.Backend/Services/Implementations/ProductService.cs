@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
@@ -28,6 +29,32 @@ namespace MVC.Backend.Services
         {
             var products = _context.Products.Where(p => p.CategoryId == categoryId);
             return products.ToList();
+        }
+
+        public List<Product> GetMostPopular(int amount)
+        {
+            var products = _context.Products;
+            return products.OrderByDescending(p => p.BoughtTimes).Take(amount).ToList();
+        }
+
+        public List<Product> GetUserHistory(int userId)
+        {
+            var orders = _context.Orders.Where(o => o.UserId == userId);
+            if (!orders.Any()) return null;
+
+            var products = new List<Product>();
+            foreach (var order in orders)
+            {
+                var cart = _context.CartItems
+                    .Include("Product")
+                    .Where(c => c.Id == order.CartId);
+                foreach (var cartItem in cart)
+                {
+                    products.Add(cartItem.Product);
+                }
+            }
+
+            return products;
         }
 
         public Product GetProduct(string id)
