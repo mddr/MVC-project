@@ -159,36 +159,44 @@ class UserPanel extends Component {
                   />
                 </Col>
               </FormGroup>
-              <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
-                  Akceptujesz nasz newsletter
-                </Col>
-                <Col sm={10}>
+
+              <div
+                className="checkboxradiowrapper"
+                style={{
+                  display: "flex",
+                  direction: "row",
+                  marginTop: "25em",
+                  width: "100%",
+                  justifyContent: "space-around"
+                }}
+              >
+                <FormGroup>
+                  <ControlLabel>Akceptujesz nasz newsletter</ControlLabel>
                   <Checkbox
                     defaultChecked={this.state.currentUser.acceptsNewsletter}
                     onChange={e =>
                       (tempUser.acceptsNewsletter = e.target.checked)
                     }
                   />
-                </Col>
-              </FormGroup>
-              <FormGroup>
-                <ControlLabel>Preferowane wyświetlanie ceny</ControlLabel>
-                <Radio
-                  name="radioGroup"
-                  defaultChecked={this.state.currentUser.prefersNetPrice}
-                  onChange={e => (tempUser.prefersNetPrice = true)}
-                >
-                  Netto
-                </Radio>
-                <Radio
-                  name="radioGroup"
-                  defaultChecked={!this.state.currentUser.prefersNetPrice}
-                  onChange={e => (tempUser.prefersNetPrice = false)}
-                >
-                  Brutto
-                </Radio>
-              </FormGroup>
+                </FormGroup>
+                <FormGroup bsClass="price_radio_group">
+                  <ControlLabel>Preferowane wyświetlanie ceny</ControlLabel>
+                  <Radio
+                    name="radioGroup"
+                    defaultChecked={this.state.currentUser.prefersNetPrice}
+                    onChange={e => (tempUser.prefersNetPrice = true)}
+                  >
+                    Netto
+                  </Radio>
+                  <Radio
+                    name="radioGroup"
+                    defaultChecked={!this.state.currentUser.prefersNetPrice}
+                    onChange={e => (tempUser.prefersNetPrice = false)}
+                  >
+                    Brutto
+                  </Radio>
+                </FormGroup>
+              </div>
               <Button onClick={() => this.setState({ currentUser: tempUser })}>
                 Zatwierdź
               </Button>
