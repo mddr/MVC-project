@@ -1,6 +1,7 @@
 import "./SearchResultsPage.css";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { SideNav, Nav } from "react-sidenav";
 import Product from "./Product";
 import AuthService from "../services/AuthService";
 
@@ -33,8 +34,33 @@ class SearchResultsPage extends Component {
         });
       });
   }
+  displayCategoriesTree = parentID => {
+    // eslint-disable-next-line
+    const categories = this.state.categories.map(category => {
+      if (category.superiorCategoryId === parentID) {
+        return (
+          <Nav className="sidenavcategory" key={category.id}>
+            <a
+              href={category.link}
+              onClick={() => this.handleNavClick(category)}
+            >
+              {category.name}
+            </a>
+            {this.displayCategoriesTree(category.id)}
+          </Nav>
+        );
+      }
+    });
 
+    return categories;
+  };
+  handleNavClick = category => {
+    this.setState({
+      category: category
+    });
+  };
   render() {
+    console.log(this.Products);
     const keyword = this.props.searchInput;
     const results = this.state.Products.filter(product =>
       product.name.toLowerCase().includes(keyword.toLowerCase())
@@ -52,8 +78,9 @@ class SearchResultsPage extends Component {
 
     return (
       <div className="searchresults">
-        <div className="banner" />
-        <div className="side">{}</div>
+        <div className="search_banner">
+          <div className="search_banner_img" />
+        </div>
         <div className="results">
           {keyword ? (
             <h2 style={{ textAlign: "left", marginLeft: "20px" }}>
@@ -63,7 +90,13 @@ class SearchResultsPage extends Component {
             ""
           )}
           <hr />
-          {results}
+          {results.length < 1 ? (
+            <div className="unfound_product">
+              <p>Brak produktu o podanej nazwie</p>
+            </div>
+          ) : (
+            results
+          )}
         </div>
       </div>
     );
