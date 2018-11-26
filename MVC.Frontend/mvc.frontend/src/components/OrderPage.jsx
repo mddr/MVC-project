@@ -17,13 +17,15 @@ class OrderPage extends Component {
       street: "",
       houseNumber: "",
       postalCode: "",
-      city: ""
+        city: "",
+        hasAddress: false
     };
     this.getTotalPrice = this.getTotalPrice.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.placeOrder = this.placeOrder.bind(this);
     this.renderItems = this.renderItems.bind(this);
     this.disableSubmit = this.disableSubmit.bind(this);
+    this.addressChanged = this.addressChanged.bind(this);
     this.CartService = new CartService();
     this.ProductService = new ProductService();
     this.AddressService = new AddressService();
@@ -35,7 +37,9 @@ class OrderPage extends Component {
             .then(res => res.json())
             .then(data => {
                 this.setState({
-                    ...data
+                    ...data,
+                    hasAddress: true,
+                    remoteAddres: {...data}
                 })
             })
     }
@@ -57,18 +61,30 @@ class OrderPage extends Component {
     return price;
   }
 
+    addressChanged() {
+        if (this.state.city.localeCompare(this.state.remoteAddres.city) !== 0) return true;
+        if (this.state.postalCode.localeCompare(this.state.remoteAddres.postalCode) !== 0) return true;
+        if (this.state.street.localeCompare(this.state.remoteAddres.street) !== 0) return true;
+        if (this.state.houseNumber.localeCompare(this.state.remoteAddres.houseNumber) !== 0) return true;
+        return false;
+    }
+
     placeOrder() {
-    this.AddressService.add(
-      this.state.city,
-      this.state.postalCode,
-      this.state.street,
-      this.state.houseNumber
-    )
-      .then(() => {
-        this.OrderService.add();
-      })
-      .then(() => window.location.reload());
-  }
+        if (this.state.hasAddress && !this.addressChanged()) {
+        this.OrderService.add()
+            .then(() => window.location.reload());
+    } else
+        this.AddressService.add(
+        this.state.city,
+        this.state.postalCode,
+        this.state.street,
+        this.state.houseNumber
+        )
+          .then(() => {
+            this.OrderService.add();
+          })
+          .then(() => window.location.reload());
+    }
 
     handleChange = event => {
     this.setState({
