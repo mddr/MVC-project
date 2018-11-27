@@ -82,6 +82,17 @@ namespace MVC.Backend.Services
             return _context.Orders.ToList();
         }
 
+        public List<Order> OrderHistory(int userId)
+        {
+            var orders = _context.Orders.Where(o => o.UserId == userId);
+            foreach(Order o in orders)
+            {
+                var cart = _context.CartItems.Where(i => i.OrderId == o.Id).ToList();
+                o.ShoppingCart = cart;
+            }
+            return orders.ToList();
+        }
+
         public List<Order> GetOrders(int userId)
         {
             var orders = _context.Orders.Where(o => o.UserId == userId);

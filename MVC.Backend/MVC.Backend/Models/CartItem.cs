@@ -11,6 +11,7 @@ namespace MVC.Backend.Models
         [ForeignKey("Users")] public int UserId { get; set; }
         public User User { get; set; }
 
+        [ForeignKey("Orders")] public int OrderId { get; set; }
         [ForeignKey("Products")] public string ProductId { get; set; }
         public Product Product { get; set; }
 

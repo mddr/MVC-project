@@ -36,39 +36,53 @@ class UserPanel extends Component {
         acceptsNewsletters: true,
         productsPerPage: 0
       },
-      Orders: [
-        {
-          shoppingCart: [
-            {
-              productId: "e1f22019-c191-49df-95f4-e110f986ee39",
-              productAmount: 2
-            },
-            {
-              productId: "afcc9a77-9cd2-475e-9b4a-f21d5e5b16a0",
-              productAmount: 1
-            }
-          ],
-          totalPrice: 850,
-          createdAt: new Date().toLocaleDateString()
-        },
-        {
-          shoppingCart: [
-            {
-              productId: "e1f22019-c191-49df-95f4-e110f986ee39",
-              productAmount: 4
-            }
-          ],
-          totalPrice: 1200,
-          createdAt: new Date().toLocaleDateString()
-        }
-      ]
+      Orders: []
     };
     this.OrderService = new OrderService();
   }
 
   componentDidMount() {
     this.setState({ currentUserInfo: this.props.userInfo });
-  }
+      this.OrderService.getUserOrders()
+          .then(res => res.json())
+          .then(data => {
+              this.setState({
+                  Orders: data
+              })
+          })
+    }
+
+    renderHistory() {
+        if (this.state.Orders.length < 1) return;
+        let items = [];
+        this.state.Orders.map(order =>
+            items.push(
+                <div className="orderitems">
+                    <h3>Zamówienie nr {this.state.Orders.indexOf(order) + 1}</h3>
+                    {order.shoppingCart.map(item => (
+                        <div className="orderitem">
+                            <label>ID produktu: </label>
+                            {item.productId} <br />
+                            <label>Ilość porduktu: </label>
+                            {item.productAmount}
+                            <br />
+                        </div>
+                    ))}
+                    <div className="totalprice">
+                        <label>Całkowita cena: </label>
+                        {order.totalPrice}
+                        <br />
+                    </div>
+                    <div className="orderdate">
+                        <label>Data dokonania zakupu: </label>
+                        {order.createdAt.toString()}
+                        <br />
+                    </div>
+                    <hr />
+                </div>)
+        );
+        return items;
+    }
 
   render() {
     let tempUser = { ...this.state.currentUserInfo };
@@ -239,31 +253,7 @@ class UserPanel extends Component {
           <Tab eventKey={2} title="Historia zamówień">
             <p>Historia zamówień:</p>
             <hr />
-            {this.state.Orders.map(order => (
-              <div className="orderitems">
-                <h3>Zamówienie nr {this.state.Orders.indexOf(order) + 1}</h3>
-                {order.shoppingCart.map(item => (
-                  <div className="orderitem">
-                    <label>ID produktu: </label>
-                    {item.productId} <br />
-                    <label>Ilość porduktu: </label>
-                    {item.productAmount}
-                    <br />
-                  </div>
-                ))}
-                <div className="totalprice">
-                  <label>Całkowita cena: </label>
-                  {order.totalPrice}
-                  <br />
-                </div>
-                <div className="orderdate">
-                  <label>Data dokonania zakupu: </label>
-                  {order.createdAt.toString()}
-                  <br />
-                </div>
-                <hr />
-              </div>
-            ))}
+                    {this.renderHistory()}
           </Tab>
         </Tabs>
       </div>

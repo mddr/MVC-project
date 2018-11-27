@@ -4,8 +4,6 @@ export class UserService {
     constructor() {
         this.Auth = new AuthService();
         this.getUserInfo = this.getUserInfo.bind(this)
-        this.getUserOrders = this.getUserOrders.bind(this)
-
     }
 
     getUserInfo() {
@@ -13,13 +11,6 @@ export class UserService {
             method: 'get',
         });
     }
-
-    getUserOrders() {
-        return this.Auth.fetch(`${this.Auth.domain}/products/history`, {
-            method: 'get',
-        });
-    }
-
 
 }
 export default UserService;

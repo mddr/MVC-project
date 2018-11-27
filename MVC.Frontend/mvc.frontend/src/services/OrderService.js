@@ -7,7 +7,7 @@ export class OrderService {
         this.orders = this.orders.bind(this)
         this.order = this.order.bind(this)
         this.delete = this.order.bind(this)
-
+        this.getUserOrders = this.getUserOrders.bind(this)
     }
 
     add() {
@@ -31,6 +31,12 @@ export class OrderService {
     delete(id) {
         return this.Auth.fetch(`${this.Auth.domain}/order/delete/${id}`, {
             method: 'delete',
+        });
+    }
+
+    getUserOrders() {
+        return this.Auth.fetch(`${this.Auth.domain}/orders/history`, {
+            method: 'get',
         });
     }
 }

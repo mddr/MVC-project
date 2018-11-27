@@ -37,6 +37,21 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpGet]
+        [Route("orders/history")]
+        public IActionResult OrdersHistory()
+        {
+            try
+            {
+                var orders = _orderService.OrderHistory(CurrentUserId());
+                return Ok(OrderViewModel.ToList(orders));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
         [Route("orders/{userId}")]
         public IActionResult Orders(int userId)
         {
