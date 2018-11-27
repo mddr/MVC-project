@@ -4,7 +4,6 @@ export class OrderService {
     constructor() {
         this.Auth = new AuthService();
         this.add = this.add.bind(this)
-        this.userOrders = this.order.bind(this)
         this.orders = this.orders.bind(this)
         this.order = this.order.bind(this)
         this.delete = this.order.bind(this)
@@ -14,12 +13,6 @@ export class OrderService {
     add() {
         return this.Auth.fetch(`${this.Auth.domain}/order/add`, {
             method: 'post',
-        });
-    }
-
-    userOrders(id) {
-        return this.Auth.fetch(`${this.Auth.domain}/orders/${id}`, {
-            method: 'get',
         });
     }
 

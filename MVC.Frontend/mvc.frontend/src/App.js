@@ -10,7 +10,7 @@ import {
   Form
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Cart from "./components/Cart";
 
 import Routes from "./Routes";
@@ -29,7 +29,8 @@ class App extends Component {
       cartItemsInfo: [],
       cartItemChanged: -1,
       searchInput: "",
-      userInfo: {}
+        userInfo: {},
+        pressedLogout: false
     };
     this.CartService = new CartService();
     this.ProductService = new ProductService();
@@ -38,13 +39,16 @@ class App extends Component {
     this.cartItemChanged = this.cartItemChanged.bind(this);
   }
 
-  componentDidMount() {
-    this.loadCart();
-    this.UserService.getUserInfo()
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ userInfo: { ...data } });
-      });
+    componentDidMount() {
+    const isUserLogged = auth.loggedInWithRefresh();
+    if (isUserLogged) {
+        this.loadCart();
+        this.UserService.getUserInfo()
+          .then(res => res.json())
+          .then(data => {
+            this.setState({ userInfo: { ...data } });
+          });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -99,14 +103,18 @@ class App extends Component {
   }
 
   async handleLogout() {
-    auth.logout();
-    await window.location.reload();
+      auth.logout();
+      this.setState({ pressedLogout: true})
   }
 
   handleInput;
 
-  render() {
+    render() {
     const isUserLogged = auth.loggedInWithRefresh();
+    if (this.state.pressedLogout === true && isUserLogged) {
+        this.setState({ pressedLogout: false })
+        return <Redirect to='/' />
+    }
     const searchBox = (
       <Navbar.Form pullLeft>
         <FormControl
