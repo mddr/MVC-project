@@ -104,7 +104,11 @@ class App extends Component {
 
   async handleLogout() {
       auth.logout();
-      this.setState({ pressedLogout: true})
+      this.setState({
+          pressedLogout: true,
+          cartItems: [],
+          cartItemsInfo: [],
+      })
   }
 
   handleInput;
