@@ -56,6 +56,25 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("userAddress/")]
+        public IActionResult UserAddress()
+        {
+            try
+            {
+                var address = _addressService.GetUserAddress(CurrentUserId());
+                return Ok(new AddressViewModel(address));
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPost]
         [Route("address/add")]
         public IActionResult Add([FromBody] AddressViewModel viewModel)

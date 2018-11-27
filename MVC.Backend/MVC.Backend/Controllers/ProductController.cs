@@ -37,7 +37,7 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpGet]
-        [Route("products/top")]
+        [Route("products/top/{amount}")]
         public IActionResult TopProducts(int amount)
         {
             try

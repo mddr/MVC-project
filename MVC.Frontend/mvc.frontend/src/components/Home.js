@@ -5,6 +5,7 @@ import ProductSlider from "./ProductSlider";
 import { SideNav, Nav } from "react-sidenav";
 
 import AuthService from "../services/AuthService";
+import ProductService from "../services/ProductService";
 
 export default class Home extends Component {
   constructor(props) {
@@ -14,10 +15,12 @@ export default class Home extends Component {
       isUserLogged: false,
       categories: [],
       Products: [],
+      TopProducts: [],
       category: -1
     };
 
     this.Auth = new AuthService();
+    this.ProductService = new ProductService();
   }
 
   componentDidMount() {
@@ -25,13 +28,20 @@ export default class Home extends Component {
   }
 
   fetchData() {
-    this.Auth.fetch(`${this.Auth.domain}/products`, null)
+      this.ProductService.products()
       .then(res => res.json())
       .then(res => {
         this.setState({
           Products: res
         });
-      });
+          });
+      this.ProductService.getTop(10)
+          .then(res => res.json())
+          .then(res => {
+              this.setState({
+                  TopProducts: res
+              });
+          });
     this.Auth.fetch(`${this.Auth.domain}/categories`, null)
       .then(res => res.json())
       .then(res => {
@@ -114,7 +124,7 @@ export default class Home extends Component {
           <hr />
           {
             <ProductSlider
-              Products={this.state.Products}
+              Products={this.state.TopProducts}
               productsPerSlider={4}
             />
           }

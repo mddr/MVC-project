@@ -9,6 +9,7 @@ namespace MVC.Backend.Services
     {
         List<Address> GetAddresses();
         Address GetAddress(int id);
+        Address GetUserAddress(int userId);
         void AddAddress(AddressViewModel viewModel, int userId);
         Task UpdateAddress(int userId, AddressViewModel viewModel);
         void DeleteAddress(int id);

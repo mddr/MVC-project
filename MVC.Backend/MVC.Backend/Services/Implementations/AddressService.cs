@@ -55,6 +55,15 @@ namespace MVC.Backend.Services
             return _context.Addresses.ToList();
         }
 
+        public Address GetUserAddress(int userId)
+        {
+            var user = _context.Users.SingleOrDefault(p => p.Id == userId);
+            if (user == null)
+                throw new ArgumentException("Invalid id");
+            var addres = _context.Addresses.SingleOrDefault(p => p.Id == user.AddressId);
+            return addres;
+        }
+
         public async Task UpdateAddress(int userId, AddressViewModel viewModel)
         {
             if (viewModel == null)
