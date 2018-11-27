@@ -12,56 +12,70 @@ import {
   Radio,
   Button
 } from "react-bootstrap";
+import OrderService from "../services/OrderService";
 
 class UserPanel extends Component {
   //todo dodać get i post state'a
-  state = {
-    currentUser: {
-      firstName: "Czarek",
-      lastName: "Szmurło",
-      email: "sznurek05@gmail.com",
-      prefersNetPrice: true,
-      acceptsNewsletter: false,
-      productsPerPage: 10,
-      address: {
-        city: "Białystok",
-        postalCode: "15-333",
-        street: "Zwierzyniecka",
-        houseNumber: 14
-      }
-    },
-    Orders: [
-      {
-        shoppingCart: [
-          {
-            productId: "e1f22019-c191-49df-95f4-e110f986ee39",
-            productAmount: 2
-          },
-          {
-            productId: "afcc9a77-9cd2-475e-9b4a-f21d5e5b16a0",
-            productAmount: 1
-          }
-        ],
-        totalPrice: 850,
-        createdAt: new Date()
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentUserInfo: {
+        id: 0,
+        emailConfirmed: true,
+        firstName: "",
+        lastName: "",
+        address: {
+          id: 0,
+          city: "",
+          postalCode: "",
+          street: "",
+          houseNumber: ""
+        },
+        currency: "",
+        prefersNetPrice: null,
+        acceptsNewsletters: true,
+        productsPerPage: 0
       },
-      {
-        shoppingCart: [
-          {
-            productId: "e1f22019-c191-49df-95f4-e110f986ee39",
-            productAmount: 4
-          }
-        ],
-        totalPrice: 1200,
-        createdAt: new Date()
-      }
-    ]
-  };
+      Orders: [
+        {
+          shoppingCart: [
+            {
+              productId: "e1f22019-c191-49df-95f4-e110f986ee39",
+              productAmount: 2
+            },
+            {
+              productId: "afcc9a77-9cd2-475e-9b4a-f21d5e5b16a0",
+              productAmount: 1
+            }
+          ],
+          totalPrice: 850,
+          createdAt: new Date().toLocaleDateString()
+        },
+        {
+          shoppingCart: [
+            {
+              productId: "e1f22019-c191-49df-95f4-e110f986ee39",
+              productAmount: 4
+            }
+          ],
+          totalPrice: 1200,
+          createdAt: new Date().toLocaleDateString()
+        }
+      ]
+    };
+    this.OrderService = new OrderService();
+  }
+
+  componentDidMount() {
+    this.setState({ currentUserInfo: this.props.userInfo });
+  }
 
   render() {
-    let tempUser = { ...this.state.currentUser };
+    let tempUser = { ...this.state.currentUserInfo };
 
     const regexPostalCode = () => {
+      if (!tempUser.address) return "error";
+
       if (/\d{2}-\d{3}/.test(tempUser.address.postalCode)) return null;
       else return "error";
     };
@@ -78,7 +92,7 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="text"
-                    defaultValue={this.state.currentUser.firstName}
+                    defaultValue={this.state.currentUserInfo.firstName}
                     onChange={e => (tempUser.firstName = e.target.value)}
                   />
                 </Col>
@@ -90,7 +104,7 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="text"
-                    defaultValue={this.state.currentUser.lastName}
+                    defaultValue={this.state.currentUserInfo.lastName}
                     onChange={e => (tempUser.lastName = e.target.value)}
                   />
                 </Col>
@@ -102,7 +116,11 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="text"
-                    defaultValue={this.state.currentUser.address.city}
+                    defaultValue={
+                      this.state.currentUserInfo.address
+                        ? this.state.currentUserInfo.address.city
+                        : ""
+                    }
                     onChange={e => (tempUser.address.city = e.target.value)}
                   />
                 </Col>
@@ -117,7 +135,11 @@ class UserPanel extends Component {
                     onChange={e => {
                       tempUser.address.postalCode = e.target.value;
                     }}
-                    defaultValue={this.state.currentUser.address.postalCode}
+                    defaultValue={
+                      this.state.currentUserInfo.address
+                        ? this.state.currentUserInfo.address.postalCode
+                        : ""
+                    }
                   />
                 </Col>
               </FormGroup>
@@ -128,7 +150,11 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="text"
-                    defaultValue={this.state.currentUser.address.street}
+                    defaultValue={
+                      this.state.currentUserInfo.address
+                        ? this.state.currentUserInfo.address.street
+                        : ""
+                    }
                     onChange={e => (tempUser.address.street = e.target.value)}
                   />
                 </Col>
@@ -140,7 +166,11 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="number"
-                    defaultValue={this.state.currentUser.address.houseNumber}
+                    defaultValue={
+                      this.state.currentUserInfo.address
+                        ? this.state.currentUserInfo.address.houseNumber
+                        : ""
+                    }
                     onChange={e =>
                       (tempUser.address.houseNumber = e.target.value)
                     }
@@ -154,7 +184,7 @@ class UserPanel extends Component {
                 <Col sm={10}>
                   <FormControl
                     type="number"
-                    defaultValue={this.state.currentUser.productsPerPage}
+                    defaultValue={this.state.currentUserInfo.productsPerPage}
                     onChange={e => (tempUser.productsPerPage = e.target.value)}
                   />
                 </Col>
@@ -173,9 +203,11 @@ class UserPanel extends Component {
                 <FormGroup>
                   <ControlLabel>Akceptujesz nasz newsletter</ControlLabel>
                   <Checkbox
-                    defaultChecked={this.state.currentUser.acceptsNewsletter}
+                    defaultChecked={
+                      this.state.currentUserInfo.acceptsNewsletters
+                    }
                     onChange={e =>
-                      (tempUser.acceptsNewsletter = e.target.checked)
+                      (tempUser.acceptsNewsletters = e.target.checked)
                     }
                   />
                 </FormGroup>
@@ -183,21 +215,23 @@ class UserPanel extends Component {
                   <ControlLabel>Preferowane wyświetlanie ceny</ControlLabel>
                   <Radio
                     name="radioGroup"
-                    defaultChecked={this.state.currentUser.prefersNetPrice}
+                    defaultChecked={this.state.currentUserInfo.prefersNetPrice}
                     onChange={e => (tempUser.prefersNetPrice = true)}
                   >
                     Netto
                   </Radio>
                   <Radio
                     name="radioGroup"
-                    defaultChecked={!this.state.currentUser.prefersNetPrice}
+                    defaultChecked={!this.state.currentUserInfo.prefersNetPrice}
                     onChange={e => (tempUser.prefersNetPrice = false)}
                   >
                     Brutto
                   </Radio>
                 </FormGroup>
               </div>
-              <Button onClick={() => this.setState({ currentUser: tempUser })}>
+              <Button
+                onClick={() => this.setState({ currentUserInfo: tempUser })}
+              >
                 Zatwierdź
               </Button>
             </Form>
@@ -207,13 +241,26 @@ class UserPanel extends Component {
             <hr />
             {this.state.Orders.map(order => (
               <div className="orderitems">
+                <h3>Zamówienie nr {this.state.Orders.indexOf(order) + 1}</h3>
                 {order.shoppingCart.map(item => (
                   <div className="orderitem">
-                    {item.productId} {item.productAmount}
+                    <label>ID produktu: </label>
+                    {item.productId} <br />
+                    <label>Ilość porduktu: </label>
+                    {item.productAmount}
+                    <br />
                   </div>
                 ))}
-                <div className="totalprice">{order.totalPrice}</div>
-                <div className="orderdate">{order.createdAt.toString()}</div>
+                <div className="totalprice">
+                  <label>Całkowita cena: </label>
+                  {order.totalPrice}
+                  <br />
+                </div>
+                <div className="orderdate">
+                  <label>Data dokonania zakupu: </label>
+                  {order.createdAt.toString()}
+                  <br />
+                </div>
                 <hr />
               </div>
             ))}

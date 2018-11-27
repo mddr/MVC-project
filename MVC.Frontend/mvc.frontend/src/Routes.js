@@ -54,7 +54,13 @@ class Routes extends Component {
         />
         <Route exact path="/Account/ConfirmEmail/:token" component={ConfirmEmailPage} />
         <Route exact path="/email-require" component={RequireEmail} />
-        <Route exact path="/user" component={UserPanel} />
+        <Route
+          exact
+          path="/user"
+          render={props => (
+            <UserPanel {...props} userInfo={this.props.userInfo} />
+          )}
+        />
       </Switch>
     );
   }
