@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { Button, Glyphicon, FormGroup, FormControl } from "react-bootstrap";
 
 import "./OrderPage.css";
-import "./Home.css";
+import "../HomePage/Home.css";
 import "./ProductPage.css";
-import CartService from "../services/CartService";
-import ProductService from "../services/ProductService";
-import AddressService from "../services/AddressService";
-import OrderService from "../services/OrderService";
+import CartService from "../../services/CartService";
+import ProductService from "../../services/ProductService";
+import AddressService from "../../services/AddressService";
+import OrderService from "../../services/OrderService";
 
 class OrderPage extends Component {
   constructor(props) {

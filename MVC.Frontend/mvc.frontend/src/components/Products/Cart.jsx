@@ -11,8 +11,8 @@ import { Link } from "react-router-dom";
 
 import "./Cart.css";
 import "./ProductPage.css";
-import CartService from "../services/CartService";
-import ProductService from "../services/ProductService";
+import CartService from "../../services/CartService";
+import ProductService from "../../services/ProductService";
 
 class Cart extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class Cart extends Component {
   getTotalPrice() {
     if (this.props.cartItems.length < 1) return 0;
     if (this.props.cartItemsInfo.length < 1) return 0;
-    if (this.props.cartItemsInfo.length != this.props.cartItems.length)
+    if (this.props.cartItemsInfo.length !== this.props.cartItems.length)
       return 0;
     let price = 0;
     for (let i = 0; i < this.props.cartItemsInfo.length; i++) {

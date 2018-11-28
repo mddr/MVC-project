@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 
-import Home from "./components/Home";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import AdminPanel from "./components/AdminPanel";
-import ProductPage from "./components/ProductPage";
-import OrderPage from "./components/OrderPage";
-import SearchResultsPage from "./components/SearchResultsPage";
-import ConfirmEmailPage from "./components/ConfirmEmailPage";
-import RequireEmail from "./components/RequireEmail";
-import UserPanel from "./components/UserPanel";
+import Home from "./components/HomePage/Home";
+import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
+import AdminPanel from "./components/AdminPanel/AdminPanel";
+import ProductPage from "./components/Products/ProductPage";
+import OrderPage from "./components/Products/OrderPage";
+import SearchResultsPage from "./components/Search/SearchResultsPage";
+import ConfirmEmailPage from "./components/Auth/ConfirmEmailPage";
+import RequireEmail from "./components/Auth/RequireEmail";
+import UserPanel from "./components/UserPanel/UserPanel";
 
 class Routes extends Component {
   render() {

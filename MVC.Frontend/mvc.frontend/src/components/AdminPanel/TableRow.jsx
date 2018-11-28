@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import FormBuilder from './FormBuilder';
+import FormBuilder from '../Helpers/FormBuilder';
 
 class TableRow extends Component {
 	constructor(props) {
