@@ -4,8 +4,8 @@ import React, { Component } from "react";
 import ProductSlider from "./ProductSlider";
 import { SideNav, Nav } from "react-sidenav";
 
-import AuthService from "../services/AuthService";
-import ProductService from "../services/ProductService";
+import AuthService from "../../services/AuthService";
+import ProductService from "../../services/ProductService";
 
 export default class Home extends Component {
   constructor(props) {

@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, Redirect } from "react-router-dom";
-import Cart from "./components/Cart";
+import Cart from "./components/Products/Cart";
 
 import Routes from "./Routes";
 import AuthService from "./services/AuthService";
@@ -29,8 +29,8 @@ class App extends Component {
       cartItemsInfo: [],
       cartItemChanged: -1,
       searchInput: "",
-        userInfo: {},
-        pressedLogout: false
+      userInfo: {},
+      pressedLogout: false
     };
     this.CartService = new CartService();
     this.ProductService = new ProductService();
@@ -39,15 +39,15 @@ class App extends Component {
     this.cartItemChanged = this.cartItemChanged.bind(this);
   }
 
-    componentDidMount() {
+  componentDidMount() {
     const isUserLogged = auth.loggedInWithRefresh();
     if (isUserLogged) {
-        this.loadCart();
-        this.UserService.getUserInfo()
-          .then(res => res.json())
-          .then(data => {
-            this.setState({ userInfo: { ...data } });
-          });
+      this.loadCart();
+      this.UserService.getUserInfo()
+        .then(res => res.json())
+        .then(data => {
+          this.setState({ userInfo: { ...data } });
+        });
     }
   }
 
@@ -103,21 +103,21 @@ class App extends Component {
   }
 
   async handleLogout() {
-      auth.logout();
-      this.setState({
-          pressedLogout: true,
-          cartItems: [],
-          cartItemsInfo: [],
-      })
+    auth.logout();
+    this.setState({
+      pressedLogout: true,
+      cartItems: [],
+      cartItemsInfo: [],
+    })
   }
 
   handleInput;
 
-    render() {
+  render() {
     const isUserLogged = auth.loggedInWithRefresh();
     if (this.state.pressedLogout === true && isUserLogged) {
-        this.setState({ pressedLogout: false })
-        return <Redirect to='/' />
+      this.setState({ pressedLogout: false })
+      return <Redirect to='/' />
     }
     const searchBox = (
       <Navbar.Form pullLeft>

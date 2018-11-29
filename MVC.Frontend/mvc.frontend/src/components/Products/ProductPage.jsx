@@ -1,11 +1,11 @@
 import "./ProductPage.css";
-import "./Home.css";
+import "../HomePage/Home.css";
 
 import React, { Component } from "react";
 import { Button, Glyphicon, InputGroup, FormControl } from "react-bootstrap";
 
-import AuthService from "../services/AuthService";
-import CartService from "../services/CartService";
+import AuthService from "../../services/AuthService";
+import CartService from "../../services/CartService";
 
 class ProductPage extends Component {
   constructor(props) {

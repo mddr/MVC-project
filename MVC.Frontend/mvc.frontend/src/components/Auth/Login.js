@@ -3,7 +3,7 @@ import "./Login.css";
 import React, { Component } from "react";
 import { Button, FormControl, FormGroup, Panel } from "react-bootstrap";
 
-import AuthService from "../services/AuthService";
+import AuthService from "../../services/AuthService";
 
 export class Login extends Component {
   constructor(props) {

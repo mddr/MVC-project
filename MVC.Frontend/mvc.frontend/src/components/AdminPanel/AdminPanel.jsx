@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import Table from "./Table";
 import { Button } from 'react-bootstrap';
 
-import AuthService from '../services/AuthService';
-import FormBuilder from './FormBuilder';
+import AuthService from '../../services/AuthService';
+import FormBuilder from '../Helpers/FormBuilder';
 
 class AdminPanel extends Component {
   	constructor(props) {

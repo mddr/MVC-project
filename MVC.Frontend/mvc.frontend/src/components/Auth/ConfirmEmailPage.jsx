@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./ConfirmEmailPage.css";
 import { Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import AuthService from "../services/AuthService";
+import AuthService from "../../services/AuthService";
 
 class ConfirmEmailPage extends Component {
 

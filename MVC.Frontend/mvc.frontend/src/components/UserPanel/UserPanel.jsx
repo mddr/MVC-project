@@ -12,7 +12,7 @@ import {
   Radio,
   Button
 } from "react-bootstrap";
-import OrderService from "../services/OrderService";
+import OrderService from "../../services/OrderService";
 
 class UserPanel extends Component {
   //todo dodać get i post state'a
@@ -43,57 +43,49 @@ class UserPanel extends Component {
 
   componentDidMount() {
     this.setState({ currentUserInfo: this.props.userInfo });
-      this.OrderService.getUserOrders()
-          .then(res => res.json())
-          .then(data => {
-              this.setState({
-                  Orders: data
-              })
-          })
-    }
+    this.OrderService.getUserOrders()
+      .then(res => res.json())
+      .then(data => {
+        this.setState({
+          Orders: data
+        });
+      });
+  }
 
-    renderHistory() {
-        if (this.state.Orders.length < 1) return;
-        let items = [];
-        this.state.Orders.map(order =>
-            items.push(
-                <div className="orderitems">
-                    <h3>Zamówienie nr {this.state.Orders.indexOf(order) + 1}</h3>
-                    {order.shoppingCart.map(item => (
-                        <div className="orderitem">
-                            <label>Nazwa produktu: </label>
-                            {item.product.name} <br />
-                            <img
-                                src={
-                                    "data:image/jpeg;base64," +
-                                    item.product.imageBase64
-                                }
-                                height="64"
-                                width="64"
-                            />
-                            <br/>
-                            <label>Ilość produktu: </label>
-                            {item.productAmount}
-                            <br />
-                            <hr />
-                        </div>
-                    ))}
-                    <div className="totalprice">
-                        <label>Całkowita cena: </label>
-                        {order.totalPrice}
-                        <br />
-                    </div>
-                    <div className="orderdate">
-                        <label>Data dokonania zakupu: </label>
-                        {order.createdAt.toString()}
-                        <br />
-                    </div>
-                    <hr />
-                    <hr />
-                </div>)
-        );
-        return items;
-    }
+  renderHistory() {
+    if (this.state.Orders.length < 1) return;
+    let items = [];
+    this.state.Orders.map(order => items.push(this.renderHistoryItem(order)));
+    return items;
+  }
+
+  renderHistoryItem(order) {
+    return (
+      <div className="orderitems">
+        <h3>Zamówienie nr {this.state.Orders.indexOf(order) + 1}</h3>
+        {order.shoppingCart.map(item => (
+          <div className="orderitem">
+            <label>ID produktu: </label>
+            {item.productId} <br />
+            <label>Ilość produktu: </label>
+            {item.productAmount}
+            <br />
+          </div>
+        ))}
+        <div className="totalprice">
+          <label>Całkowita cena: </label>
+          {order.totalPrice}
+          <br />
+        </div>
+        <div className="orderdate">
+          <label>Data dokonania zakupu: </label>
+          {order.createdAt.toString()}
+          <br />
+        </div>
+        <hr />
+      </div>
+    );
+  }
 
   render() {
     let tempUser = { ...this.state.currentUserInfo };
@@ -257,7 +249,7 @@ class UserPanel extends Component {
           <Tab eventKey={2} title="Historia zamówień">
             <p>Historia zamówień:</p>
             <hr />
-                    {this.renderHistory()}
+            {this.renderHistory()}
           </Tab>
         </Tabs>
       </div>
