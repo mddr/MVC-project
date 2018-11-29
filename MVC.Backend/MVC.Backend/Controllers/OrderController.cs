@@ -43,7 +43,7 @@ namespace MVC.Backend.Controllers
             try
             {
                 var orders = _orderService.OrderHistory(CurrentUserId());
-                return Ok(OrderViewModel.ToList(orders));
+                return Ok(orders);
             }
             catch (Exception)
             {

@@ -11,6 +11,7 @@ namespace MVC.Backend.ViewModels
         public string ProductId { get; set; }
         public int ProductAmount { get; set; }
         public bool IsValid { get; set; }
+        public ProductViewModel Product { get; set; }
 
         public CartItemViewModel()
         {
@@ -21,6 +22,11 @@ namespace MVC.Backend.ViewModels
             ProductAmount = cartItem.ProductAmount;
             ProductId = cartItem.ProductId;
             IsValid = cartItem.IsValid;
+        }
+
+        public CartItemViewModel(CartItem cartItem, Product product) : this(cartItem)
+        {
+            Product = new ProductViewModel(product);
         }
 
         public static List<CartItemViewModel> ToList(List<CartItem> cartItems)

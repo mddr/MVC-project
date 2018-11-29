@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
@@ -82,15 +83,19 @@ namespace MVC.Backend.Services
             return _context.Orders.ToList();
         }
 
-        public List<Order> OrderHistory(int userId)
+        public List<OrderViewModel> OrderHistory(int userId)
         {
+            var results = new List<OrderViewModel>();
             var orders = _context.Orders.Where(o => o.UserId == userId);
             foreach(Order o in orders)
             {
-                var cart = _context.CartItems.Where(i => i.OrderId == o.Id).ToList();
-                o.ShoppingCart = cart;
+                var cart = _context.CartItems
+                    .Include("Product")
+                    .Where(i => i.OrderId == o.Id).ToList();
+
+                results.Add(new OrderViewModel(o, cart));
             }
-            return orders.ToList();
+            return results;
         }
 
         public List<Order> GetOrders(int userId)

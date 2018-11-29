@@ -61,11 +61,21 @@ class UserPanel extends Component {
                     <h3>Zamówienie nr {this.state.Orders.indexOf(order) + 1}</h3>
                     {order.shoppingCart.map(item => (
                         <div className="orderitem">
-                            <label>ID produktu: </label>
-                            {item.productId} <br />
-                            <label>Ilość porduktu: </label>
+                            <label>Nazwa produktu: </label>
+                            {item.product.name} <br />
+                            <img
+                                src={
+                                    "data:image/jpeg;base64," +
+                                    item.product.imageBase64
+                                }
+                                height="64"
+                                width="64"
+                            />
+                            <br/>
+                            <label>Ilość produktu: </label>
                             {item.productAmount}
                             <br />
+                            <hr />
                         </div>
                     ))}
                     <div className="totalprice">
@@ -79,6 +89,7 @@ class UserPanel extends Component {
                         <br />
                     </div>
                     <hr />
+                    <hr />
                 </div>)
         );
         return items;
@@ -86,13 +97,6 @@ class UserPanel extends Component {
 
   render() {
     let tempUser = { ...this.state.currentUserInfo };
-
-    const regexPostalCode = () => {
-      if (!tempUser.address) return "error";
-
-      if (/\d{2}-\d{3}/.test(tempUser.address.postalCode)) return null;
-      else return "error";
-    };
 
     return (
       <div className="userpanel">
@@ -139,7 +143,7 @@ class UserPanel extends Component {
                   />
                 </Col>
               </FormGroup>
-              <FormGroup validationState={regexPostalCode()}>
+              <FormGroup >
                 <Col componentClass={ControlLabel} sm={2}>
                   Kod pocztowy
                 </Col>
