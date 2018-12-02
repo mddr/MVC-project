@@ -33,11 +33,11 @@ class Cart extends Component {
     for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
       price +=
         this.props.cartItemsInfo[i].pricePln *
-          this.props.cartItems[i].productAmount -
+        this.props.cartItems[i].productAmount -
         (this.props.cartItemsInfo[i].discount *
           this.props.cartItemsInfo[i].pricePln *
           this.props.cartItems[i].productAmount) /
-          100;
+        100;
     }
     return price;
   }
@@ -92,8 +92,8 @@ class Cart extends Component {
                 (this.props.cartItemsInfo[i].discount *
                   this.props.cartItemsInfo[i].pricePln *
                   this.props.cartItems[i].productAmount) /
-                  100) *
-                100
+                100) *
+              100
             ) / 100}
             zł
           </span>
@@ -107,14 +107,6 @@ class Cart extends Component {
               <FormControl
                 value={item.productAmount}
                 style={{ width: "50px", textAlign: "center" }}
-                /* onChange={(x: React.FormEvent<FormControl & HTMLInputElement>) => {
-                  this.setState({
-                    count: isNaN(parseInt(x.currentTarget.value))
-                      ? 1
-                      : parseInt(x.currentTarget.value)
-                  });
-                }
-              }*/
               />
               <InputGroup.Button>
                 <Button
@@ -165,16 +157,16 @@ class Cart extends Component {
           </div>
         </Popover>
       ) : (
-        <Popover
-          id="popover-trigger-click-root-close"
-          title="Koszyk"
-          arrowOffsetTop="80"
-        >
-          <span style={{ color: "gray", margin: "2px", fontStyle: "italic" }}>
-            Koszyk jest pusty
+          <Popover
+            id="popover-trigger-click-root-close"
+            title="Koszyk"
+            arrowOffsetTop="80"
+          >
+            <span style={{ color: "gray", margin: "2px", fontStyle: "italic" }}>
+              Koszyk jest pusty
           </span>
-        </Popover>
-      );
+          </Popover>
+        );
     return (
       <div className="cart">
         <OverlayTrigger

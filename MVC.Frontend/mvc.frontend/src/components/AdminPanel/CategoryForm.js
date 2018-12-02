@@ -1,11 +1,11 @@
 ﻿import * as React from "react";
 import {
   Button,
+  DropdownButton,
   FormControl,
   FormGroup,
-  Modal,
-  DropdownButton,
-  MenuItem
+  MenuItem,
+  Modal
 } from "react-bootstrap";
 
 export default class ProductForm extends React.Component {

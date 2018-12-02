@@ -2,7 +2,7 @@ import decode from 'jwt-decode';
 
 export class AuthService {
     constructor(domain) {
-        this.domain = domain || 'https://localhost:44364'
+        this.domain = domain || 'http://localhost:44364'
         this.fetch = this.fetch.bind(this)
         this.login = this.login.bind(this)
         this.getProfile = this.getProfile.bind(this)

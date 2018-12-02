@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./RequireEmail.css";
-import { LinkContainer } from "react-router-bootstrap";
 
 class RequireEmail extends Component {
   state = {};

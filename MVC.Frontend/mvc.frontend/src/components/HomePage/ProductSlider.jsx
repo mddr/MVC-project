@@ -10,13 +10,13 @@ class ProductSlider extends Component {
     sliderPosition: 0
   };
 
-  handleLeftButtonClick = () => {
+  handlePrevButtonClick = () => {
     let sliderPosition = this.state.sliderPosition;
     sliderPosition > 0 ? sliderPosition-- : (sliderPosition = 0);
     this.setState({ sliderPosition });
   };
 
-  handleRightButtonClick = () => {
+  handleNextButtonClick = () => {
     const { Products, productsPerSlider } = this.props;
     let sliderPosition = this.state.sliderPosition;
     Math.floor(Products.length / productsPerSlider) < sliderPosition
@@ -31,7 +31,7 @@ class ProductSlider extends Component {
       <div className="productslider">
         <button
           className="sliderLeftButton"
-          onClick={this.handleLeftButtonClick}
+          onClick={this.handlePrevButtonClick}
         >
           <span className="glyphicon glyphicon-chevron-left" />
         </button>
@@ -58,7 +58,7 @@ class ProductSlider extends Component {
         ))}
         <button
           className="sliderRightButton"
-          onClick={this.handleRightButtonClick}
+          onClick={this.handleNextButtonClick}
         >
           <span className="glyphicon glyphicon-chevron-right" />
         </button>

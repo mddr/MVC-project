@@ -28,20 +28,20 @@ export default class Home extends Component {
   }
 
   fetchData() {
-      this.ProductService.products()
+    this.ProductService.products()
       .then(res => res.json())
       .then(res => {
         this.setState({
           Products: res
         });
-          });
-      this.ProductService.getTop(10)
-          .then(res => res.json())
-          .then(res => {
-              this.setState({
-                  TopProducts: res
-              });
-          });
+      });
+    this.ProductService.getTop(10)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          TopProducts: res
+        });
+      });
     this.Auth.fetch(`${this.Auth.domain}/categories`, null)
       .then(res => res.json())
       .then(res => {
@@ -52,7 +52,6 @@ export default class Home extends Component {
   }
 
   displayCategoriesTree = parentID => {
-    // eslint-disable-next-line
     const categories = this.state.categories.map(category => {
       if (category.superiorCategoryId === parentID) {
         return (

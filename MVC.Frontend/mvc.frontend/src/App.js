@@ -6,8 +6,7 @@ import {
   Navbar,
   NavItem,
   FormControl,
-  Button,
-  Form
+  Button
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, Redirect } from "react-router-dom";

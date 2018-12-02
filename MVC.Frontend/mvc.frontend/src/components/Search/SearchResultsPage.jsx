@@ -1,7 +1,7 @@
 import "./SearchResultsPage.css";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { SideNav, Nav } from "react-sidenav";
+import { Nav } from "react-sidenav";
 import Product from "../Products/Product";
 import AuthService from "../../services/AuthService";
 

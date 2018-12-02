@@ -52,6 +52,172 @@ class UserPanel extends Component {
       });
   }
 
+  render() {
+    return (
+      <div className="userpanel">
+        <Tabs defaultActiveKey={1}>
+          <Tab eventKey={1} title="Dane użytkownika">
+            {this.renderUserData()}
+          </Tab>
+          <Tab eventKey={2} title="Historia zamówień">
+            <p>Historia zamówień:</p>
+            <hr />
+            {this.renderHistory()}
+          </Tab>
+        </Tabs>
+      </div>
+    );
+  }
+
+  renderUserData() {
+    let tempUser = { ...this.state.currentUserInfo };
+    return (
+      <Form>
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={2}>
+            Imię
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              defaultValue={this.state.currentUserInfo.firstName}
+              onChange={e => (tempUser.firstName = e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={2}>
+            Nazwisko
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              defaultValue={this.state.currentUserInfo.lastName}
+              onChange={e => (tempUser.lastName = e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={2}>
+            Miasto
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              defaultValue={
+                this.state.currentUserInfo.address
+                  ? this.state.currentUserInfo.address.city
+                  : ""
+              }
+              onChange={e => (tempUser.address.city = e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={2}>
+            Kod pocztowy
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              onChange={e => {
+                tempUser.address.postalCode = e.target.value;
+              }}
+              defaultValue={
+                this.state.currentUserInfo.address
+                  ? this.state.currentUserInfo.address.postalCode
+                  : ""
+              }
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={2}>
+            Ulica
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              defaultValue={
+                this.state.currentUserInfo.address
+                  ? this.state.currentUserInfo.address.street
+                  : ""
+              }
+              onChange={e => (tempUser.address.street = e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={2}>
+            Numer domu
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="number"
+              defaultValue={
+                this.state.currentUserInfo.address
+                  ? this.state.currentUserInfo.address.houseNumber
+                  : ""
+              }
+              onChange={e => (tempUser.address.houseNumber = e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup>
+          <Col componentClass={ControlLabel} sm={2}>
+            Ilość produktów na stronę
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="number"
+              defaultValue={this.state.currentUserInfo.productsPerPage}
+              onChange={e => (tempUser.productsPerPage = e.target.value)}
+            />
+          </Col>
+        </FormGroup>
+
+        <div
+          className="checkboxradiowrapper"
+          style={{
+            display: "flex",
+            direction: "row",
+            marginTop: "25em",
+            width: "100%",
+            justifyContent: "space-around"
+          }}
+        >
+          <FormGroup>
+            <ControlLabel>Akceptujesz nasz newsletter</ControlLabel>
+            <Checkbox
+              defaultChecked={this.state.currentUserInfo.acceptsNewsletters}
+              onChange={e => (tempUser.acceptsNewsletters = e.target.checked)}
+            />
+          </FormGroup>
+          <FormGroup bsClass="price_radio_group">
+            <ControlLabel>Preferowane wyświetlanie ceny</ControlLabel>
+            <Radio
+              name="radioGroup"
+              defaultChecked={this.state.currentUserInfo.prefersNetPrice}
+              onChange={e => (tempUser.prefersNetPrice = true)}
+            >
+              Netto
+            </Radio>
+            <Radio
+              name="radioGroup"
+              defaultChecked={!this.state.currentUserInfo.prefersNetPrice}
+              onChange={e => (tempUser.prefersNetPrice = false)}
+            >
+              Brutto
+            </Radio>
+          </FormGroup>
+        </div>
+        <Button onClick={() => this.setState({ currentUserInfo: tempUser })}>
+          Zatwierdź
+        </Button>
+      </Form>
+    );
+  }
+
   renderHistory() {
     if (this.state.Orders.length < 1) return;
     let items = [];
@@ -83,175 +249,6 @@ class UserPanel extends Component {
           <br />
         </div>
         <hr />
-      </div>
-    );
-  }
-
-  render() {
-    let tempUser = { ...this.state.currentUserInfo };
-
-    return (
-      <div className="userpanel">
-        <Tabs defaultActiveKey={1}>
-          <Tab eventKey={1} title="Dane użytkownika">
-            <Form>
-              <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
-                  Imię
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="text"
-                    defaultValue={this.state.currentUserInfo.firstName}
-                    onChange={e => (tempUser.firstName = e.target.value)}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
-                  Nazwisko
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="text"
-                    defaultValue={this.state.currentUserInfo.lastName}
-                    onChange={e => (tempUser.lastName = e.target.value)}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
-                  Miasto
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="text"
-                    defaultValue={
-                      this.state.currentUserInfo.address
-                        ? this.state.currentUserInfo.address.city
-                        : ""
-                    }
-                    onChange={e => (tempUser.address.city = e.target.value)}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup >
-                <Col componentClass={ControlLabel} sm={2}>
-                  Kod pocztowy
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="text"
-                    onChange={e => {
-                      tempUser.address.postalCode = e.target.value;
-                    }}
-                    defaultValue={
-                      this.state.currentUserInfo.address
-                        ? this.state.currentUserInfo.address.postalCode
-                        : ""
-                    }
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
-                  Ulica
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="text"
-                    defaultValue={
-                      this.state.currentUserInfo.address
-                        ? this.state.currentUserInfo.address.street
-                        : ""
-                    }
-                    onChange={e => (tempUser.address.street = e.target.value)}
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
-                  Numer domu
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="number"
-                    defaultValue={
-                      this.state.currentUserInfo.address
-                        ? this.state.currentUserInfo.address.houseNumber
-                        : ""
-                    }
-                    onChange={e =>
-                      (tempUser.address.houseNumber = e.target.value)
-                    }
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup>
-                <Col componentClass={ControlLabel} sm={2}>
-                  Ilość produktów na stronę
-                </Col>
-                <Col sm={10}>
-                  <FormControl
-                    type="number"
-                    defaultValue={this.state.currentUserInfo.productsPerPage}
-                    onChange={e => (tempUser.productsPerPage = e.target.value)}
-                  />
-                </Col>
-              </FormGroup>
-
-              <div
-                className="checkboxradiowrapper"
-                style={{
-                  display: "flex",
-                  direction: "row",
-                  marginTop: "25em",
-                  width: "100%",
-                  justifyContent: "space-around"
-                }}
-              >
-                <FormGroup>
-                  <ControlLabel>Akceptujesz nasz newsletter</ControlLabel>
-                  <Checkbox
-                    defaultChecked={
-                      this.state.currentUserInfo.acceptsNewsletters
-                    }
-                    onChange={e =>
-                      (tempUser.acceptsNewsletters = e.target.checked)
-                    }
-                  />
-                </FormGroup>
-                <FormGroup bsClass="price_radio_group">
-                  <ControlLabel>Preferowane wyświetlanie ceny</ControlLabel>
-                  <Radio
-                    name="radioGroup"
-                    defaultChecked={this.state.currentUserInfo.prefersNetPrice}
-                    onChange={e => (tempUser.prefersNetPrice = true)}
-                  >
-                    Netto
-                  </Radio>
-                  <Radio
-                    name="radioGroup"
-                    defaultChecked={!this.state.currentUserInfo.prefersNetPrice}
-                    onChange={e => (tempUser.prefersNetPrice = false)}
-                  >
-                    Brutto
-                  </Radio>
-                </FormGroup>
-              </div>
-              <Button
-                onClick={() => this.setState({ currentUserInfo: tempUser })}
-              >
-                Zatwierdź
-              </Button>
-            </Form>
-          </Tab>
-          <Tab eventKey={2} title="Historia zamówień">
-            <p>Historia zamówień:</p>
-            <hr />
-            {this.renderHistory()}
-          </Tab>
-        </Tabs>
       </div>
     );
   }

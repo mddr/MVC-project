@@ -40,7 +40,6 @@ export class Login extends Component {
         window.location.reload();
       })
       .catch(() => {
-        //todo: change it
         alert("Nieprawidłowy email lub hasło");
       });
   };

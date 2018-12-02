@@ -1,5 +1,6 @@
-import React, { Component } from "react";
-import "./Product.css";
+import './Product.css';
+
+import React, { Component } from 'react';
 
 class Product extends Component {
   extractUnits = (price, discount) => {
@@ -15,7 +16,6 @@ class Product extends Component {
   };
 
   render() {
-    //eslint-disable-next-line
     let { discount, name, price } = this.props;
 
     return (

@@ -1,13 +1,14 @@
-import React, { Component } from "react";
-import { Button, Glyphicon, FormGroup, FormControl } from "react-bootstrap";
+import '../HomePage/Home.css';
+import './OrderPage.css';
+import './ProductPage.css';
 
-import "./OrderPage.css";
-import "../HomePage/Home.css";
-import "./ProductPage.css";
-import CartService from "../../services/CartService";
-import ProductService from "../../services/ProductService";
-import AddressService from "../../services/AddressService";
-import OrderService from "../../services/OrderService";
+import React, { Component } from 'react';
+import { Button, FormControl, FormGroup, Glyphicon } from 'react-bootstrap';
+
+import AddressService from '../../services/AddressService';
+import CartService from '../../services/CartService';
+import OrderService from '../../services/OrderService';
+import ProductService from '../../services/ProductService';
 
 class OrderPage extends Component {
   constructor(props) {
@@ -17,8 +18,8 @@ class OrderPage extends Component {
       street: "",
       houseNumber: "",
       postalCode: "",
-        city: "",
-        hasAddress: false
+      city: "",
+      hasAddress: false
     };
     this.getTotalPrice = this.getTotalPrice.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -32,22 +33,22 @@ class OrderPage extends Component {
     this.OrderService = new OrderService();
   }
 
-    componentDidMount() {
-        this.AddressService.userAddress()
-            .then(res => res.json())
-            .then(data => {
-                this.setState({
-                    ...data,
-                    hasAddress: true,
-                    remoteAddres: {...data}
-                })
-            })
-    }
+  componentDidMount() {
+    this.AddressService.userAddress()
+      .then(res => res.json())
+      .then(data => {
+        this.setState({
+          ...data,
+          hasAddress: true,
+          remoteAddres: { ...data }
+        })
+      })
+  }
 
-    getTotalPrice() {
+  getTotalPrice() {
     if (this.props.cartItems.length < 1) return 0;
     if (this.props.cartItemsInfo.length < 1) return 0;
-    if (this.props.cartItemsInfo.length != this.props.cartItems.length)
+    if (this.props.cartItemsInfo.length !== this.props.cartItems.length)
       return 0;
     let price = 0;
     for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
@@ -55,47 +56,47 @@ class OrderPage extends Component {
         (this.props.cartItemsInfo[i].pricePln -
           (this.props.cartItemsInfo[i].discount *
             this.props.cartItemsInfo[i].pricePln) /
-            100) *
+          100) *
         this.props.cartItems[i].productAmount;
     }
     return price;
   }
 
-    addressChanged() {
-        if (this.state.city.localeCompare(this.state.remoteAddres.city) !== 0) return true;
-        if (this.state.postalCode.localeCompare(this.state.remoteAddres.postalCode) !== 0) return true;
-        if (this.state.street.localeCompare(this.state.remoteAddres.street) !== 0) return true;
-        if (this.state.houseNumber.localeCompare(this.state.remoteAddres.houseNumber) !== 0) return true;
-        return false;
-    }
+  addressChanged() {
+    if (this.state.city.localeCompare(this.state.remoteAddres.city) !== 0) return true;
+    if (this.state.postalCode.localeCompare(this.state.remoteAddres.postalCode) !== 0) return true;
+    if (this.state.street.localeCompare(this.state.remoteAddres.street) !== 0) return true;
+    if (this.state.houseNumber.localeCompare(this.state.remoteAddres.houseNumber) !== 0) return true;
+    return false;
+  }
 
-    placeOrder() {
-        if (this.state.hasAddress && !this.addressChanged()) {
-        this.OrderService.add()
-            .then(() => window.location.reload());
+  placeOrder() {
+    if (this.state.hasAddress && !this.addressChanged()) {
+      this.OrderService.add()
+        .then(() => window.location.reload());
     } else
-        this.AddressService.add(
+      this.AddressService.add(
         this.state.city,
         this.state.postalCode,
         this.state.street,
         this.state.houseNumber
-        )
-          .then(() => {
-            this.OrderService.add();
-          })
-          .then(() => window.location.reload());
-    }
+      )
+        .then(() => {
+          this.OrderService.add();
+        })
+        .then(() => window.location.reload());
+  }
 
-    handleChange = event => {
+  handleChange = event => {
     this.setState({
       [event.target.id]: event.target.value
     });
   };
 
-    renderItems() {
+  renderItems() {
     if (this.props.cartItems.length < 1) return;
     if (this.props.cartItemsInfo.length < 1) return;
-    if (this.props.cartItemsInfo.length != this.props.cartItems.length) return;
+    if (this.props.cartItemsInfo.length !== this.props.cartItems.length) return;
     let items = [];
     this.props.cartItems.map((item, i) => {
       items.push(
@@ -117,9 +118,9 @@ class OrderPage extends Component {
               (this.props.cartItemsInfo[i].pricePln -
                 (this.props.cartItemsInfo[i].discount *
                   this.props.cartItemsInfo[i].pricePln) /
-                  100) *
-                item.productAmount *
-                100
+                100) *
+              item.productAmount *
+              100
             ) / 100}
             zł
           </span>
@@ -131,20 +132,20 @@ class OrderPage extends Component {
     return items;
   }
 
-    disableSubmit() {
-        return this.state.city.length < 1 ||
-            this.props.cartItems.length < 1 ||
-            this.state.postalCode.length < 1 ||
-            this.state.houseNumber.length < 1 ||
-            this.state.street.length < 1;
-    }
+  disableSubmit() {
+    return this.state.city.length < 1 ||
+      this.props.cartItems.length < 1 ||
+      this.state.postalCode.length < 1 ||
+      this.state.houseNumber.length < 1 ||
+      this.state.street.length < 1;
+  }
   render() {
     const items =
       this.props.cartItems.length > 0 ? (
         this.renderItems()
       ) : (
-        <div>Zamówienie jest puste</div>
-      );
+          <div>Zamówienie jest puste</div>
+        );
     return (
       <div className="orderpage">
         <div className="banner">
@@ -210,8 +211,8 @@ class OrderPage extends Component {
           </FormGroup>
 
           <Button
-                    onClick={this.placeOrder}
-                    disabled={this.disableSubmit()}
+            onClick={this.placeOrder}
+            disabled={this.disableSubmit()}
             bsStyle="buyButton"
             bsSize="large"
             style={{ marginTop: 18 }}
