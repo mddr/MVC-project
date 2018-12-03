@@ -21,6 +21,7 @@ namespace MVC.Backend.ViewModels
         {
             ProductAmount = cartItem.ProductAmount;
             ProductId = cartItem.ProductId;
+            Product = new ProductViewModel(cartItem.Product);
             IsValid = cartItem.IsValid;
         }
 

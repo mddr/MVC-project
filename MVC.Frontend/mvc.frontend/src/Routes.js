@@ -27,7 +27,6 @@ class Routes extends Component {
             <ProductPage
               {...props}
               cartItems={this.props.cartItems}
-              cartItemsInfo={this.props.cartItemsInfo}
             />
           )}
         />
@@ -38,7 +37,6 @@ class Routes extends Component {
             <OrderPage
               {...props}
               cartItems={this.props.cartItems}
-              cartItemsInfo={this.props.cartItemsInfo}
             />
           )}
         />

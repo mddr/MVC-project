@@ -51,8 +51,8 @@ class ProductPage extends Component {
   }
 
   addToCart() {
-    for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
-      if (this.props.cartItemsInfo[i].id === this.state.id) {
+    for (let i = 0; i < this.props.cartItems.length; i++) {
+      if (this.props.cartItems[i].product.id === this.state.id) {
         this.CartService.updateItem(
           this.state.id,
           this.state.count + this.props.cartItems[i].productAmount

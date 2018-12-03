@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
@@ -24,7 +25,9 @@ namespace MVC.Backend.Services
                 throw new ArgumentException($"User not found. Id: {userId}");
 
             var cartId = user.CartId;
-            var cart = _context.CartItems.Where(i => i.Id == cartId).ToList();
+            var cart = _context.CartItems
+						.Include("Product")
+						.Where(i => i.Id == cartId).ToList();
             if (cart.Any(c => c.UserId != userId))
                 throw new ArgumentException($"Invalid user");
 

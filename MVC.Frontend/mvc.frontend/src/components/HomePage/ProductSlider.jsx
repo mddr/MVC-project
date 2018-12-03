@@ -45,8 +45,8 @@ class ProductSlider extends Component {
                 : productsPerSlider * this.state.sliderPosition) &&
             Products.indexOf(element) <
               (this.state.sliderPosition + 1) * productsPerSlider
-        ).map(element => (
-          <Link to={`/product/${element.id}`}>
+				).map(element => (
+					<Link key={element.id} to={`/product/${element.id}`}>
             <Product
               key={element.id}
               imageBase64={element.imageBase64}

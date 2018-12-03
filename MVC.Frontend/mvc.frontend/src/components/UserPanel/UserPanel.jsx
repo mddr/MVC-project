@@ -13,9 +13,9 @@ import {
   Button
 } from "react-bootstrap";
 import OrderService from "../../services/OrderService";
+import UserService from "../../services/UserService";
 
 class UserPanel extends Component {
-  //todo dodać get i post state'a
   constructor(props) {
     super(props);
     this.state = {
@@ -39,10 +39,15 @@ class UserPanel extends Component {
       Orders: []
     };
     this.OrderService = new OrderService();
+    this.UserService = new UserService();
   }
 
   componentDidMount() {
-    this.setState({ currentUserInfo: this.props.userInfo });
+    this.UserService.getUserInfo()
+        .then(res => res.json())
+        .then(data => {
+            this.setState({ currentUserInfo: { ...data } });
+        });
     this.OrderService.getUserOrders()
       .then(res => res.json())
       .then(data => {

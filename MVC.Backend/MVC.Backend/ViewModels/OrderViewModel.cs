@@ -39,7 +39,7 @@ namespace MVC.Backend.ViewModels
             //ShoppingCart = cart.Select(c => new CartItemViewModel(c)).ToList();
             foreach(var c in cart)
             {
-                ShoppingCart.Add(new CartItemViewModel(c, c.Product));
+                ShoppingCart.Add(new CartItemViewModel(c));
             }
         }
 

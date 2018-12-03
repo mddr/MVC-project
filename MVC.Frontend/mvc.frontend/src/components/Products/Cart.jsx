@@ -25,17 +25,14 @@ class Cart extends Component {
   }
 
   getTotalPrice() {
-    if (this.props.cartItems.length < 1) return 0;
-    if (this.props.cartItemsInfo.length < 1) return 0;
-    if (this.props.cartItemsInfo.length !== this.props.cartItems.length)
-      return 0;
-    let price = 0;
-    for (let i = 0; i < this.props.cartItemsInfo.length; i++) {
+		if (this.props.cartItems.length < 1) return 0;
+		let price = 0;
+    for (let i = 0; i < this.props.cartItems.length; i++) {
       price +=
-        this.props.cartItemsInfo[i].pricePln *
+        this.props.cartItems[i].product.pricePln *
         this.props.cartItems[i].productAmount -
-        (this.props.cartItemsInfo[i].discount *
-          this.props.cartItemsInfo[i].pricePln *
+        (this.props.cartItems[i].product.discount *
+          this.props.cartItems[i].product.pricePln *
           this.props.cartItems[i].productAmount) /
         100;
     }
@@ -66,9 +63,7 @@ class Cart extends Component {
 
   renderItems() {
     if (this.props.cartItems.length < 1) return;
-    if (this.props.cartItemsInfo.length < 1) return;
     // eslint-disable-next-line
-    if (this.props.cartItemsInfo.length != this.props.cartItems.length) return;
     let items = [];
     // eslint-disable-next-line
     this.props.cartItems.map((item, i) => {
@@ -77,20 +72,20 @@ class Cart extends Component {
           <img
             src={
               "data:image/jpeg;base64," +
-              this.props.cartItemsInfo[i].imageBase64
+              this.props.cartItems[i].product.imageBase64
             }
-            alt={this.props.cartItemsInfo[i].name}
+            alt={this.props.cartItems[i].product.name}
             height="64"
             width="64"
           />
           <span className="namespan">
-            {item.productAmount} x {this.props.cartItemsInfo[i].name}
+            {item.productAmount} x {this.props.cartItems[i].product.name}
           </span>
           <span style={{ width: "50px" }}>
             {Math.round(
-              (this.props.cartItemsInfo[i].pricePln * item.productAmount -
-                (this.props.cartItemsInfo[i].discount *
-                  this.props.cartItemsInfo[i].pricePln *
+              (this.props.cartItems[i].product.pricePln * item.productAmount -
+                (this.props.cartItems[i].product.discount *
+                  this.props.cartItems[i].product.pricePln *
                   this.props.cartItems[i].productAmount) /
                 100) *
               100
