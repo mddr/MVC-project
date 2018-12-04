@@ -42,7 +42,83 @@ namespace MVC.Backend.Controllers
             }
         }
 
-        private int CurrentUserId()
+		[HttpGet]
+		[Route("user/{id}")]
+		public IActionResult GetUser(int id)
+		{
+			try
+			{
+				var users = _userService.GetUser(id);
+				return Ok(users);
+			}
+			catch (ArgumentException ex)
+			{
+				return BadRequest();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError);
+			}
+		}
+
+		[HttpGet]
+		[Route("users")]
+		public IActionResult GetUsers()
+		{
+			try
+			{
+				var users = _userService.GetUsers();
+				return Ok(users.Select(u => new UserViewModel(u)));
+			}
+			catch (ArgumentException ex)
+			{
+				return BadRequest();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError);
+			}
+		}
+
+		[HttpPost]
+		[Route("user/update")]
+		public IActionResult UpdateUser([FromBody]UserViewModel viewModel)
+		{
+			try
+			{
+				_userService.UpdateUser(viewModel);
+				return Ok();
+			}
+			catch (ArgumentException ex)
+			{
+				return BadRequest();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError);
+			}
+		}
+
+		[HttpDelete]
+		[Route("user/delete/{id}")]
+		public IActionResult DeleteUser(int id)
+		{
+			try
+			{
+				_userService.DeleteUser(id);
+				return Ok();
+			}
+			catch (ArgumentException ex)
+			{
+				return BadRequest();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError);
+			}
+		}
+
+		private int CurrentUserId()
         {
             return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }

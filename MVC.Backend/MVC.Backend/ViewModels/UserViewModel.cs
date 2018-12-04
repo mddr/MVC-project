@@ -13,7 +13,8 @@ namespace MVC.Backend.ViewModels
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public AddressViewModel Address { get; set; }
+		public string Email { get; set; }
+		public AddressViewModel Address { get; set; }
 
         public string Currency { get; set; }
         public bool PrefersNetPrice { get; set; }
@@ -30,11 +31,12 @@ namespace MVC.Backend.ViewModels
             EmailConfirmed = user.EmailConfirmed;
             FirstName = user.FirstName;
             LastName = user.LastName;
+			Email = user.Email;
             Currency = user.Currency.ToString();
             PrefersNetPrice = user.PrefersNetPrice;
             AcceptsNewsletters = user.AcceptsNewsletters;
             ProductsPerPage = user.ProductsPerPage;
             if (user.Address != null) Address = new AddressViewModel(user.Address);
         }
-    }
+	}
 }

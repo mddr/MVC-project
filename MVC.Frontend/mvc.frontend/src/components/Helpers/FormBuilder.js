@@ -2,6 +2,7 @@ import * as React from "react";
 
 import ProductForm from "../AdminPanel/ProductForm";
 import CategoryForm from "../AdminPanel/CategoryForm";
+import UserForm from "../AdminPanel/UserForm";
 import DeleteForm from "../AdminPanel/DeleteForm";
 
 export default class FormBuilder extends React.Component {
@@ -34,7 +35,21 @@ export default class FormBuilder extends React.Component {
             hideForm={this.props.hideForm}
             modelProps={this.props.modelProps}
           />
-        );
+				);
+			case "user":
+				return (
+					<UserForm
+						Auth={this.props.Auth}
+						apiUrl={this.props.apiUrl}
+						apiAction={this.props.apiAction}
+						updateData={this.props.updateData}
+						categories={this.props.categories}
+						title={this.props.title}
+						showForm={this.props.showForm}
+						hideForm={this.props.hideForm}
+						modelProps={this.props.modelProps}
+					/>
+				);
       case "delete":
         return (
           <DeleteForm

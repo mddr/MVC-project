@@ -9,6 +9,7 @@ using MVC.Backend.Data;
 using MVC.Backend.Helpers;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
+using static MVC.Backend.Helpers.Enums;
 
 namespace MVC.Backend.Services
 {
@@ -16,12 +17,15 @@ namespace MVC.Backend.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly ITokenService _tokenService;
+        private readonly IAddressService _addressService;
 
-        public UserService(ApplicationDbContext context, ITokenService tokenService)
+        public UserService(ApplicationDbContext context, ITokenService tokenService, IAddressService addressService)
         {
             _context = context;
             _tokenService = tokenService;
-        }
+			_addressService = addressService;
+
+		}
 
         public async Task AddUser(SignupViewModel viewModel, Enums.Roles role = Enums.Roles.User)
         {
@@ -89,5 +93,63 @@ namespace MVC.Backend.Services
             var result = new UserViewModel(user);
             return result;
         }
-    }
+
+		public User GetUser(int userId)
+		{
+			var user = _context.Users
+				.Include(u => u.Address)
+				.FirstOrDefault(u => u.Id == userId);
+			if (user == null)
+				throw new ArgumentException($"User not found. Id: {userId}");
+			return user;
+		}
+
+		public List<User> GetUsers()
+		{
+			var users = _context.Users;
+			var addresses = _addressService.GetAddresses();
+			foreach(var a in addresses)
+			{
+				var user = users.Where(u => u.AddressId == a.Id).SingleOrDefault();
+				if (user != null){
+					user.Address = a;
+				}
+			}
+			return users.ToList();
+		}
+
+		public void UpdateUser(UserViewModel viewModel)
+		{
+			if (viewModel == null)
+				throw new ArgumentException();
+
+			var user = _context.Users.SingleOrDefault(c => c.Id == viewModel.Id);
+			if (user == null)
+				throw new ArgumentException("Invalid id");
+
+			if (!Enum.TryParse(viewModel.Currency, out Currency currency))
+				throw new ArgumentException("Faild to parse currency");
+
+			user.Currency = currency;
+			user.EmailConfirmed = viewModel.EmailConfirmed;
+			user.FirstName = viewModel.FirstName;
+			user.LastName = viewModel.LastName;
+			user.Email = viewModel.Email;
+			user.PrefersNetPrice = viewModel.PrefersNetPrice;
+			user.AcceptsNewsletters = viewModel.AcceptsNewsletters;
+			user.ProductsPerPage = viewModel.ProductsPerPage;
+			user.AcceptsNewsletters = viewModel.AcceptsNewsletters;
+
+			_context.SaveChanges();
+		}
+
+		public void DeleteUser(int userId)
+		{
+			var user = _context.Users.SingleOrDefault(c => c.Id == userId);
+			if (user == null)
+				throw new ArgumentException("Invalid id");
+			_context.Users.Remove(user);
+			_context.SaveChanges();
+		}
+	}
 }

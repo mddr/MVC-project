@@ -82,6 +82,19 @@ class TableRow extends Component {
 		let content = {};
 		for (let i = 0; i < rowKeys.length; i++) {
 			switch (rowKeys[i]) {
+				case "address": content = "";
+					const address = rowData[rowKeys[i]];
+					if (address != null)
+						content = `${address.city}, ${address.postalCode}, ${address.street} ${address.houseNumber}`;
+					break;
+				case "firstName": content = rowData[rowKeys[i]]; break;
+				case "lastName": content = rowData[rowKeys[i]]; break;
+				case "email": content = rowData[rowKeys[i]]; break;
+				case "currency": content = rowData[rowKeys[i]]; break;
+				case "emailConfirmed": rowData[rowKeys[i]] ? content = "tak" : content = "nie"; break;
+				case "prefersNetPrice": rowData[rowKeys[i]] ? content = "tak" : content = "nie"; break;
+				case "acceptsNewsletters": rowData[rowKeys[i]] ? content = "tak" : content = "nie"; break;
+				case "productsPerPage": content = rowData[rowKeys[i]]; break;
 				case "name": content = rowData[rowKeys[i]]; break;
 				case "categoryId": content = this.getCategoryName(rowData[rowKeys[i]]); break;
 				case "isHidden": rowData[rowKeys[i]] ? content = "tak" : content = "nie"; break;

@@ -51,6 +51,33 @@ class Table extends Component {
 					case "subCategories":
 						header = "Podkategorie";
 						break;
+					case "firstName":
+						header = "Imie";
+						break;
+					case "lastName":
+						header = "Nazwisko";
+						break;
+					case "email":
+						header = "Email";
+						break;
+					case "currency":
+						header = "Waluta";
+						break;
+					case "emailConfirmed":
+						header = "Email potwierdzony";
+						break;
+					case "prefersNetPrice":
+						header = "Preferuje cene netto";
+						break;
+					case "acceptsNewsletters":
+						header = "Akceptuje newsletter";
+						break;
+					case "productsPerPage":
+						header = "Liczba produktów na strone";
+						break;
+					case "address":
+						header = "Adres";
+						break;
 					default:
 						continue;
 				}
