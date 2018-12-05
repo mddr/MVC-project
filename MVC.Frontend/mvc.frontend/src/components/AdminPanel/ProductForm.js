@@ -62,6 +62,9 @@ export default class ProductForm extends React.Component {
       this.setState({ imageBase64: reader.result });
     };
   };
+  handleMultipleFiles = e => {
+    //TODO
+  };
 
   componentDidMount() {
     if (this.props.modelProps)
@@ -204,6 +207,15 @@ export default class ProductForm extends React.Component {
             <div className="button">
               <label htmlFor="single">Ikona</label>
               <input type="file" id="single" onChange={this.handleFile} />
+            </div>
+            <div>
+              <label htmlFor="multiplefiles">Dodaj pliki...</label>
+              <input
+                type="file"
+                id="multiplefiles"
+                onChange={this.handleMultipleFiles}
+                multiple
+              />
             </div>
           </form>
         </Modal.Body>
