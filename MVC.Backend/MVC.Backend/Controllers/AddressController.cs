@@ -94,7 +94,26 @@ namespace MVC.Backend.Controllers
             }
         }
 
-        [HttpPost]
+		[HttpPost]
+		[Route("address/add/{userId}")]
+		public IActionResult SetAddress([FromBody] AddressViewModel viewModel, int userId)
+		{
+			try
+			{
+				_addressService.AddAddress(viewModel, userId);
+				return Ok();
+			}
+			catch (ArgumentException)
+			{
+				return BadRequest();
+			}
+			catch (Exception)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError);
+			}
+		}
+
+		[HttpPost]
         [Route("address/update")]
         [Authorize]
         public IActionResult Update([FromBody] AddressViewModel viewModel)

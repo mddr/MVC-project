@@ -15,7 +15,6 @@ class AdminPanel extends Component {
 			showCreateForm: false,
 		};
 		this.Auth = new AuthService();
-		this.handleChange = this.handleChange.bind(this);
 		this.fetchData = this.fetchData.bind(this);
 		this.hideForm = this.hideForm.bind(this);
 		this.updateData = this.updateData.bind(this);
@@ -46,18 +45,18 @@ class AdminPanel extends Component {
 		});
 	}
 
-	handleChange = event => {
-		this.setState({
-			["form-" + event.target.id]: event.target.value
-		});
-	};
-
 	hideForm() {
 		this.setState({ showCreateForm: false });
 	}
 
 	updateData(model) {
 		window.location.reload(true);
+	}
+
+	disableCreate() {
+		if (this.state.apiUrl.singular === "user")
+			return true;
+		return false;
 	}
 
 	render() {
@@ -77,10 +76,13 @@ class AdminPanel extends Component {
 								<h4>Tabels</h4>
 								<ul className="nav nav-pills nav-stacked">
 									<li className="active">
-										<a href="#section" onClick={() => { this.setState({ apiUrl: { plural: "categories", singular: "category" } }) }}>Kategorie</a>
+										<a href="#category" onClick={() => { this.setState({ apiUrl: { plural: "categories", singular: "category" } }) }}>Kategorie</a>
 									</li>
 									<li className="active">
-										<a href="#section2" onClick={() => { this.setState({ apiUrl: { plural: "products", singular: "product" } }) }}>Produkty</a>
+										<a href="#product" onClick={() => { this.setState({ apiUrl: { plural: "products", singular: "product" } }) }}>Produkty</a>
+									</li>
+									<li className="active">
+										<a href="#user" onClick={() => { this.setState({ apiUrl: { plural: "users", singular: "user" } }) }}>Użytkownicy</a>
 									</li>
 								</ul>
 								<br />
@@ -91,16 +93,7 @@ class AdminPanel extends Component {
 					<div className="col-sm-9">
 						<div className="panel panel-default">
 							<div className="panel-body">
-								<Button onClick={() => { this.setState({ showCreateForm: true }) }}>Utwórz</Button>
-								<FormBuilder
-									model={this.state.apiUrl.singular}
-									Auth={this.Auth} apiUrl={this.state.apiUrl} apiAction={"add"}
-									categories={this.state.categories}
-									showForm={this.state.showCreateForm}
-									title={"Utwórz"}
-									hideForm={this.hideForm}
-									updateData={this.updateData}
-								/>
+								{this.renderCreateButton()}
 								<Table apiUrl={this.state.apiUrl} Auth={this.Auth} data={this.state.data} categories={this.state.categories} updateData={this.updateData}
 								/>
 							</div>
@@ -109,6 +102,21 @@ class AdminPanel extends Component {
 				</div>
 			</div>
 		);
+	}
+
+	renderCreateButton() {
+		if (this.disableCreate())
+			return;
+		return (<div><Button onClick={() => { this.setState({ showCreateForm: true }) }}>Utwórz</Button>
+			<FormBuilder
+				model={this.state.apiUrl.singular}
+				Auth={this.Auth} apiUrl={this.state.apiUrl} apiAction={"add"}
+				categories={this.state.categories}
+				showForm={this.state.showCreateForm}
+				title={"Utwórz"}
+				hideForm={this.hideForm}
+				updateData={this.updateData}
+			/></div>);
 	}
 }
 

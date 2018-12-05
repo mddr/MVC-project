@@ -15,5 +15,9 @@ namespace MVC.Backend.Services
         Task<ObjectResult> Login(LoginViewModel viewModel);
         Task ConfirmEmail(string token);
         UserViewModel GetUserData(int userId);
+        User GetUser(int userId);
+        List<User> GetUsers();
+        void UpdateUser(UserViewModel viewModel);
+        void DeleteUser(int userId);
     }
 }
