@@ -51,7 +51,22 @@ namespace MVC.Backend.Controllers
             }
         }
 
-        [HttpGet]
+		[HttpGet]
+		[Route("products/newest/{amount}")]
+		public IActionResult NewestProducts(int amount)
+		{
+			try
+			{
+				var products = _productService.GetNewest(amount);
+				return Ok(ProductViewModel.ToList(products));
+			}
+			catch (Exception)
+			{
+				return StatusCode(StatusCodes.Status500InternalServerError);
+			}
+		}
+
+		[HttpGet]
         [Route("products/{categoryId}")]
         public IActionResult Products(int categoryId)
         {

@@ -12,6 +12,7 @@ namespace MVC.Backend.Services
         List<Product> GetProducts();
         List<Product> GetProducts(int categoryId);
         List<Product> GetMostPopular(int amount);
+        List<Product> GetNewest(int amount);
         List<Product> GetUserHistory(int userId);
         Product GetProduct(string id);
         void AddProduct(ProductViewModel viewModel);

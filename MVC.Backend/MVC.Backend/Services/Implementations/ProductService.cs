@@ -37,7 +37,13 @@ namespace MVC.Backend.Services
             return products.OrderByDescending(p => p.BoughtTimes).Take(amount).ToList();
         }
 
-        public List<Product> GetUserHistory(int userId)
+		public List<Product> GetNewest(int amount)
+		{
+			var products = _context.Products;
+			return products.OrderByDescending(p => p.AddedAt).Take(amount).ToList();
+		}
+
+		public List<Product> GetUserHistory(int userId)
         {
             var orders = _context.Orders.Where(o => o.UserId == userId);
             if (!orders.Any()) return null;
