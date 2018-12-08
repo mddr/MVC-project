@@ -25,16 +25,16 @@ class Cart extends Component {
   }
 
   getTotalPrice() {
-		if (this.props.cartItems.length < 1) return 0;
-		let price = 0;
+    if (this.props.cartItems.length < 1) return 0;
+    let price = 0;
     for (let i = 0; i < this.props.cartItems.length; i++) {
       price +=
         this.props.cartItems[i].product.pricePln *
-        this.props.cartItems[i].productAmount -
+          this.props.cartItems[i].productAmount -
         (this.props.cartItems[i].product.discount *
           this.props.cartItems[i].product.pricePln *
           this.props.cartItems[i].productAmount) /
-        100;
+          100;
     }
     return price;
   }
@@ -87,8 +87,8 @@ class Cart extends Component {
                 (this.props.cartItems[i].product.discount *
                   this.props.cartItems[i].product.pricePln *
                   this.props.cartItems[i].productAmount) /
-                100) *
-              100
+                  100) *
+                100
             ) / 100}
             zł
           </span>
@@ -152,16 +152,16 @@ class Cart extends Component {
           </div>
         </Popover>
       ) : (
-          <Popover
-            id="popover-trigger-click-root-close"
-            title="Koszyk"
-            arrowOffsetTop="80"
-          >
-            <span style={{ color: "gray", margin: "2px", fontStyle: "italic" }}>
-              Koszyk jest pusty
+        <Popover
+          id="popover-trigger-click-root-close"
+          title="Koszyk"
+          arrowOffsetTop="80"
+        >
+          <span style={{ color: "gray", margin: "2px", fontStyle: "italic" }}>
+            Koszyk jest pusty
           </span>
-          </Popover>
-        );
+        </Popover>
+      );
     return (
       <div className="cart">
         <OverlayTrigger

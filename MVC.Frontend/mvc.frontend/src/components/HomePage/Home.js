@@ -16,6 +16,7 @@ export default class Home extends Component {
       categories: [],
       Products: [],
       TopProducts: [],
+      NewProducts: [],
       category: -1
     };
 
@@ -42,6 +43,13 @@ export default class Home extends Component {
           TopProducts: res
         });
       });
+    this.ProductService.getNewest(4)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          NewProducts: res
+        });
+      });
     this.Auth.fetch(`${this.Auth.domain}/categories`, null)
       .then(res => res.json())
       .then(res => {
@@ -50,7 +58,6 @@ export default class Home extends Component {
         });
       });
   }
-
   displayCategoriesTree = parentID => {
     const categories = this.state.categories.map(category => {
       if (category.superiorCategoryId === parentID) {
@@ -113,7 +120,7 @@ export default class Home extends Component {
           <hr />
           {
             <ProductSlider
-              Products={this.state.Products}
+              Products={this.state.NewProducts}
               productsPerSlider={3}
             />
           }
