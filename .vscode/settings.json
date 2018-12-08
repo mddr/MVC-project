@@ -1,4 +1,4 @@
 {
-  "powermode.enabled": true,
+  "powermode.enabled": false,
   "powermode.presets": "exploding-rift"
 }
