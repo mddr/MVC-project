@@ -1,13 +1,7 @@
 import "./App.css";
 
 import React, { Component } from "react";
-import {
-  Nav,
-  Navbar,
-  NavItem,
-  FormControl,
-  Button
-} from "react-bootstrap";
+import { Nav, Navbar, NavItem, FormControl, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, Redirect } from "react-router-dom";
 import Cart from "./components/Products/Cart";
@@ -65,17 +59,12 @@ class App extends Component {
   }
 
   async loadCart() {
-
     await this.CartService.getCart()
       .then(res => res.json())
       .then(data =>
-        this.setState(
-          {
-            cartItems: data.sort((a, b) =>
-              a.productId.localeCompare(b.productId)
-            )
-          }
-        )
+        this.setState({
+          cartItems: data.sort((a, b) => a.productId.localeCompare(b.productId))
+        })
       );
   }
 
@@ -84,16 +73,16 @@ class App extends Component {
     this.setState({
       pressedLogout: true,
       cartItems: [],
-      cartItemsInfo: [],
-    })
+      cartItemsInfo: []
+    });
   }
 
   handleInput;
 
   render() {
     if (this.state.pressedLogout === true) {
-      this.setState({ pressedLogout: false })
-      return <Redirect to='/' />
+      this.setState({ pressedLogout: false });
+      return <Redirect to="/" />;
     }
 
     return (
@@ -105,7 +94,7 @@ class App extends Component {
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
-					{this.renderTopNavBar()}
+          {this.renderTopNavBar()}
         </Navbar>
         <Routes
           cartItems={this.state.cartItems}
@@ -117,71 +106,72 @@ class App extends Component {
     );
   }
 
-	renderTopNavBar() {
-		const isUserLogged = auth.loggedInWithRefresh();
-		const searchBox = (
-			<Navbar.Form pullLeft>
-				<FormControl
-					id="search_input"
-					type="text"
-					placeholder="Wpisz nazwę..."
-					style={{ margin: "auto", width: "25em" }}
-					onChange={e => this.setState({ searchInput: e.target.value })}
-				/>{" "}
-				<Link to="/search-results">
-					<Button type="submit" style={{ margin: "auto" }}>
-						Szukaj
+  renderTopNavBar() {
+    const isUserLogged = auth.loggedInWithRefresh();
+    const searchBox = (
+      <Navbar.Form pullLeft>
+        <FormControl
+          id="search_input"
+          type="text"
+          placeholder="Wpisz nazwę..."
+          style={{ margin: "auto", width: "25em" }}
+          onChange={e => this.setState({ searchInput: e.target.value })}
+        />{" "}
+        <Link to="/search-results">
+          <Button type="submit" style={{ margin: "auto" }}>
+            Szukaj
           </Button>
-				</Link>
-			</Navbar.Form>
-		);
-		let loginControl;
-		if (!isUserLogged) {
-			loginControl = (
-				<Navbar.Collapse>
-					{searchBox}
-					<Nav pullRight>
-						<NavItem style={{ padding: "none" }}>
-							<Cart
-								cartItems={this.state.cartItems}
-								cartItemChanged={this.cartItemChanged}
-							/>
-						</NavItem>
-						<LinkContainer to="/login">
-							<NavItem>Zaloguj się</NavItem>
-						</LinkContainer>
-						<LinkContainer to="/register">
-							<NavItem>Zarejestruj się</NavItem>
-						</LinkContainer>
-					</Nav>
-				</Navbar.Collapse>
-			);
-		} else {
-			const userInfo = auth.getProfile();
-			var keys = Object.keys(userInfo)
-			loginControl = (
-				<Navbar.Collapse>
-					{searchBox}
-					<Nav pullRight>
-						<NavItem style={{ padding: "none" }}>
-							<Cart
-								cartItems={this.state.cartItems}
-								cartItemChanged={this.cartItemChanged}
-							/>
-						</NavItem>
-						<Nav pullRight>
-							<LinkContainer to="/user">
-								<NavItem>Cześć {userInfo[keys[0]]}!</NavItem>
-							</LinkContainer>
-							<NavItem onClick={this.handleLogout.bind(this)}>
-								Wyloguj się
+        </Link>
+      </Navbar.Form>
+    );
+    let loginControl;
+    if (!isUserLogged) {
+      loginControl = (
+        <Navbar.Collapse>
+          {searchBox}
+          <Nav pullRight>
+            <NavItem style={{ padding: "none" }}>
+              <Cart
+                cartItems={this.state.cartItems}
+                cartItemChanged={this.cartItemChanged}
+              />
+            </NavItem>
+            <LinkContainer to="/login">
+              <NavItem>Zaloguj się</NavItem>
+            </LinkContainer>
+            <LinkContainer to="/register">
+              <NavItem>Zarejestruj się</NavItem>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      );
+    } else {
+      const userInfo = auth.getProfile();
+      var keys = Object.keys(userInfo);
+      loginControl = (
+        <Navbar.Collapse>
+          {searchBox}
+          <Nav pullRight>
+            <NavItem style={{ padding: "none" }}>
+              <Cart
+                cartItems={this.state.cartItems}
+                cartItemChanged={this.cartItemChanged}
+                userInfo={this.state.userInfo}
+              />
+            </NavItem>
+            <Nav pullRight>
+              <LinkContainer to="/user">
+                <NavItem>Cześć {userInfo[keys[0]]}!</NavItem>
+              </LinkContainer>
+              <NavItem onClick={this.handleLogout.bind(this)}>
+                Wyloguj się
               </NavItem>
-						</Nav>
-					</Nav>
-				</Navbar.Collapse>
-			);
-		}
-		return loginControl;
+            </Nav>
+          </Nav>
+        </Navbar.Collapse>
+      );
+    }
+    return loginControl;
   }
 }
 
