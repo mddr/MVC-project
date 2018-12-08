@@ -53,7 +53,7 @@ namespace MVC.Backend.Controllers
             {
                 await _userService.AddUser(viewModel, Enums.Roles.Admin);
 
-                var host = Request.Host;
+                const string host = "localhost:3000";
                 _emailService.SendConfirmationEmail(viewModel.Email, host.ToString());
                 return Ok();
             }

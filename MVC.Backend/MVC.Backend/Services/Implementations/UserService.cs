@@ -110,7 +110,7 @@ namespace MVC.Backend.Services
 			var addresses = _addressService.GetAddresses();
 			foreach(var a in addresses)
 			{
-				var user = users.Where(u => u.AddressId == a.Id).SingleOrDefault();
+				var user = users.SingleOrDefault(u => u.AddressId == a.Id);
 				if (user != null){
 					user.Address = a;
 				}
