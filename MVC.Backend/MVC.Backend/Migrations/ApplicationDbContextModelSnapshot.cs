@@ -3,17 +3,15 @@ using System;
 using MVC.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MVC.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181028195815_CategoriesRelation")]
-    partial class CategoriesRelation
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,11 +19,29 @@ namespace MVC.Backend.Migrations
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("MVC.Backend.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("HouseNumber");
+
+                    b.Property<string>("PostalCode");
+
+                    b.Property<string>("Street");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("MVC.Backend.Models.CartItem", b =>
                 {
                     b.Property<string>("Id");
 
-                    b.Property<int>("ProductId");
+                    b.Property<string>("ProductId");
 
                     b.Property<bool>("IsValid");
 
@@ -33,15 +49,13 @@ namespace MVC.Backend.Migrations
 
                     b.Property<int>("ProductAmount");
 
-                    b.Property<string>("ProductId1");
-
                     b.Property<int>("UserId");
 
                     b.HasKey("Id", "ProductId");
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductId1");
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
 
@@ -70,14 +84,20 @@ namespace MVC.Backend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("AddressId");
+
                     b.Property<string>("CartId")
                         .IsRequired();
+
+                    b.Property<DateTime>("CreatedAt");
 
                     b.Property<double>("TotalPrice");
 
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("UserId");
 
@@ -94,6 +114,8 @@ namespace MVC.Backend.Migrations
                     b.Property<int>("BoughtTimes");
 
                     b.Property<int>("CategoryId");
+
+                    b.Property<DateTime>("CreatedAt");
 
                     b.Property<int>("Discount");
 
@@ -145,12 +167,16 @@ namespace MVC.Backend.Migrations
 
                     b.Property<bool>("AcceptsNewsletters");
 
+                    b.Property<int?>("AddressId");
+
                     b.Property<string>("CartId");
 
                     b.Property<int>("Currency");
 
                     b.Property<string>("Email")
                         .IsRequired();
+
+                    b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
                         .IsRequired();
@@ -187,7 +213,8 @@ namespace MVC.Backend.Migrations
 
                     b.HasOne("MVC.Backend.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId1");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MVC.Backend.Models.User", "User")
                         .WithMany("ShoppingCart")
@@ -204,6 +231,10 @@ namespace MVC.Backend.Migrations
 
             modelBuilder.Entity("MVC.Backend.Models.Order", b =>
                 {
+                    b.HasOne("MVC.Backend.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
                     b.HasOne("MVC.Backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")

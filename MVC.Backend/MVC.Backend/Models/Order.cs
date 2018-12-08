@@ -20,7 +20,7 @@ namespace MVC.Backend.Models
         public List<CartItem> ShoppingCart { get; set; }
 
         [Required] public double TotalPrice { get; set; }
-        [Required] public DateTime CreatedAt => DateTime.Now;
+        [Required] public DateTime CreatedAt { get; set; }
 
         public Order()
         {
@@ -28,6 +28,7 @@ namespace MVC.Backend.Models
 
         public Order(int userId, int? addressId, string cartId, double totalPrice, List<CartItem> cart)
         {
+            CreatedAt = DateTime.Now;
             UserId = userId;
             AddressId = addressId;
             CartId = cartId;

@@ -40,7 +40,7 @@ namespace MVC.Backend.Services
 		public List<Product> GetNewest(int amount)
 		{
 			var products = _context.Products;
-			return products.OrderByDescending(p => p.AddedAt).Take(amount).ToList();
+			return products.OrderByDescending(p => p.CreatedAt).Take(amount).ToList();
 		}
 
 		public List<Product> GetUserHistory(int userId)

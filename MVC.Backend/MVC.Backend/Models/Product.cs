@@ -20,7 +20,7 @@ namespace MVC.Backend.Models
         [Required] public int TaxRate { get; set; } //todo: walidacja (0/5/8/23)
         public int Discount { get; set; }
 
-        [Required] public DateTime AddedAt;
+        [Required] public DateTime CreatedAt { get; set; }
         [Required] public int AmountAvailable { get; set; }
         [Required] public int BoughtTimes { get; set; }
 
@@ -40,7 +40,7 @@ namespace MVC.Backend.Models
         public Product(string name, double pricePln, int categoryId, int amountAvailable, string expertEmail, bool isHidden = false, int taxRate = 23, int discount = 0,
             int boughtTimes = 0, string fullImagePath = null, string thumbnailPath = null) : this()
         {
-            AddedAt = DateTime.Now;
+            CreatedAt = DateTime.Now;
             Name = name;
             IsHidden = isHidden;
             ExpertEmail = expertEmail;

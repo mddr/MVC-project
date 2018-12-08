@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MVC.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181027131645_SuperiorCategoryId")]
-    partial class SuperiorCategoryId
+    [Migration("20181208182804_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,11 +21,29 @@ namespace MVC.Backend.Migrations
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("MVC.Backend.Models.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("HouseNumber");
+
+                    b.Property<string>("PostalCode");
+
+                    b.Property<string>("Street");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("MVC.Backend.Models.CartItem", b =>
                 {
                     b.Property<string>("Id");
 
-                    b.Property<int>("ProductId");
+                    b.Property<string>("ProductId");
 
                     b.Property<bool>("IsValid");
 
@@ -51,8 +69,6 @@ namespace MVC.Backend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CategoryId");
-
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -60,7 +76,7 @@ namespace MVC.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("SuperiorCategoryId");
 
                     b.ToTable("Categories");
                 });
@@ -70,14 +86,20 @@ namespace MVC.Backend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("AddressId");
+
                     b.Property<string>("CartId")
                         .IsRequired();
+
+                    b.Property<DateTime>("CreatedAt");
 
                     b.Property<double>("TotalPrice");
 
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("UserId");
 
@@ -86,7 +108,7 @@ namespace MVC.Backend.Migrations
 
             modelBuilder.Entity("MVC.Backend.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AmountAvailable");
@@ -95,12 +117,13 @@ namespace MVC.Backend.Migrations
 
                     b.Property<int>("CategoryId");
 
+                    b.Property<DateTime>("CreatedAt");
+
                     b.Property<int>("Discount");
 
                     b.Property<string>("ExpertEmail");
 
-                    b.Property<string>("FullImagePath")
-                        .IsRequired();
+                    b.Property<string>("FullImagePath");
 
                     b.Property<bool>("IsHidden");
 
@@ -111,8 +134,7 @@ namespace MVC.Backend.Migrations
 
                     b.Property<int>("TaxRate");
 
-                    b.Property<string>("ThumbnailPath")
-                        .IsRequired();
+                    b.Property<string>("ThumbnailPath");
 
                     b.HasKey("Id");
 
@@ -131,9 +153,11 @@ namespace MVC.Backend.Migrations
 
                     b.Property<int>("ProductId");
 
+                    b.Property<string>("ProductId1");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId1");
 
                     b.ToTable("ProductFiles");
                 });
@@ -145,12 +169,16 @@ namespace MVC.Backend.Migrations
 
                     b.Property<bool>("AcceptsNewsletters");
 
+                    b.Property<int?>("AddressId");
+
                     b.Property<string>("CartId");
 
                     b.Property<int>("Currency");
 
                     b.Property<string>("Email")
                         .IsRequired();
+
+                    b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
                         .IsRequired();
@@ -198,13 +226,17 @@ namespace MVC.Backend.Migrations
 
             modelBuilder.Entity("MVC.Backend.Models.Category", b =>
                 {
-                    b.HasOne("MVC.Backend.Models.Category")
+                    b.HasOne("MVC.Backend.Models.Category", "SuperiorCategory")
                         .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("SuperiorCategoryId");
                 });
 
             modelBuilder.Entity("MVC.Backend.Models.Order", b =>
                 {
+                    b.HasOne("MVC.Backend.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
                     b.HasOne("MVC.Backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -223,8 +255,7 @@ namespace MVC.Backend.Migrations
                 {
                     b.HasOne("MVC.Backend.Models.Product", "Product")
                         .WithMany("Files")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ProductId1");
                 });
 #pragma warning restore 612, 618
         }
