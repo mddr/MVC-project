@@ -15,10 +15,14 @@ namespace MVC.Backend.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly IEmailService _emailService;
+        private readonly IUserService _userService;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, IEmailService emailService, IUserService userService)
         {
             _orderService = orderService;
+            _emailService = emailService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -28,7 +32,8 @@ namespace MVC.Backend.Controllers
             try
             {
                 var orders = _orderService.GetOrders();
-                return Ok(OrderViewModel.ToList(orders));
+                var results = orders.Select(o => new OrderViewModel(o)).ToList();
+                return Ok(results);
             }
             catch (Exception)
             {
@@ -58,7 +63,8 @@ namespace MVC.Backend.Controllers
             try
             {
                 var orders = _orderService.GetOrders(userId);
-                return Ok(OrderViewModel.ToList(orders));
+                var results = orders.Select(o => new OrderViewModel(o)).ToList();
+                return Ok(results);
             }
             catch (Exception)
             {
@@ -91,14 +97,17 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                _orderService.AddOrder(CurrentUserId());
+                var userId = CurrentUserId();
+                var user = _userService.GetUser(userId);
+                var order = _orderService.AddOrder(userId);
+                _emailService.SendOrderInfo(user.Email, order);
                 return Ok();
             }
             catch (ArgumentException)
             {
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }

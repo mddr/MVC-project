@@ -8,6 +8,8 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
 using MVC.Backend.Helpers;
+using MVC.Backend.Models;
+using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Services
 {
@@ -34,10 +36,8 @@ namespace MVC.Backend.Services
             var url = @"http://" + Host + "/Account/ConfirmEmail/" + token;
             var builder = new BodyBuilder
             {
-                TextBody = @"<p>Kliknij w poniższy link aby dokończyć rejestrację:<br></p>
-<a></a>",
-                HtmlBody = $@"<p>Kliknij w poniższy link aby dokończyć rejestrację:<br></p>
-<a href={url}>Link</a>"
+                TextBody = @"<p>Kliknij w poniższy link aby dokończyć rejestrację:<br></p><a></a>",
+                HtmlBody = $@"<p>Kliknij w poniższy link aby dokończyć rejestrację:<br></p><a href={url}>Link</a>"
             };
             message.Body = builder.ToMessageBody();
 
@@ -62,10 +62,8 @@ namespace MVC.Backend.Services
             var url = @"http://" + Host + "/Account/SetPassword/" + token;
             var builder = new BodyBuilder
             {
-                TextBody = @"<p>Kliknij w poniższy link aby zresetować hasło:<br></p>
-<a></a>",
-                HtmlBody = $@"<p>Kliknij w poniższy link aby zresetować hasło:<br></p>
-<a href={url}>Link</a>"
+                TextBody = @"<p>Kliknij w poniższy link aby zresetować hasło:<br></p><a></a>",
+                HtmlBody = $@"<p>Kliknij w poniższy link aby zresetować hasło:<br></p><a href={url}>Link</a>"
             };
             message.Body = builder.ToMessageBody();
 
@@ -77,6 +75,33 @@ namespace MVC.Backend.Services
                 client.Send(message);
                 client.Disconnect(true);
             }
+        }
+
+        public void SendOrderInfo(string address, Order order)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_options.Value.Email));
+            message.To.Add(new MailboxAddress(address));
+
+            var date = order.CreatedAt.ToString("g");
+            message.Subject = $"Potwierdzenie złożenia zamówienia z  {date}";
+
+            var viewModel = new OrderViewModel(order);
+            var builder = new BodyBuilder
+            {
+                TextBody = $@"<p>Zamówienie z {date}<hr><hr>{viewModel} </p>",
+                HtmlBody = $@"<p>Zamówienie z {date}<hr><hr>{viewModel} </p>"
+            };
+            message.Body = builder.ToMessageBody();
+
+            using (var client = new SmtpClient())
+            {
+                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                client.Connect(_options.Value.Host, _options.Value.Port, true);
+                client.Authenticate(_options.Value.Email, _options.Value.Password);
+                client.Send(message);
+                client.Disconnect(true);
+            };
         }
     }
 }

@@ -13,7 +13,7 @@ namespace MVC.Backend.Services
         List<Order> GetOrders(int userId);
         Order GetOrder(int id);
         List<OrderViewModel> OrderHistory(int userId);
-        void AddOrder(int userId);
+        Order AddOrder(int userId);
         void UpdateOrder(OrderViewModel viewModel, int userId);
         void DeleteOrder(int id);
     }

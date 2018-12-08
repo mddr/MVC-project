@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using MVC.Backend.Helpers;
 using MVC.Backend.Models;
 
@@ -52,6 +53,16 @@ namespace MVC.Backend.ViewModels
             }
 
             return viewModels;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append($"Nazwa produktu: {Name}<br>");
+            sb.Append($"Email eksperta: {ExpertEmail}<br>");
+            var priceAfterDiscount = (1 + (Discount / 100)) * PricePln;
+            sb.Append($"Cena: {priceAfterDiscount} zł <br>");
+            return sb.ToString();
         }
     }
 }

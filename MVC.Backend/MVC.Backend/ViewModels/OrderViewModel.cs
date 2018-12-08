@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MVC.Backend.Models;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace MVC.Backend.ViewModels
 {
@@ -36,22 +37,20 @@ namespace MVC.Backend.ViewModels
         public OrderViewModel(Order order, List<CartItem> cart) : this(order)
         {
             ShoppingCart = new List<CartItemViewModel>();
-            //ShoppingCart = cart.Select(c => new CartItemViewModel(c)).ToList();
             foreach(var c in cart)
             {
                 ShoppingCart.Add(new CartItemViewModel(c));
             }
         }
 
-        public static List<OrderViewModel> ToList(List<Order> orders)
+        public override string ToString()
         {
-            var viewModels = new List<OrderViewModel>();
-            foreach (var order in orders)
+            var sb = new StringBuilder();
+            foreach (var itemViewModel in ShoppingCart)
             {
-                viewModels.Add(new OrderViewModel(order));
+                sb.Append(itemViewModel + "<br>");
             }
-
-            return viewModels;
+            return sb.ToString();
         }
     }
 }

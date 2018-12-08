@@ -18,7 +18,7 @@ namespace MVC.Backend.Services
             _context = context;
         }
 
-        public void AddOrder(int userId)
+        public Order AddOrder(int userId)
         {
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
@@ -46,6 +46,8 @@ namespace MVC.Backend.Services
             user.CartId = null;
             _context.Orders.Add(order);
             _context.SaveChanges();
+
+            return order;
         }
 
         public void DeleteOrder(int id)

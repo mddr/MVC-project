@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using MVC.Backend.Models;
 
@@ -33,6 +34,16 @@ namespace MVC.Backend.ViewModels
         public static List<CartItemViewModel> ToList(List<CartItem> cartItems)
         {
             return cartItems?.Select(cartItem => new CartItemViewModel(cartItem)).ToList();
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Product);
+            sb.Append($"Ilość: {ProductAmount}<br>");
+            sb.Append("<hr>");
+
+            return sb.ToString();
         }
     }
 }
