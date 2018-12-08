@@ -19,5 +19,6 @@ namespace MVC.Backend.Services
         List<User> GetUsers();
         void UpdateUser(UserViewModel viewModel);
         void DeleteUser(int userId);
+        Task ChangePassword(int userId, string oldPassword, string newPassword);
     }
 }

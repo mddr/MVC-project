@@ -24,7 +24,6 @@ namespace MVC.Backend.Services
             _context = context;
             _tokenService = tokenService;
 			_addressService = addressService;
-
 		}
 
         public async Task AddUser(SignupViewModel viewModel, Enums.Roles role = Enums.Roles.User)
@@ -151,5 +150,20 @@ namespace MVC.Backend.Services
 			_context.Users.Remove(user);
 			_context.SaveChanges();
 		}
-	}
+
+        public async Task ChangePassword(int userId, string oldPassword, string newPassword)
+        {
+            var user = _context.Users.Single(u => u.Id == userId);
+            var validatedUser = AuthHelper.Authenticate(user.Email, oldPassword, _context);
+            if (validatedUser == null)
+                throw new ArgumentException($"Invalid old password provided");
+
+            var salt = AuthHelper.CreateSalt(128);
+            var passwordHash = AuthHelper.CreateHash(newPassword, salt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = salt;
+
+            await _context.SaveChangesAsync();
+        }
+    }
 }

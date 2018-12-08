@@ -54,7 +54,7 @@ namespace MVC.Backend.Controllers
                 await _userService.AddUser(viewModel, Enums.Roles.Admin);
 
                 const string host = "localhost:3000";
-                _emailService.SendConfirmationEmail(viewModel.Email, host.ToString());
+                emailService.SendConfirmationEmail(viewModel.Email, host);
                 return Ok();
             }
             catch (ArgumentException)
@@ -101,6 +101,30 @@ namespace MVC.Backend.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel viewModel)
+        {
+            try
+            {
+                var userId = CurrentUserId();
+                await _userService.ChangePassword(userId, viewModel.OldPassword, viewModel.NewPassword);
+                return Ok();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        private int CurrentUserId()
+        {
+            return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }
