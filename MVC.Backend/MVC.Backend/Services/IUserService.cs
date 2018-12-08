@@ -20,5 +20,6 @@ namespace MVC.Backend.Services
         void UpdateUser(UserViewModel viewModel);
         void DeleteUser(int userId);
         Task ChangePassword(int userId, string oldPassword, string newPassword);
+        Task SetPassword(int userId, string newPassword, string token);
     }
 }

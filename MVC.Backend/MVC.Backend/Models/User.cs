@@ -19,7 +19,7 @@ namespace MVC.Backend.Models
 
         [Required] public string FirstName { get; set; }
         [Required] public string LastName { get; set; }
-        [ForeignKey("Addresses")] public int? AddressId { get; set; }
+        [ForeignKey("Address")] public int? AddressId { get; set; }
         public Address Address;
 
         [Required] public Enums.Currency Currency { get; set; }

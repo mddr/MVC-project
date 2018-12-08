@@ -31,9 +31,7 @@ namespace MVC.Backend.Controllers
             try
             {
                 await _userService.AddUser(viewModel);
-
-                var host = Request.Host;
-                _emailService.SendConfirmationEmail(viewModel.Email, host.ToString());
+                _emailService.SendConfirmationEmail(viewModel.Email);
                 return Ok();
             }
             catch (ArgumentException)
@@ -52,9 +50,7 @@ namespace MVC.Backend.Controllers
             try
             {
                 await _userService.AddUser(viewModel, Enums.Roles.Admin);
-
-                const string host = "localhost:3000";
-                emailService.SendConfirmationEmail(viewModel.Email, host);
+                _emailService.SendConfirmationEmail(viewModel.Email);
                 return Ok();
             }
             catch (ArgumentException)
@@ -110,6 +106,45 @@ namespace MVC.Backend.Controllers
             {
                 var userId = CurrentUserId();
                 await _userService.ChangePassword(userId, viewModel.OldPassword, viewModel.NewPassword);
+                return Ok();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult ResetPassword()
+        {
+            try
+            {
+                var userId = CurrentUserId();
+                var user = _userService.GetUser(userId);
+                _emailService.SendPasswordReset(user.Email);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetPassword([FromBody] ResetPasswordViewModel viewModel)
+        {
+            try
+            {
+                var userId = CurrentUserId();
+                await _userService.SetPassword(userId, viewModel.NewPassword, viewModel.Token);
                 return Ok();
             }
             catch (ArgumentException)

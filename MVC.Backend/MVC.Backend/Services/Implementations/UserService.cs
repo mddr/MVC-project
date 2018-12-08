@@ -26,7 +26,7 @@ namespace MVC.Backend.Services
 			_addressService = addressService;
 		}
 
-        public async Task AddUser(SignupViewModel viewModel, Enums.Roles role = Enums.Roles.User)
+        public async Task AddUser(SignupViewModel viewModel, Roles role = Roles.User)
         {
             var user = _context.Users.SingleOrDefault(u => u.Email == viewModel.Email);
             if (user != null)
@@ -96,7 +96,6 @@ namespace MVC.Backend.Services
 		public User GetUser(int userId)
 		{
 			var user = _context.Users
-				.Include(u => u.Address)
 				.FirstOrDefault(u => u.Id == userId);
 			if (user == null)
 				throw new ArgumentException($"User not found. Id: {userId}");
@@ -157,6 +156,24 @@ namespace MVC.Backend.Services
             var validatedUser = AuthHelper.Authenticate(user.Email, oldPassword, _context);
             if (validatedUser == null)
                 throw new ArgumentException($"Invalid old password provided");
+
+            var salt = AuthHelper.CreateSalt(128);
+            var passwordHash = AuthHelper.CreateHash(newPassword, salt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = salt;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SetPassword(int userId, string newPassword, string token)
+        {
+            var user = _context.Users.Single(u => u.Id == userId);
+
+            var claims = _tokenService.GetPrincipalFromExpiredToken(token);
+            var email = claims.Claims.First(c => c.Type == ClaimTypes.Email).Value;
+            var type = claims.Claims.First(c => c.Type == "type").Value;
+            if (type != "passwordReset" || email != user.Email)
+                throw new ArgumentException("Invalid token");
 
             var salt = AuthHelper.CreateSalt(128);
             var passwordHash = AuthHelper.CreateHash(newPassword, salt);

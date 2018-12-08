@@ -15,6 +15,7 @@ namespace MVC.Backend.Services
     {
         private readonly IOptions<EmailSettings> _options;
         private readonly ITokenService _tokenService;
+        private const string Host = "localhost:3000";
 
         public EmailService(IOptions<EmailSettings> options, ITokenService tokenService)
         {
@@ -22,7 +23,7 @@ namespace MVC.Backend.Services
             _tokenService = tokenService;
         }
 
-        public void SendConfirmationEmail(string address, string host)
+        public void SendConfirmationEmail(string address)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_options.Value.Email));
@@ -30,13 +31,41 @@ namespace MVC.Backend.Services
             message.Subject = "Potwierdzenie rejestracji";
 
             var token = _tokenService.GenerateConfirmationToken(address);
-            var url = @"http://" + host + "/Account/ConfirmEmail/" + token;
+            var url = @"http://" + Host + "/Account/ConfirmEmail/" + token;
             var builder = new BodyBuilder
             {
                 TextBody = @"<p>Kliknij w poniższy link aby dokończyć rejestrację:<br></p>
 <a></a>",
-                HtmlBody = string.Format(@"<p>Kliknij w poniższy link aby dokończyć rejestrację:<br></p>
-<a href={0}>Link</a>", url)
+                HtmlBody = $@"<p>Kliknij w poniższy link aby dokończyć rejestrację:<br></p>
+<a href={url}>Link</a>"
+            };
+            message.Body = builder.ToMessageBody();
+
+            using (var client = new SmtpClient())
+            {
+                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                client.Connect(_options.Value.Host, _options.Value.Port, true);
+                client.Authenticate(_options.Value.Email, _options.Value.Password);
+                client.Send(message);
+                client.Disconnect(true);
+            }
+        }
+
+        public void SendPasswordReset(string address)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_options.Value.Email));
+            message.To.Add(new MailboxAddress(address));
+            message.Subject = "Reset hasła";
+
+            var token = _tokenService.GenerateResetToken(address);
+            var url = @"http://" + Host + "/Account/SetPassword/" + token;
+            var builder = new BodyBuilder
+            {
+                TextBody = @"<p>Kliknij w poniższy link aby zresetować hasło:<br></p>
+<a></a>",
+                HtmlBody = $@"<p>Kliknij w poniższy link aby zresetować hasło:<br></p>
+<a href={url}>Link</a>"
             };
             message.Body = builder.ToMessageBody();
 

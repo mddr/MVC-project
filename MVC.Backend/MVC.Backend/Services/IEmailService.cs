@@ -7,6 +7,7 @@ namespace MVC.Backend.Services
 {
     public interface IEmailService
     {
-        void SendConfirmationEmail(string address, string host);
+        void SendConfirmationEmail(string address);
+        void SendPasswordReset(string address);
     }
 }
