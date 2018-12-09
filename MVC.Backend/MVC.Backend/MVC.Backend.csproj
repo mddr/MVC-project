@@ -13,6 +13,7 @@
     <PackageReference Include="ImageProcessor" Version="2.6.2.25" />
     <PackageReference Include="iTextSharp" Version="5.5.13" />
     <PackageReference Include="MailKit" Version="2.0.7" />
+    <PackageReference Include="MediaTypeMap" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.2" />

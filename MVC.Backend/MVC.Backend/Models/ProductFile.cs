@@ -8,10 +8,23 @@ namespace MVC.Backend.Models
     public class ProductFile
     {
         [Key] public int Id { get; set; }
+        [Required] public string FileName { get; set; }
         [Required] public string FilePath { get; set; }
-        [Required] public DateTime CreatedAt => DateTime.Now;
+        [Required] public DateTime CreatedAt { get; set; }
 
-        [ForeignKey("Products")] public int ProductId { get; set; }
+        [ForeignKey("Product")] public string ProductId { get; set; }
         public Product Product { get; set; }
+
+        public ProductFile()
+        {
+            CreatedAt = DateTime.Now;
+        }
+
+        public ProductFile(Product product, string fileName, string filePath) : this()
+        {
+            Product = product;
+            FileName = fileName;
+            FilePath = filePath;
+        }
     }
 }

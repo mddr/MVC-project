@@ -12,6 +12,9 @@ using ImageProcessor.Imaging.Formats;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using MVC.Backend.Helpers;
+using MimeTypes;
+using MVC.Backend.Models;
+using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Services
 {
@@ -24,9 +27,30 @@ namespace MVC.Backend.Services
             _directorySettings = directorySettings;
         }
 
+        public FileContent GetFileContent(string filePath)
+        {
+            var bytes = File.ReadAllBytes(filePath);
+            var extension = Path.GetExtension(filePath);
+            var fileType = MimeTypeMap.GetMimeType(extension);
+            var content = new FileContent(bytes, fileType);
+            return content;
+        }
+
+        public string SaveFile(string productId, string base64)
+        {
+            var mimeType = GetMime(base64);
+            var extension = MimeTypeMap.GetExtension(mimeType);
+            var filePath = GenerateFilePath(productId, extension, _directorySettings.Value.Files);
+
+            var bytes = Convert.FromBase64String(GetBase64(base64));
+            File.WriteAllBytes(filePath, bytes);
+
+            return filePath;
+        }
+
         public string SaveImage(string productId, string base64)
         {
-            var filePath = GenerateFilePath(productId);
+            var filePath = GenerateFilePath(productId, ".jpg", _directorySettings.Value.Images);
 
             var size = new Size(900, 900);
             var resizedImage = ResizeImage(base64, size);
@@ -37,8 +61,7 @@ namespace MVC.Backend.Services
 
         public string SaveThumbnail(string productId, string base64)
         {
-            var filePath = GenerateThumbnailFilePath(productId);
-
+            var filePath = GenerateThumbnailFilePath(productId, ".jpg", _directorySettings.Value.Images);
             var size = new Size (200, 200);
             var resizedImage = ResizeImage(base64, size);
             File.WriteAllBytes(filePath, resizedImage);
@@ -46,11 +69,16 @@ namespace MVC.Backend.Services
             return filePath;
         }
 
-    #region helpers
-
-        private byte[] ResizeImage(string base64, Size size)
+        public void DeleteFile(string filePath)
         {
-            var imageBytes = Convert.FromBase64String(GetImage(base64));
+            if (!File.Exists(filePath))
+                throw new ArgumentException($"File {filePath} doesn't exist");
+            File.Delete(filePath);
+        }
+
+        private static byte[] ResizeImage(string base64, Size size)
+        {
+            var imageBytes = Convert.FromBase64String(GetBase64(base64));
             var format = new JpegFormat {Quality = 80};
 
             using (var inStream = new MemoryStream(imageBytes))
@@ -68,46 +96,38 @@ namespace MVC.Backend.Services
 
                     return outStream.ToArray();
                 }
-
             }
         }
 
-        private string GenerateFilePath(string productId)
+        private static string GenerateFilePath(string productId, string extension, string basePath)
         {
-            const string extension = "jpg";
-
             var sb = new StringBuilder();
-            sb.Append(_directorySettings.Value.Images);
+            sb.Append(basePath);
             sb.Append(productId);
-            sb.Append(".");
             sb.Append(extension);
             return sb.ToString();
         }
 
-        private string GenerateThumbnailFilePath(string productId)
+        private static string GenerateThumbnailFilePath(string productId, string extension, string basePath)
         {
-            const string extension = "jpg";
-
             var sb = new StringBuilder();
-            sb.Append(_directorySettings.Value.Images);
+            sb.Append(basePath);
             sb.Append(productId);
-            sb.Append("_thumb.");
+            sb.Append("_thumb");
             sb.Append(extension);
             return sb.ToString();
         }
 
         private string GetMime(string base64)
         {
-            var split = base64.Split(',');
-            return split[0];
+            var split = base64.Split(';');
+            return split[0].Replace("data:", string.Empty);
         }
 
-        private string GetImage(string base64)
+        private static string GetBase64(string base64)
         {
             var split = base64.Split(',');
             return split.Length == 1 ? base64 : split[1];
         }
-
-        #endregion
     }
 }

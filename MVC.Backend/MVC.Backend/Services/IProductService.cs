@@ -20,5 +20,8 @@ namespace MVC.Backend.Services
         void UpdateProduct(ProductViewModel viewModel);
         void DeleteProduct(string id);
         void SetProductVisibility(string id, bool isVisible);
+        Task AddFile(FileRequestViewModel viewModel);
+        Task DeleteFile(string productId, int fileId);
+        ProductFile GetFile(string productId, int fileId);
     }
 }

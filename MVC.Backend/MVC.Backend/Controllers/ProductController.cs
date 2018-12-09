@@ -15,10 +15,12 @@ namespace MVC.Backend.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IFileService _fileService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IFileService fileService)
         {
             _productService = productService;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -231,6 +233,67 @@ namespace MVC.Backend.Controllers
             try
             {
                 _productService.SetProductVisibility(id, true);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("product/{productId}/file/{fileId}")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult GetFile(string productId, int fileId)
+        {
+            try
+            {
+                var file = _productService.GetFile(productId, fileId);
+                var fileContent = _fileService.GetFileContent(file.FilePath);
+                return File(fileContent.Bytes, fileContent.FileType, file.FileName);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        [Route("product/{id}/file/add")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult AddFile([FromBody] FileRequestViewModel viewModel)
+        {
+            try
+            {
+                _productService.AddFile(viewModel);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpDelete]
+        [Route("product/{productId}/file/delete/{fileId}")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult DeleteFile(string productId, int fileId)
+        {
+            try
+            {
+                _productService.DeleteFile(productId, fileId);
                 return Ok();
             }
             catch (ArgumentException ex)

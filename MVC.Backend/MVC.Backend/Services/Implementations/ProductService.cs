@@ -22,7 +22,7 @@ namespace MVC.Backend.Services
 
         public IEnumerable<Product> GetProducts(bool? isHidden)
         {
-            var products = _context.Products;
+            var products = _context.Products.Include(p => p.Files);
             return isHidden.HasValue
                 ? products.Where(p => p.IsHidden == isHidden.Value)
                 : products;
@@ -30,7 +30,7 @@ namespace MVC.Backend.Services
 
         public IEnumerable<Product> GetProducts(int categoryId, bool? isHidden)
         {
-            var products = _context.Products.Where(p => p.CategoryId == categoryId);
+            var products = _context.Products.Include(p => p.Files).Where(p => p.CategoryId == categoryId);
             return isHidden.HasValue
                 ? products.Where(p => p.IsHidden == isHidden.Value)
                 : products;
@@ -38,13 +38,13 @@ namespace MVC.Backend.Services
 
         public IEnumerable<Product> GetMostPopular(int amount, bool isHidden)
         {
-            var products = _context.Products.Where(p => p.IsHidden == isHidden);
+            var products = _context.Products.Include(p => p.Files).Where(p => p.IsHidden == isHidden);
             return products.OrderByDescending(p => p.BoughtTimes).Take(amount).ToList();
         }
 
 		public IEnumerable<Product> GetNewest(int? amount, bool isHidden)
 		{
-			var products = _context.Products.Where(p => p.IsHidden == isHidden).OrderByDescending(p => p.CreatedAt);
+			var products = _context.Products.Include(p => p.Files).Where(p => p.IsHidden == isHidden).OrderByDescending(p => p.CreatedAt);
 		    return amount.HasValue
 		        ? products.Take(amount.Value).ToList()
 		        : products.ToList();
@@ -53,6 +53,7 @@ namespace MVC.Backend.Services
         public IEnumerable<Product> GetDiscounted(int? amount, bool isHidden)
         {
             var products = _context.Products
+                .Include(p => p.Files)
                 .Where(p => p.Discount > 0 && p.IsHidden == isHidden)
                 .OrderByDescending(p => p.CreatedAt);
 
@@ -153,6 +154,29 @@ namespace MVC.Backend.Services
             var product = GetProduct(id);
             product.IsHidden = !isVisible;
             _context.SaveChanges();
+        }
+
+        public async Task AddFile(FileRequestViewModel viewModel)
+        {
+            var product = GetProduct(viewModel.ProductId);
+            var filePath = _fileService.SaveFile(product.Id, viewModel.Base64);
+            var file = new ProductFile(product, viewModel.FileName, filePath);
+            _context.ProductFiles.Add(file);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteFile(string productId, int fileId)
+        {
+            var file = _context.ProductFiles.Single(f => f.ProductId == productId && f.Id == fileId);
+            _fileService.DeleteFile(file.FilePath);
+            _context.ProductFiles.Remove(file);
+            await _context.SaveChangesAsync();
+        }
+
+        public ProductFile GetFile(string productId, int fileId)
+        {
+            var file = _context.ProductFiles.Single(f => f.ProductId == productId && f.Id == fileId);
+            return file;
         }
     }
 }

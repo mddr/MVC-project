@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using MVC.Backend.Helpers;
 using MVC.Backend.Models;
@@ -24,6 +25,7 @@ namespace MVC.Backend.ViewModels
         public int CategoryId { get; set; }
 
         public string ImageBase64 { get; set; }
+        public List<FileResultViewModel> Files { get; set; }
 
         public ProductViewModel()
         {
@@ -42,6 +44,10 @@ namespace MVC.Backend.ViewModels
             AmountAvailable = product.AmountAvailable;
             BoughtTimes = product.BoughtTimes;
             ImageBase64 = product.GetBase64();
+            if (product.Files != null)
+            {
+                Files = product.Files.Select(f => new FileResultViewModel(f)).ToList();
+            }
         }
 
         public override string ToString()
