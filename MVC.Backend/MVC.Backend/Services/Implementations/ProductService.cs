@@ -20,35 +20,40 @@ namespace MVC.Backend.Services
             _fileService = fileService;
         }
 
-        public IEnumerable<Product> GetProducts()
-        {
-            return _context.Products.ToList();
-        }
-
-        public IEnumerable<Product> GetProducts(int categoryId)
-        {
-            var products = _context.Products.Where(p => p.CategoryId == categoryId);
-            return products.ToList();
-        }
-
-        public IEnumerable<Product> GetMostPopular(int amount)
+        public IEnumerable<Product> GetProducts(bool? isHidden)
         {
             var products = _context.Products;
+            return isHidden.HasValue
+                ? products.Where(p => p.IsHidden == isHidden.Value)
+                : products;
+        }
+
+        public IEnumerable<Product> GetProducts(int categoryId, bool? isHidden)
+        {
+            var products = _context.Products.Where(p => p.CategoryId == categoryId);
+            return isHidden.HasValue
+                ? products.Where(p => p.IsHidden == isHidden.Value)
+                : products;
+        }
+
+        public IEnumerable<Product> GetMostPopular(int amount, bool isHidden)
+        {
+            var products = _context.Products.Where(p => p.IsHidden == isHidden);
             return products.OrderByDescending(p => p.BoughtTimes).Take(amount).ToList();
         }
 
-		public IEnumerable<Product> GetNewest(int? amount)
+		public IEnumerable<Product> GetNewest(int? amount, bool isHidden)
 		{
-			var products = _context.Products.OrderByDescending(p => p.CreatedAt);
+			var products = _context.Products.Where(p => p.IsHidden == isHidden).OrderByDescending(p => p.CreatedAt);
 		    return amount.HasValue
 		        ? products.Take(amount.Value).ToList()
 		        : products.ToList();
         }
 
-        public IEnumerable<Product> GetDiscounted(int? amount)
+        public IEnumerable<Product> GetDiscounted(int? amount, bool isHidden)
         {
             var products = _context.Products
-                .Where(p => p.Discount > 0)
+                .Where(p => p.Discount > 0 && p.IsHidden == isHidden)
                 .OrderByDescending(p => p.CreatedAt);
 
             return amount.HasValue
@@ -140,6 +145,13 @@ namespace MVC.Backend.Services
                 throw new ArgumentException();
 
             _context.Products.Remove(product);
+            _context.SaveChanges();
+        }
+
+        public void SetProductVisibility(string id, bool isVisible)
+        {
+            var product = GetProduct(id);
+            product.IsHidden = !isVisible;
             _context.SaveChanges();
         }
     }

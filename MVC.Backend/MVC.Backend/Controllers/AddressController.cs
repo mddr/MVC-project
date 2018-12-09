@@ -28,7 +28,8 @@ namespace MVC.Backend.Controllers
             try
             {
                 var addresses = _addressService.GetAddresses();
-                return Ok(AddressViewModel.ToList(addresses));
+                var results = addresses.Select(a => new AddressViewModel(a)).ToList();
+                return Ok(results);
             }
             catch (Exception)
             {

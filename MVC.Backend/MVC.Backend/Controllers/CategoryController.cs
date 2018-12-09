@@ -23,12 +23,29 @@ namespace MVC.Backend.Controllers
         
         [HttpGet]
         [Route("categories")]
-        public IActionResult Categories()
+        public IActionResult GetAllCategories()
         {
             try
             {
                 var categories = _categoryService.GetCategories();
-                return Ok(CategoryViewModel.ToList(categories));
+                var results = categories.Select(c => new CategoryViewModel(c)).ToList();
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("categories/visible")]
+        public IActionResult GetVisibleCategories()
+        {
+            try
+            {
+                var categories = _categoryService.GetVisibleCategories();
+                var results = categories.Select(c => new CategoryViewModel(c)).ToList();
+                return Ok(results);
             }
             catch (Exception)
             {
@@ -38,7 +55,7 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("category/{id}")]
-        public IActionResult Category(int id)
+        public IActionResult GetCategory(int id)
         {
             try
             {
@@ -103,6 +120,46 @@ namespace MVC.Backend.Controllers
             try
             {
                 _categoryService.DeleteCategory(id);
+                return Ok();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        [Route("category/hide/{id}")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult HideCategory(int id)
+        {
+            try
+            {
+                _categoryService.SetCategoryVisibility(id, false);
+                return Ok();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        [Route("category/show/{id}")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult ShowCategory(int id)
+        {
+            try
+            {
+                _categoryService.SetCategoryVisibility(id, true);
                 return Ok();
             }
             catch (ArgumentException)

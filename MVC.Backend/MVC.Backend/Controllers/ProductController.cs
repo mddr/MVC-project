@@ -23,11 +23,27 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("products")]
-        public IActionResult Products()
+        public IActionResult GetAllProducts()
         {
             try
             {
-                var products = _productService.GetProducts();
+                var products = _productService.GetProducts(null);
+                var results = products.Select(p => new ProductViewModel(p)).ToList();
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("products/visible")]
+        public IActionResult GetVisibleProducts()
+        {
+            try
+            {
+                var products = _productService.GetProducts(false);
                 var results = products.Select(p => new ProductViewModel(p)).ToList();
                 return Ok(results);
             }
@@ -43,7 +59,7 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var products = _productService.GetMostPopular(amount);
+                var products = _productService.GetMostPopular(amount, false);
                 var results = products.Select(p => new ProductViewModel(p)).ToList();
                 return Ok(results);
             }
@@ -59,7 +75,7 @@ namespace MVC.Backend.Controllers
 		{
 			try
 			{
-				var products = _productService.GetNewest(amount);
+				var products = _productService.GetNewest(amount, false);
 			    var results = products.Select(p => new ProductViewModel(p)).ToList();
 			    return Ok(results);
             }
@@ -75,7 +91,7 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var products = _productService.GetProducts(categoryId);
+                var products = _productService.GetProducts(categoryId, false);
                 var results = products.Select(p => new ProductViewModel(p)).ToList();
                 return Ok(results);
             }
@@ -175,6 +191,46 @@ namespace MVC.Backend.Controllers
             try
             {
                 _productService.DeleteProduct(id);
+                return Ok();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        [Route("product/hide/{id}")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult HideProduct(string id)
+        {
+            try
+            {
+                _productService.SetProductVisibility(id, false);
+                return Ok();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        [Route("product/show/{id}")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult ShowProduct(string id)
+        {
+            try
+            {
+                _productService.SetProductVisibility(id, true);
                 return Ok();
             }
             catch (ArgumentException)

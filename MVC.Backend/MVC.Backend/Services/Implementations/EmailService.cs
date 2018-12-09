@@ -91,8 +91,8 @@ namespace MVC.Backend.Services
         public void SendNewsletter()
         {
             var users = _userService.GetUsersForNewsletter();
-            var discountedProducts = _productService.GetDiscounted(null);
-            var newestProducts = _productService.GetNewest(null);
+            var discountedProducts = _productService.GetDiscounted(null, false);
+            var newestProducts = _productService.GetNewest(null, false);
 
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_options.Value.Email));

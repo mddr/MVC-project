@@ -12,16 +12,26 @@ namespace MVC.Backend.Services
     public class CategoryService : ICategoryService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IProductService _productService;
 
-        public CategoryService(ApplicationDbContext context)
+        public CategoryService(ApplicationDbContext context, IProductService productService)
         {
             _context = context;
+            _productService = productService;
         }
 
-        public List<Category> GetCategories()
+        public IEnumerable<Category> GetCategories()
         {
             return _context.Categories
                 .Include("SubCategories")
+                .ToList();
+        }
+
+        public IEnumerable<Category> GetVisibleCategories()
+        {
+            return _context.Categories
+                .Include("SubCategories")
+                .Where(c => !c.IsHidden)
                 .ToList();
         }
 
@@ -68,6 +78,23 @@ namespace MVC.Backend.Services
                 throw new ArgumentException("Invalid id");
             _context.Categories.Remove(category);
             _context.SaveChanges();
+        }
+
+        public void SetCategoryVisibility(int id, bool isVisible)
+        {
+            var category = GetCategory(id);
+            category.IsHidden = !isVisible;
+            var products = _productService.GetProducts(id, null);
+            foreach (var product in products)
+            {
+                product.IsHidden = !isVisible;
+            }
+
+            _context.SaveChanges();
+            foreach (var subCategory in category.SubCategories)
+            {
+                SetCategoryVisibility(subCategory.Id, isVisible);
+            }
         }
 
         public bool Exists(int? id)
