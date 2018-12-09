@@ -3,6 +3,7 @@ import Table from "./Table";
 import { Button } from 'react-bootstrap';
 
 import AuthService from '../../services/AuthService';
+import AdminService from '../../services/AdminService';
 import FormBuilder from '../Helpers/FormBuilder';
 
 class AdminPanel extends Component {
@@ -15,6 +16,7 @@ class AdminPanel extends Component {
 			showCreateForm: false,
 		};
 		this.Auth = new AuthService();
+		this.AdminService = new AdminService();
 		this.fetchData = this.fetchData.bind(this);
 		this.hideForm = this.hideForm.bind(this);
 		this.updateData = this.updateData.bind(this);
@@ -93,7 +95,7 @@ class AdminPanel extends Component {
 					<div className="col-sm-9">
 						<div className="panel panel-default">
 							<div className="panel-body">
-								{this.renderCreateButton()}
+								{this.renderTopButtons()}
 								<Table apiUrl={this.state.apiUrl} Auth={this.Auth} data={this.state.data} categories={this.state.categories} updateData={this.updateData}
 								/>
 							</div>
@@ -104,9 +106,18 @@ class AdminPanel extends Component {
 		);
 	}
 
-	renderCreateButton() {
-		if (this.disableCreate())
-			return;
+	renderTopButtons() {
+		let buttons = [];
+		if (!this.disableCreate())
+			buttons.push(this.renderCreateButton());
+		if (this.state.apiUrl.singular === "user")
+			buttons.push(
+				<Button onClick={() => { this.AdminService.sendNewsletters() }}>Wyślij newslettery</Button>
+			);
+		return (<div>{buttons}</div>);
+	}
+
+	renderCreateButton() {		
 		return (<div><Button onClick={() => { this.setState({ showCreateForm: true }) }}>Utwórz</Button>
 			<FormBuilder
 				model={this.state.apiUrl.singular}

@@ -29,7 +29,7 @@ export default class Home extends Component {
   }
 
   fetchData() {
-    this.ProductService.products()
+		this.ProductService.getVisibleProducts()
       .then(res => res.json())
       .then(res => {
         this.setState({
