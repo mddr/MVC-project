@@ -42,12 +42,9 @@ export class AuthService {
         })
     }
 
-    confirmMail(token) {
-        return this.fetch(`${this.domain}/account/ConfirmEmail`, {
-            method: 'POST',
-            body: JSON.stringify({
-                token
-            })
+	confirmMail(token) {
+        return this.fetch(`${this.domain}/account/ConfirmEmail/${token}`, {
+            method: 'POST'
         });
     }
 

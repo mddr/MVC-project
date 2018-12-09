@@ -82,7 +82,8 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmEmail(string token)
+		[Route("account/ConfirmEmail/{token}")]
+		public async Task<IActionResult> ConfirmEmail(string token)
         {
             try
             {

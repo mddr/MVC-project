@@ -15,23 +15,30 @@ class ConfirmEmailPage extends Component {
     };
     this.AuthService = new AuthService();
   }
-  render() {
-    this.AuthService.confirmMail();
-    return (
-      <div className="confirmView">
-        <div className="simpleDiv">
-          <h1>Udało Się!</h1>
-          <p>
-            Twój adres email został potwierdzony. Teraz możesz zalogować się do
-            serwisu.
-          </p>
+	render() {
+		if (!this.state.confirmed)
+			this.AuthService.confirmMail(this.props.match.params.token)
+			.then(this.setState({
+				confirmed: true
+			}));
+		if (this.state.confirmed)
+			return (
+				<div className="confirmView">
+					<div className="simpleDiv">
+						<h1>Udało Się!</h1>
+						<p>
+							Twój adres email został potwierdzony. Teraz możesz zalogować się do
+							serwisu.
+						</p>
 
-          <LinkContainer to="/login">
-            <Button bsStyle="success">Zaloguj się</Button>
-          </LinkContainer>
-        </div>
-      </div>
-    );
+						<LinkContainer to="/login">
+							<Button bsStyle="success">Zaloguj się</Button>
+						</LinkContainer>
+					</div>
+				</div>
+			);
+		else
+			return null;
   }
 }
 
