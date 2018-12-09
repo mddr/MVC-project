@@ -50,7 +50,7 @@ namespace MVC.Backend.ViewModels
             sb.Append($"Nazwa produktu: {Name}<br>");
             sb.Append($"Email eksperta: {ExpertEmail}<br>");
             var priceAfterDiscount = (1 + (Discount / 100)) * PricePln;
-            sb.Append($"Cena: {priceAfterDiscount} zł <br>");
+            sb.Append($"Cena: {priceAfterDiscount} zł<br>");
             return sb.ToString();
         }
     }

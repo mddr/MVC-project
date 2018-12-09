@@ -110,9 +110,9 @@ namespace MVC.Backend.Controllers
                 var product = _productService.GetProduct(id);
                 return Ok(new ProductViewModel(product));
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
@@ -133,9 +133,9 @@ namespace MVC.Backend.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -153,9 +153,9 @@ namespace MVC.Backend.Controllers
                 _productService.AddProduct(viewModel);
                 return Ok();
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
@@ -173,11 +173,11 @@ namespace MVC.Backend.Controllers
                 _productService.UpdateProduct(viewModel);
                 return Ok();
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -193,9 +193,9 @@ namespace MVC.Backend.Controllers
                 _productService.DeleteProduct(id);
                 return Ok();
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
@@ -213,9 +213,9 @@ namespace MVC.Backend.Controllers
                 _productService.SetProductVisibility(id, false);
                 return Ok();
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
@@ -233,9 +233,9 @@ namespace MVC.Backend.Controllers
                 _productService.SetProductVisibility(id, true);
                 return Ok();
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {

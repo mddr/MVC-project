@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MVC.Backend.Models;
@@ -16,5 +17,6 @@ namespace MVC.Backend.Services
         void UpdateCategory(CategoryViewModel viewModel);
         void DeleteCategory(int id);
         void SetCategoryVisibility(int id, bool isVisible);
+        byte[] GeneratePdfSummary(int id);
     }
 }

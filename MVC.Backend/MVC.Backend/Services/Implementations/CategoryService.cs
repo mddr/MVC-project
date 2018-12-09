@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Models;
@@ -94,6 +97,38 @@ namespace MVC.Backend.Services
             foreach (var subCategory in category.SubCategories)
             {
                 SetCategoryVisibility(subCategory.Id, isVisible);
+            }
+        }
+
+        public byte[] GeneratePdfSummary(int id)
+        {
+            var category = GetCategory(id);
+            var products = _productService.GetProducts(id, null);
+
+            var document = new Document(PageSize.A4, 50, 50, 50, 50);
+
+            using (var output = new MemoryStream())
+            {
+                PdfWriter.GetInstance(document, output);
+                document.Open();
+
+                var header = new Paragraph($"{category.Name} - cennik") { Alignment = Element.ALIGN_CENTER };
+                document.Add(header);
+
+                foreach (var product in products)
+                {
+                    var viewModel = new ProductViewModel(product);
+                    var viewModelString = viewModel.ToString()
+                        .Replace("<br>", "; ")
+                        .Replace("<hr>", string.Empty)
+                        .Replace("zł", "zl");
+                    var paragraph = new Paragraph(viewModelString + "\n");
+                    document.Add(paragraph);
+                }
+
+                document.Close();
+                var bytes = output.ToArray();
+                return bytes;
             }
         }
 

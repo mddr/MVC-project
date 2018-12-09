@@ -162,9 +162,31 @@ namespace MVC.Backend.Controllers
                 _categoryService.SetCategoryVisibility(id, true);
                 return Ok();
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("category/{id}/summary")]
+        public IActionResult GetCategorySummary(int id)
+        {
+            try
+            {
+                var category = _categoryService.GetCategory(id);
+                var bytes = _categoryService.GeneratePdfSummary(id);
+
+                var fileName = category.Name + "-cennik_" + Guid.NewGuid() + ".pdf";
+                return File(bytes, "application/pdf", fileName);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
