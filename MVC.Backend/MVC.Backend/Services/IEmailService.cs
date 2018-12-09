@@ -11,5 +11,6 @@ namespace MVC.Backend.Services
         void SendConfirmationEmail(string address);
         void SendPasswordReset(string address);
         void SendOrderInfo(string address, Order order);
+        void SendNewsletter();
     }
 }

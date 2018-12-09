@@ -32,9 +32,9 @@ namespace MVC.Backend.ViewModels
             AddressId = order.AddressId;
             TotalPrice = order.TotalPrice;
             CreatedAt = order.CreatedAt;
-            ShoppingCart = CartItemViewModel.ToList(order.ShoppingCart);
+            ShoppingCart = order.ShoppingCart.Select(c => new CartItemViewModel(c)).ToList();
         }
-        public OrderViewModel(Order order, List<CartItem> cart) : this(order)
+        public OrderViewModel(Order order, IEnumerable<CartItem> cart) : this(order)
         {
             ShoppingCart = new List<CartItemViewModel>();
             foreach(var c in cart)

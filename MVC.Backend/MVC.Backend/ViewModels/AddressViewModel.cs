@@ -26,16 +26,5 @@ namespace MVC.Backend.ViewModels
             Street = address.Street;
             HouseNumber = address.HouseNumber;
         }
-
-        public static List<AddressViewModel> ToList(List<Address> addresses)
-        {
-            var viewModels = new List<AddressViewModel>();
-            foreach (var address in addresses)
-            {
-                viewModels.Add(new AddressViewModel(address));
-            }
-
-            return viewModels;
-        }
     }
 }

@@ -28,7 +28,8 @@ namespace MVC.Backend.Controllers
             try
             {
                 var products = _productService.GetProducts();
-                return Ok(ProductViewModel.ToList(products));
+                var results = products.Select(p => new ProductViewModel(p)).ToList();
+                return Ok(results);
             }
             catch (Exception)
             {
@@ -43,7 +44,8 @@ namespace MVC.Backend.Controllers
             try
             {
                 var products = _productService.GetMostPopular(amount);
-                return Ok(ProductViewModel.ToList(products));
+                var results = products.Select(p => new ProductViewModel(p)).ToList();
+                return Ok(results);
             }
             catch (Exception)
             {
@@ -58,8 +60,9 @@ namespace MVC.Backend.Controllers
 			try
 			{
 				var products = _productService.GetNewest(amount);
-				return Ok(ProductViewModel.ToList(products));
-			}
+			    var results = products.Select(p => new ProductViewModel(p)).ToList();
+			    return Ok(results);
+            }
 			catch (Exception)
 			{
 				return StatusCode(StatusCodes.Status500InternalServerError);
@@ -73,7 +76,8 @@ namespace MVC.Backend.Controllers
             try
             {
                 var products = _productService.GetProducts(categoryId);
-                return Ok(ProductViewModel.ToList(products));
+                var results = products.Select(p => new ProductViewModel(p)).ToList();
+                return Ok(results);
             }
             catch (Exception)
             {

@@ -12,11 +12,13 @@ namespace MVC.Backend.Services
     public interface IUserService
     {
         Task AddUser(SignupViewModel viewModel, Enums.Roles role = Enums.Roles.User);
-        Task<ObjectResult> Login(LoginViewModel viewModel);
-        Task ConfirmEmail(string token);
         UserViewModel GetUserData(int userId);
         User GetUser(int userId);
-        List<User> GetUsers();
+        IEnumerable<User> GetUsers();
+        IEnumerable<User> GetUsersForNewsletter();
+
+        Task<ObjectResult> Login(LoginViewModel viewModel);
+        Task ConfirmEmail(string token);
         void UpdateUser(UserViewModel viewModel);
         void DeleteUser(int userId);
         Task ChangePassword(int userId, string oldPassword, string newPassword);

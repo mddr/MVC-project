@@ -22,12 +22,8 @@ namespace MVC.Backend.ViewModels
             Id = category.Id;
             Name = category.Name;
             SuperiorCategoryId = category.SuperiorCategoryId;
-            SubCategories = ToList(category.SubCategories);
-        }
-
-        public static List<CategoryViewModel> ToList(ICollection<Category> categories)
-        {
-            return categories?.Select(category => new CategoryViewModel(category)).ToList();
+            if (category.SubCategories != null)
+                SubCategories = category.SubCategories.Select(c => new CategoryViewModel(c)).ToList();
         }
     }
 }

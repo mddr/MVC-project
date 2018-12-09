@@ -20,30 +20,43 @@ namespace MVC.Backend.Services
             _fileService = fileService;
         }
 
-        public List<Product> GetProducts()
+        public IEnumerable<Product> GetProducts()
         {
             return _context.Products.ToList();
         }
 
-        public List<Product> GetProducts(int categoryId)
+        public IEnumerable<Product> GetProducts(int categoryId)
         {
             var products = _context.Products.Where(p => p.CategoryId == categoryId);
             return products.ToList();
         }
 
-        public List<Product> GetMostPopular(int amount)
+        public IEnumerable<Product> GetMostPopular(int amount)
         {
             var products = _context.Products;
             return products.OrderByDescending(p => p.BoughtTimes).Take(amount).ToList();
         }
 
-		public List<Product> GetNewest(int amount)
+		public IEnumerable<Product> GetNewest(int? amount)
 		{
-			var products = _context.Products;
-			return products.OrderByDescending(p => p.CreatedAt).Take(amount).ToList();
-		}
+			var products = _context.Products.OrderByDescending(p => p.CreatedAt);
+		    return amount.HasValue
+		        ? products.Take(amount.Value).ToList()
+		        : products.ToList();
+        }
 
-		public List<Product> GetUserHistory(int userId)
+        public IEnumerable<Product> GetDiscounted(int? amount)
+        {
+            var products = _context.Products
+                .Where(p => p.Discount > 0)
+                .OrderByDescending(p => p.CreatedAt);
+
+            return amount.HasValue
+                ? products.Take(amount.Value).ToList()
+                : products.ToList();
+        }
+
+        public IEnumerable<Product> GetUserHistory(int userId)
         {
             var orders = _context.Orders.Where(o => o.UserId == userId);
             if (!orders.Any()) return null;

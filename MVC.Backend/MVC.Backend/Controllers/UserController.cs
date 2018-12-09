@@ -16,10 +16,12 @@ namespace MVC.Backend.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -118,7 +120,27 @@ namespace MVC.Backend.Controllers
 			}
 		}
 
-		private int CurrentUserId()
+        [HttpPost]
+        [Route("users/newsletter")]
+        [EmailConfirmed(Roles = "Admin")]
+        public IActionResult SendNewsLetter()
+        {
+            try
+            {
+                _emailService.SendNewsletter();
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        private int CurrentUserId()
         {
             return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }

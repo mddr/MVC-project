@@ -40,6 +40,12 @@ namespace MVC.Backend.Services
             await _context.SaveChangesAsync();
         }
 
+        public IEnumerable<User> GetUsersForNewsletter()
+        {
+            var users = _context.Users.Where(u => u.AcceptsNewsletters);
+            return users;
+        }
+
         public async Task<ObjectResult> Login(LoginViewModel viewModel)
         {
             var user = AuthHelper.Authenticate(viewModel.Email, viewModel.Password, _context);
@@ -102,7 +108,7 @@ namespace MVC.Backend.Services
 			return user;
 		}
 
-		public List<User> GetUsers()
+		public IEnumerable<User> GetUsers()
 		{
 			var users = _context.Users;
 			var addresses = _addressService.GetAddresses();

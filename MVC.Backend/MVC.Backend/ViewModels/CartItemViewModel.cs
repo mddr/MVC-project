@@ -31,11 +31,6 @@ namespace MVC.Backend.ViewModels
             Product = new ProductViewModel(product);
         }
 
-        public static List<CartItemViewModel> ToList(List<CartItem> cartItems)
-        {
-            return cartItems?.Select(cartItem => new CartItemViewModel(cartItem)).ToList();
-        }
-
         public override string ToString()
         {
             var sb = new StringBuilder();

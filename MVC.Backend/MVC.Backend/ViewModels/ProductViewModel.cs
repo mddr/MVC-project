@@ -44,17 +44,6 @@ namespace MVC.Backend.ViewModels
             ImageBase64 = product.GetBase64();
         }
 
-        public static List<ProductViewModel> ToList(List<Product> products)
-        {
-            var viewModels = new List<ProductViewModel>();
-            foreach (var product in products)
-            {
-                viewModels.Add(new ProductViewModel(product));
-            }
-
-            return viewModels;
-        }
-
         public override string ToString()
         {
             var sb = new StringBuilder();

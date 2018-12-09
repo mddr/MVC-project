@@ -28,7 +28,8 @@ namespace MVC.Backend.Controllers
             try
             {
                 var cart = _cartService.GetCartItems(CurrentUserId());
-                return Ok(CartItemViewModel.ToList(cart));
+                var results = cart.Select(i => new CartItemViewModel(i)).ToList();
+                return Ok(results);
             }
             catch (Exception ex)
             {
