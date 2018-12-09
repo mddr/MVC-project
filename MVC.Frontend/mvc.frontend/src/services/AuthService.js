@@ -6,6 +6,9 @@ export class AuthService {
         this.fetch = this.fetch.bind(this)
         this.login = this.login.bind(this)
         this.getProfile = this.getProfile.bind(this)
+				this.changepassword = this.changepassword.bind(this)
+				this.setpassword = this.setpassword.bind(this)
+				this.resetpassword = this.resetpassword.bind(this)
 
         this.accessTokenName = 'access_token'
         this.refreshTokenName = 'refresh_token'
@@ -117,6 +120,41 @@ export class AuthService {
         return decode(this.getToken(this.accessTokenName));
     }
 
+		changepassword(oldpassword, newpassword) {
+				let body = "";
+				const obj = {
+					oldpassword,
+					newpassword
+				};
+
+				body = JSON.stringify(obj);
+
+				return this.Auth.fetch(`${this.Auth.domain}/account/changepassword`, {
+					method: 'post',
+					body
+				});
+		}
+
+		setpassword(newpassword, token) {
+			let body = "";
+			const obj = {
+				newpassword,
+				token
+			};
+
+			body = JSON.stringify(obj);
+
+			return this.Auth.fetch(`${this.Auth.domain}/account/setpassword`, {
+				method: 'post',
+				body
+			});
+		}
+
+		resetpassword() {
+			return this.Auth.fetch(`${this.Auth.domain}/account/setpassword`, {
+				method: 'post',
+			});
+		}
 
     fetch(url, options) {
         const headers = {
