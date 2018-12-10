@@ -8,6 +8,7 @@ import {
   MenuItem,
   Modal
 } from "react-bootstrap";
+import ProductService from "../../services/ProductService";
 
 export default class ProductForm extends React.Component {
   constructor(props) {
@@ -22,13 +23,15 @@ export default class ProductForm extends React.Component {
       expertEmail: "",
       discount: "",
       imageBase64: "",
-      categoryName: ""
+      categoryName: "",
+      filesList: []
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
     this.handleFile = this.handleFile.bind(this);
     this.getCategoryName = this.getCategoryName.bind(this);
+    this.ProductService = new ProductService();
   }
 
   validateForm() {
@@ -63,7 +66,8 @@ export default class ProductForm extends React.Component {
     };
   };
   handleMultipleFiles = e => {
-    //TODO
+    const recivedFiles = Array.from(e.target.files);
+    this.setState({ filesList: recivedFiles });
   };
 
   componentDidMount() {
@@ -112,6 +116,20 @@ export default class ProductForm extends React.Component {
     ).then(() => {
       this.props.updateData(obj);
     });
+    //dodawanie plików
+    let filereader = new FileReader();
+
+    for (var file of this.state.filesList) {
+      filereader.readAsDataURL(file);
+      // eslint-disable-next-line no-loop-func
+      filereader.onload = () => {
+        this.ProductService.addFile(
+          this.state.id,
+          file.name,
+          filereader.result
+        );
+      };
+    }
   }
 
   renderMenuItems() {
