@@ -1,11 +1,11 @@
-import '../HomePage/Home.css';
-import './ProductPage.css';
+import "../HomePage/Home.css";
+import "./ProductPage.css";
 
-import React, { Component } from 'react';
-import { Button, FormControl, Glyphicon, InputGroup } from 'react-bootstrap';
-
-import AuthService from '../../services/AuthService';
-import CartService from '../../services/CartService';
+import React, { Component } from "react";
+import { Button, FormControl, Glyphicon, InputGroup } from "react-bootstrap";
+import AuthService from "../../services/AuthService";
+import UserService from "../../services/UserService";
+import CartService from "../../services/CartService";
 
 class ProductPage extends Component {
   constructor(props) {
@@ -17,10 +17,13 @@ class ProductPage extends Component {
       name: "",
       description: "",
       boughtTimes: -1,
-      count: 0
+      count: 0,
+      netto: false,
+      taxRate: 0
     };
 
     this.Auth = new AuthService();
+    this.UserService = new UserService();
     this.CartService = new CartService();
     this.fetchData = this.fetchData.bind(this);
     this.buyNow = this.buyNow.bind(this);
@@ -32,6 +35,12 @@ class ProductPage extends Component {
   }
 
   fetchData() {
+    this.UserService.getUserInfo()
+      .then(res => res.json())
+      .then(res => {
+        this.setState({ netto: res.prefersNetPrice });
+      });
+
     this.Auth.fetch(
       `${this.Auth.domain}/product/${this.props.match.params.id}`,
       null
@@ -39,13 +48,16 @@ class ProductPage extends Component {
       .then(res => res.json())
       .then(res => {
         this.setState({
-          pricePln: res.pricePln,
+          pricePln: this.state.netto
+            ? this.afterTaxPrice(res.pricePln, res.taxRate)
+            : res.pricePln,
           discount: res.discount,
           name: res.name,
           description: res.description,
           boughtTimes: res.boughtTimes,
           imageBase64: res.imageBase64,
-          id: res.id
+          id: res.id,
+          taxRate: res.taxRate
         });
       });
   }
@@ -63,6 +75,11 @@ class ProductPage extends Component {
     this.CartService.addItem(this.state.id, this.state.count).then(() =>
       window.location.reload()
     );
+  }
+
+  afterTaxPrice(price, taxRate) {
+    price -= price * (taxRate / 100);
+    return price;
   }
 
   validate() {
@@ -132,7 +149,7 @@ class ProductPage extends Component {
                       margin: "0"
                     }}
                   >
-                    {this.state.pricePln}zł
+                    {Math.round(this.state.pricePln * 100) / 100}zł
                   </div>
                 ) : (
                   ""
@@ -211,6 +228,9 @@ class ProductPage extends Component {
             </div>
             <hr />
             <div className="description">{this.state.description}</div>
+            <span>
+              <Button>Pobierz pliki związane z produktem</Button>
+            </span>
           </div>
         </div>
 
