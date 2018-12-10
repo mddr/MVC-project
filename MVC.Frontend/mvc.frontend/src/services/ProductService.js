@@ -10,6 +10,9 @@ export class ProductService {
 		this.getNewest = this.getNewest.bind(this);
 		this.hideProduct = this.hideProduct.bind(this);
 		this.showProduct = this.showProduct.bind(this);
+		this.getFile = this.getFile.bind(this);
+		this.addFile = this.addFile.bind(this);
+		this.removeFile = this.removeFile.bind(this);
   }
 
 	getProduct(id) {
@@ -48,5 +51,42 @@ export class ProductService {
 			method: "post"
 		});
 	}
+
+	getFile(productId, fileId) {
+		return this.Auth.fetch(`${this.Auth.domain}/product/${productId}/file/${fileId}`, {
+			method: "get"
+		});
+	}
+
+	addFile(productId, filename, base64) {
+		let body = "";
+		const obj = {
+			productId,
+			filename,
+			base64: `data:text/plain;base64,${base64}`,
+		};
+
+		body = JSON.stringify(obj);
+		return this.Auth.fetch(`${this.Auth.domain}/product/${productId}/file/add`, {
+			method: "post",
+			body
+		});
+	}
+
+	removeFile(productId, filename, base64) {
+		let body = "";
+		const obj = {
+			productId,
+			filename,
+			base64: `data:text/plain;base64,${base64}`,
+		};
+
+		body = JSON.stringify(obj);
+		return this.Auth.fetch(`${this.Auth.domain}/product/${productId}/file/delete/${fileId}`, {
+			method: "DELETE",
+			body
+		});
+	}
+
 }
 export default ProductService;

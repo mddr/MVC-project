@@ -4,6 +4,10 @@ export class CategoryService {
 	constructor() {
 		this.Auth = new AuthService();
 		this.getCategories = this.getCategories.bind(this)
+		this.getVisibleCategories = this.getVisibleCategories.bind(this)
+		this.hideCategory = this.hideCategory.bind(this)
+		this.showCategory = this.showCategory.bind(this)
+		this.getPdfSummary = this.getPdfSummary.bind(this)
 	}
 
 	getCategories() {
@@ -23,6 +27,12 @@ export class CategoryService {
 	showCategory(id) {
 		return this.Auth.fetch(`${this.Auth.domain}/category/hide/${id}`, {
 			method: "post"
+		});
+	}
+
+	getPdfSummary(id) {
+		return this.Auth.fetch(`${this.Auth.domain}/category/${id}/summary`, {
+			method: "get"
 		});
 	}
 

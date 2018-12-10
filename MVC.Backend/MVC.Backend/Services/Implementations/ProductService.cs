@@ -84,7 +84,9 @@ namespace MVC.Backend.Services
 
         public Product GetProduct(string id)
         {
-            var product = _context.Products.SingleOrDefault(p => p.Id == id);
+            var product = _context.Products.
+				Include(p => p.Files)
+				.SingleOrDefault(p => p.Id == id);
             if (product == null)
                 throw new ArgumentException();
             return product;
