@@ -12,5 +12,32 @@ export class UserService {
       });
 	}
 
+	update(id, firstName, lastName, email, currency, emailConfirmed, prefersNetPrice, acceptsNewsletters, productsPerPage) {
+		let body = "";
+		const user = {
+			id,
+			firstName,
+			lastName,
+			email,
+			currency,
+			emailConfirmed,
+			prefersNetPrice,
+			acceptsNewsletters,
+			productsPerPage
+		};
+
+		body = JSON.stringify(user);
+
+		this.props.Auth.fetch(
+			`${this.props.Auth.domain}/user/update`,
+			{
+				method: "post",
+				body
+			}
+		).then(() => {
+			this.props.updateData(user);
+		});
+	}
+
 }
 export default UserService;

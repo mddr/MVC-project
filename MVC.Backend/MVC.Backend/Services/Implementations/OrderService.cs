@@ -39,6 +39,7 @@ namespace MVC.Backend.Services
                     throw new ArgumentException($"Product not found. Id: {item.ProductId}");
                 totalPrice += product.PricePln * (100 - product.Discount) / 100;
                 product.BoughtTimes += item.ProductAmount;
+                product.AmountAvailable -= item.ProductAmount;
             }
 
             var order = new Order(userId, user.AddressId, user.CartId, totalPrice, cart);
@@ -65,7 +66,8 @@ namespace MVC.Backend.Services
                 if (product == null)
                     throw new ArgumentException($"Product not found. Id: {item.ProductId}");
                 product.BoughtTimes -= item.ProductAmount;
-            }
+				product.AmountAvailable += item.ProductAmount;
+			}
 
             _context.Orders.Remove(order);
             _context.CartItems.RemoveRange(cart);

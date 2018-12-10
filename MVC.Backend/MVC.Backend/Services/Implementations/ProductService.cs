@@ -98,7 +98,7 @@ namespace MVC.Backend.Services
                 throw new ArgumentException();
             var product = new Product(viewModel.Name, viewModel.PricePln, viewModel.CategoryId,
                 viewModel.AmountAvailable, viewModel.ExpertEmail, viewModel.IsHidden, viewModel.TaxRate,
-                viewModel.Discount, viewModel.Discount);
+                viewModel.Discount);
 
             if (!string.IsNullOrEmpty(viewModel.ImageBase64))
             {
