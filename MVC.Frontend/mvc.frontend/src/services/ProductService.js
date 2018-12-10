@@ -73,18 +73,9 @@ export class ProductService {
 		});
 	}
 
-	removeFile(productId, filename, base64) {
-		let body = "";
-		const obj = {
-			productId,
-			filename,
-			base64: `data:text/plain;base64,${base64}`,
-		};
-
-		body = JSON.stringify(obj);
+	removeFile(productId, fileId) {
 		return this.Auth.fetch(`${this.Auth.domain}/product/${productId}/file/delete/${fileId}`, {
-			method: "DELETE",
-			body
+			method: "DELETE",			
 		});
 	}
 
