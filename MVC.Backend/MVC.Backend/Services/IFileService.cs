@@ -9,7 +9,7 @@ namespace MVC.Backend.Services
     public interface IFileService
     {
         FileContent GetFileContent(string filePath);
-        string SaveFile(string productId, string base64);
+        string SaveFile(string productId, string base64, string fileName);
         string SaveImage(string productId, string base64);
         string SaveThumbnail(string productId, string base64);
         void DeleteFile(string filePath);

@@ -162,7 +162,7 @@ namespace MVC.Backend.Services
         public async Task AddFile(FileRequestViewModel viewModel)
         {
             var product = GetProduct(viewModel.ProductId);
-            var filePath = _fileService.SaveFile(product.Id, viewModel.Base64);
+            var filePath = _fileService.SaveFile(product.Id, viewModel.Base64, viewModel.FileName);
             var file = new ProductFile(product, viewModel.FileName, filePath);
             _context.ProductFiles.Add(file);
             await _context.SaveChangesAsync();

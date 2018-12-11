@@ -36,11 +36,11 @@ namespace MVC.Backend.Services
             return content;
         }
 
-        public string SaveFile(string productId, string base64)
+        public string SaveFile(string productId, string base64, string fileName)
         {
             var mimeType = GetMime(base64);
             var extension = MimeTypeMap.GetExtension(mimeType);
-            var filePath = GenerateFilePath(productId, extension, _directorySettings.Value.Files);
+            var filePath = GenerateFilePath(productId, extension, _directorySettings.Value.Files, fileName);
 
             var bytes = Convert.FromBase64String(GetBase64(base64));
             File.WriteAllBytes(filePath, bytes);
@@ -108,7 +108,17 @@ namespace MVC.Backend.Services
             return sb.ToString();
         }
 
-        private static string GenerateThumbnailFilePath(string productId, string extension, string basePath)
+		private static string GenerateFilePath(string productId, string extension, string basePath, string fileName)
+		{
+			var sb = new StringBuilder();
+			sb.Append(basePath);
+			sb.Append(productId);
+			sb.Append(fileName);
+			sb.Append(extension);
+			return sb.ToString();
+		}
+
+		private static string GenerateThumbnailFilePath(string productId, string extension, string basePath)
         {
             var sb = new StringBuilder();
             sb.Append(basePath);

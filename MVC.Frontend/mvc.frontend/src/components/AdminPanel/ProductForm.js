@@ -124,15 +124,15 @@ export default class ProductForm extends React.Component {
       }
     ).then(() => {
 			//dodawanie plików
-			let filereader = new FileReader();
 
-			for (var file of this.state.filesList) {
-				filereader.readAsDataURL(file);
+			for (let i = 0; i < this.state.filesList.length;i++) {
+			let filereader = new FileReader();
+				filereader.readAsDataURL(this.state.filesList[i]);
 				// eslint-disable-next-line no-loop-func
 				filereader.onload = () => {
 					this.ProductService.addFile(
 						this.state.id,
-						file.name,
+						this.state.filesList[i].name,
 						filereader.result
 					);
 				};
@@ -289,7 +289,12 @@ export default class ProductForm extends React.Component {
 				<Glyphicon
 					glyph="trash"
 					style={{ color: "red" }}
-					onClick={() => this.ProductService.removeFile(this.state.id,file.id)}
+					onClick={() => {
+						this.ProductService.removeFile(this.state.id, file.id)
+						let stateFiles = this.state.files;
+						stateFiles = stateFiles.filter(elem => elem.id !== file.id);
+						this.setState({ files: stateFiles });
+					}}
 				/>
 			</li>)
 		})
