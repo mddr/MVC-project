@@ -14,6 +14,7 @@ namespace MVC.Backend.Services
         Task AddUser(SignupViewModel viewModel, Enums.Roles role = Enums.Roles.User);
         UserViewModel GetUserData(int userId);
         User GetUser(int userId);
+        User GetUser(string email);
         IEnumerable<User> GetUsers();
         IEnumerable<User> GetUsersForNewsletter();
 

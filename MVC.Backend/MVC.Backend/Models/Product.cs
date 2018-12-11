@@ -15,6 +15,7 @@ namespace MVC.Backend.Models
         [Required] public string Name { get; set; }
         [Required] public bool IsHidden { get; set; }
         public string ExpertEmail { get; set; }
+        public string Description { get; set; }
 
         [Required] public double PricePln { get; set; }
         [Required] public int TaxRate { get; set; } //todo: walidacja (0/5/8/23)
@@ -37,13 +38,14 @@ namespace MVC.Backend.Models
             Id = Guid.NewGuid().ToString();
         }
 
-        public Product(string name, double pricePln, int categoryId, int amountAvailable, string expertEmail, bool isHidden = false, int taxRate = 23, int discount = 0,
+        public Product(string name, double pricePln, int categoryId, int amountAvailable, string expertEmail, string description, bool isHidden = false, int taxRate = 23, int discount = 0,
             int boughtTimes = 0, string fullImagePath = null, string thumbnailPath = null) : this()
         {
             CreatedAt = DateTime.Now;
             Name = name;
             IsHidden = isHidden;
             ExpertEmail = expertEmail;
+			Description = description;
             PricePln = pricePln;
             TaxRate = taxRate;
             Discount = discount;

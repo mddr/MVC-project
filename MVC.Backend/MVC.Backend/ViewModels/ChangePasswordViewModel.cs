@@ -13,7 +13,13 @@ namespace MVC.Backend.ViewModels
 
     public class ResetPasswordViewModel
     {
-        public string NewPassword { get; set; }
+		public string Email { get; set; }
+		public string NewPassword { get; set; }
         public string Token { get; set; }
     }
+
+	public class RequestResetPasswordViewModel
+	{
+		public string Email { get; set; }
+	}
 }

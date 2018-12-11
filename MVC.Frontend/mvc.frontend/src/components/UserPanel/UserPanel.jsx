@@ -15,6 +15,7 @@ import {
 } from "react-bootstrap";
 import OrderService from "../../services/OrderService";
 import UserService from "../../services/UserService";
+import AuthService from '../../services/AuthService';
 
 class UserPanel extends Component {
   constructor(props) {
@@ -43,7 +44,9 @@ class UserPanel extends Component {
       Orders: []
     };
     this.OrderService = new OrderService();
-    this.UserService = new UserService();
+		this.UserService = new UserService();
+		this.AuthService = new AuthService();
+		this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount() {
@@ -60,17 +63,24 @@ class UserPanel extends Component {
         });
       });
   }
-  validateForm() {
+
+	validateForm() {
     if (!(this.state.password.length > 0)) return false;
     if (this.state.password !== this.state.password2) return false;
     return true;
-  }
+	}
+
+	handleSubmit() {
+		this.AuthService.changepassword(this.state.curr_password, this.state.password);
+	}
+
   handleChange = event => {
     this.setState({
       [event.target.id]: event.target.value
     });
   };
-  render() {
+
+	render() {
     return (
       <div className="userpanel">
         <Tabs defaultActiveKey={1}>
@@ -82,8 +92,8 @@ class UserPanel extends Component {
             <hr />
             {this.renderHistory()}
           </Tab>
-          <Tab eventKey={3} title="Zmiana hasła">
-            {this.renderPassChange()}
+					<Tab eventKey={3} title="Zmiana hasła">
+						{this.renderPassChange()}
           </Tab>
         </Tabs>
       </div>

@@ -126,30 +126,37 @@ export class AuthService {
 
 				body = JSON.stringify(obj);
 
-				return this.Auth.fetch(`${this.Auth.domain}/account/changepassword`, {
+				return this.fetch(`${this.domain}/account/changepassword`, {
 					method: 'post',
 					body
 				});
 		}
 
-		setpassword(newpassword, token) {
+		setpassword(newpassword, token, email) {
 			let body = "";
 			const obj = {
 				newpassword,
-				token
+				token,
+				email,
 			};
 
 			body = JSON.stringify(obj);
 
-			return this.Auth.fetch(`${this.Auth.domain}/account/setpassword`, {
+			return this.fetch(`${this.domain}/account/setpassword`, {
 				method: 'post',
 				body
 			});
 		}
 
-		resetpassword() {
-			return this.Auth.fetch(`${this.Auth.domain}/account/setpassword`, {
+		resetpassword(email) {
+			let body = "";
+			const obj = {
+				email,
+			};
+			body = JSON.stringify(obj);
+			return this.fetch(`${this.domain}/account/resetpassword`, {
 				method: 'post',
+				body
 			});
 		}
 

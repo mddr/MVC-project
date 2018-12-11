@@ -14,8 +14,9 @@ namespace MVC.Backend.ViewModels
         public string Name { get; set; }
         public bool IsHidden { get; set; }
         public string ExpertEmail { get; set; }
+		public string Description { get; set; }
 
-        public double PricePln { get; set; }
+		public double PricePln { get; set; }
         public int TaxRate { get; set; }
         public int Discount { get; set; }
 
@@ -38,6 +39,7 @@ namespace MVC.Backend.ViewModels
             CategoryId = product.CategoryId;
             IsHidden = product.IsHidden;
             ExpertEmail = product.ExpertEmail;
+			Description = product.Description;
             PricePln = product.PricePln;
             TaxRate = product.TaxRate;
             Discount = product.Discount;

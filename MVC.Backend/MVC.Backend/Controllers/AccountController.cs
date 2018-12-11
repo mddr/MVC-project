@@ -120,12 +120,11 @@ namespace MVC.Backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult ResetPassword()
+        public IActionResult ResetPassword([FromBody] RequestResetPasswordViewModel viewModel)
         {
             try
             {
-                var userId = CurrentUserId();
-                var user = _userService.GetUser(userId);
+                var user = _userService.GetUser(viewModel.Email);
                 _emailService.SendPasswordReset(user.Email);
                 return Ok();
             }
@@ -144,8 +143,8 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var userId = CurrentUserId();
-                await _userService.SetPassword(userId, viewModel.NewPassword, viewModel.Token);
+				var user = _userService.GetUser(viewModel.Email);
+				await _userService.SetPassword(user.Id, viewModel.NewPassword, viewModel.Token);
                 return Ok();
             }
             catch (ArgumentException)

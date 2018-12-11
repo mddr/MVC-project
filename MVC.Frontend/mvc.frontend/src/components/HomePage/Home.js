@@ -6,6 +6,7 @@ import { SideNav, Nav } from "react-sidenav";
 
 import AuthService from "../../services/AuthService";
 import ProductService from "../../services/ProductService";
+import CategoryService from "../../services/CategoryService";
 
 export default class Home extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class Home extends Component {
 
     this.Auth = new AuthService();
     this.ProductService = new ProductService();
+		this.CategoryService = new CategoryService();
   }
 
   componentDidMount() {
@@ -49,8 +51,8 @@ export default class Home extends Component {
         this.setState({
           NewProducts: res
         });
-      });
-    this.Auth.fetch(`${this.Auth.domain}/categories`, null)
+			});
+		this.CategoryService.getVisibleCategories()
       .then(res => res.json())
       .then(res => {
         this.setState({

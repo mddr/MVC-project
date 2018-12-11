@@ -1,12 +1,14 @@
 ﻿import * as React from "react";
 import {
-  Button,
+	Button,
+	Checkbox,
   DropdownButton,
   FormControl,
   FormGroup,
   MenuItem,
   Modal
 } from "react-bootstrap";
+import CategoryService from "../../services/CategoryService";
 
 export default class ProductForm extends React.Component {
   constructor(props) {
@@ -14,13 +16,15 @@ export default class ProductForm extends React.Component {
     this.state = {
       id: "",
       name: "",
+			isHidden: true,
       superiorCategoryId: "",
       categoryName: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
-    this.getCategoryName = this.getCategoryName.bind(this);
+		this.getCategoryName = this.getCategoryName.bind(this);
+		this.CategoryService = new CategoryService();
   }
 
   validateForm() {
@@ -71,7 +75,11 @@ export default class ProductForm extends React.Component {
         method: "post",
         body
       }
-    ).then(() => {
+		).then(() => {
+			if (this.state.isHidden) this.CategoryService.hideCategory(this.state.id);
+			else this.CategoryService.showCategory(this.state.id);
+		})
+		.then(() => {
       this.props.updateData(obj);
     });
   }
@@ -119,7 +127,15 @@ export default class ProductForm extends React.Component {
               id={`dropdown-basic-0`}
             >
               {this.renderMenuItems()}
-            </DropdownButton>
+						</DropdownButton>
+						<Checkbox
+							defaultChecked={this.state.isHidden}
+							onClick={() => {
+								this.setState({ isHidden: !this.state.isHidden });
+							}}
+						>
+							Ukryta
+							</Checkbox>
           </form>
         </Modal.Body>
         <Modal.Footer>

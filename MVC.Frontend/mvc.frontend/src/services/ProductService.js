@@ -63,7 +63,7 @@ export class ProductService {
 		const obj = {
 			productId,
 			filename,
-			base64: `data:text/plain;base64,${base64}`,
+			base64,
 		};
 
 		body = JSON.stringify(obj);

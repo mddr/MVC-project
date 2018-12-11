@@ -25,7 +25,7 @@ export class CategoryService {
 	}
 
 	showCategory(id) {
-		return this.Auth.fetch(`${this.Auth.domain}/category/hide/${id}`, {
+		return this.Auth.fetch(`${this.Auth.domain}/category/show/${id}`, {
 			method: "post"
 		});
 	}

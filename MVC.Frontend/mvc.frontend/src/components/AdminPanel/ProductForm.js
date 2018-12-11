@@ -4,7 +4,8 @@ import {
   Checkbox,
   DropdownButton,
   FormControl,
-  FormGroup,
+	FormGroup,
+	Glyphicon,
   MenuItem,
   Modal
 } from "react-bootstrap";
@@ -21,10 +22,13 @@ export default class ProductForm extends React.Component {
       categoryId: "",
       amountAvailable: "",
       expertEmail: "",
+			description: "",
       discount: "",
       imageBase64: "",
       categoryName: "",
-      filesList: []
+      taxRate: "",
+      filesList: [],
+      files: []
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -41,9 +45,12 @@ export default class ProductForm extends React.Component {
         this.state.pricePln > 0 &&
         this.state.categoryId > 0 &&
         this.state.amountAvailable > -1 &&
+				this.state.taxRate > -1 &&
+				this.state.taxRate <= 100 &&
         this.state.discount >= 0 &&
         this.state.discount <= 100 &&
         this.state.discount !== "" &&
+				this.state.taxRate !== "" &&
         this.state.amountAvailable !== ""
       )
     )
@@ -99,8 +106,10 @@ export default class ProductForm extends React.Component {
       categoryId: this.state.categoryId,
       amountAvailable: this.state.amountAvailable,
       expertEmail: this.state.expertEmail,
+			description: this.state.description,
       discount: this.state.discount,
-      imageBase64: this.state.imageBase64
+      imageBase64: this.state.imageBase64,
+      taxRate: this.state.taxRate
     };
 
     body = JSON.stringify(obj);
@@ -114,22 +123,22 @@ export default class ProductForm extends React.Component {
         body
       }
     ).then(() => {
+			//dodawanie plików
+			let filereader = new FileReader();
+
+			for (var file of this.state.filesList) {
+				filereader.readAsDataURL(file);
+				// eslint-disable-next-line no-loop-func
+				filereader.onload = () => {
+					this.ProductService.addFile(
+						this.state.id,
+						file.name,
+						filereader.result
+					);
+				};
+			}
       this.props.updateData(obj);
     });
-    //dodawanie plików
-    let filereader = new FileReader();
-
-    for (var file of this.state.filesList) {
-      filereader.readAsDataURL(file);
-      // eslint-disable-next-line no-loop-func
-      filereader.onload = () => {
-        this.ProductService.addFile(
-          this.state.id,
-          file.name,
-          filereader.result
-        );
-      };
-    }
   }
 
   renderMenuItems() {
@@ -220,6 +229,15 @@ export default class ProductForm extends React.Component {
                 type="number"
                 name="discount"
                 placeholder="Podaj zniżke"
+							/>
+						</FormGroup>
+						<FormGroup controlId="taxRate">
+              <FormControl
+								value={this.state.taxRate}
+                onChange={this.handleChange}
+                type="number"
+								name="taxRate"
+                placeholder="Podaj wysokość opodatkowania"
               />
             </FormGroup>
             <div className="button">
@@ -234,7 +252,18 @@ export default class ProductForm extends React.Component {
                 onChange={this.handleMultipleFiles}
                 multiple
               />
-            </div>
+						</div>
+						{this.renderProdcutFiles()}
+						<FormGroup controlId="description">
+							<FormControl
+								componentClass="textarea"
+								value={this.state.description}
+								onChange={this.handleChange}
+								type="description"
+								name="description"
+								placeholder="Podaj opis"
+							/>
+						</FormGroup>
           </form>
         </Modal.Body>
         <Modal.Footer>
@@ -251,5 +280,21 @@ export default class ProductForm extends React.Component {
         </Modal.Footer>
       </Modal>
     );
-  }
+	}
+	renderProdcutFiles() {
+		let files = [];
+		this.state.files.forEach((file, index) => {
+			files.push(<li>
+				{file.fileName} 
+				<Glyphicon
+					glyph="trash"
+					style={{ color: "red" }}
+					onClick={() => this.ProductService.removeFile(this.state.id,file.id)}
+				/>
+			</li>)
+		})
+		return (<ul>
+			{files}
+		</ul>)
+	}
 }

@@ -108,6 +108,15 @@ namespace MVC.Backend.Services
 			return user;
 		}
 
+		public User GetUser(string email)
+		{
+			var user = _context.Users
+				.FirstOrDefault(u => u.Email == email);
+			if (user == null)
+				throw new ArgumentException($"User not found. Email: {email}");
+			return user;
+		}
+
 		public IEnumerable<User> GetUsers()
 		{
 			var users = _context.Users;

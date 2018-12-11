@@ -97,7 +97,7 @@ namespace MVC.Backend.Services
             if (viewModel == null)
                 throw new ArgumentException();
             var product = new Product(viewModel.Name, viewModel.PricePln, viewModel.CategoryId,
-                viewModel.AmountAvailable, viewModel.ExpertEmail, viewModel.IsHidden, viewModel.TaxRate,
+                viewModel.AmountAvailable, viewModel.ExpertEmail, viewModel.Description, viewModel.IsHidden, viewModel.TaxRate,
                 viewModel.Discount);
 
             if (!string.IsNullOrEmpty(viewModel.ImageBase64))
@@ -124,6 +124,7 @@ namespace MVC.Backend.Services
             product.AmountAvailable = viewModel.AmountAvailable;
             product.Discount = viewModel.Discount;
             product.ExpertEmail = viewModel.ExpertEmail;
+            product.Description = viewModel.Description;
             product.BoughtTimes = viewModel.BoughtTimes;
             product.IsHidden = viewModel.IsHidden;
             product.PricePln = viewModel.PricePln;

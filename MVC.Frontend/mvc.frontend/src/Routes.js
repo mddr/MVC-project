@@ -10,6 +10,8 @@ import OrderPage from "./components/Products/OrderPage";
 import SearchResultsPage from "./components/Search/SearchResultsPage";
 import ConfirmEmailPage from "./components/Auth/ConfirmEmailPage";
 import RequireEmail from "./components/Auth/RequireEmail";
+import ChangePasswordPage from "./components/Auth/ChangePasswordPage";
+import ResetPasswordPage from "./components/Auth/ResetPasswordPage";
 import UserPanel from "./components/UserPanel/UserPanel";
 
 class Routes extends Component {
@@ -51,6 +53,8 @@ class Routes extends Component {
           )}
         />
         <Route exact path="/Account/ConfirmEmail/:token" component={ConfirmEmailPage} />
+				<Route exact path="/Account/SetPassword/:token" component={ChangePasswordPage} />
+				<Route exact path="/Account/ResetPassword/" component={ResetPasswordPage} />
         <Route exact path="/email-require" component={RequireEmail} />
         <Route
           exact

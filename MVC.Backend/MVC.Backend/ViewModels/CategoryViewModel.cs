@@ -10,6 +10,7 @@ namespace MVC.Backend.ViewModels
     {
         public int? Id { get; set; }
         public string Name { get; set; }
+        public bool IsHidden { get; set; }
         public int? SuperiorCategoryId { get; set; }
         public List<CategoryViewModel> SubCategories { get; set; }
 
@@ -21,6 +22,7 @@ namespace MVC.Backend.ViewModels
         {
             Id = category.Id;
             Name = category.Name;
+			IsHidden = category.IsHidden;
             SuperiorCategoryId = category.SuperiorCategoryId;
             if (category.SubCategories != null)
                 SubCategories = category.SubCategories.Select(c => new CategoryViewModel(c)).ToList();

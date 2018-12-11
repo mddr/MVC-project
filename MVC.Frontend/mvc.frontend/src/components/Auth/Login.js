@@ -1,6 +1,7 @@
 import "./Login.css";
 
 import React, { Component } from "react";
+import { Link, Redirect } from "react-router-dom";
 import { Button, FormControl, FormGroup, Panel } from "react-bootstrap";
 
 import AuthService from "../../services/AuthService";
@@ -15,6 +16,7 @@ export class Login extends Component {
     };
     this.Auth = new AuthService();
     this.handleSubmit = this.handleSubmit.bind(this);
+		this.resetPassword = this.resetPassword.bind(this);
   }
 
   componentWillMount() {
@@ -29,7 +31,11 @@ export class Login extends Component {
     this.setState({
       [event.target.id]: event.target.value
     });
-  };
+	};
+
+	resetPassword() {
+		this.Auth.resetpassword();
+	}
 
   handleSubmit = event => {
     event.preventDefault();
@@ -77,6 +83,8 @@ export class Login extends Component {
             >
               Zaloguj się
             </Button>
+
+						<Link to="/Account/ResetPassword">Nie pamietam hasła</Link>
           </form>
         </Panel>
       </div>
