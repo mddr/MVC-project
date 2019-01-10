@@ -27,7 +27,7 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("orders")]
-        public IActionResult Orders()
+        public IActionResult GetOrders()
         {
             try
             {
@@ -43,11 +43,12 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("orders/history")]
-        public IActionResult OrdersHistory()
+        public IActionResult GetOrdersHistory()
         {
             try
             {
-                var orders = _orderService.OrderHistory(CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+                var orders = _orderService.OrderHistory(userId);
                 return Ok(orders);
             }
             catch (Exception)
@@ -58,7 +59,7 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("orders/{userId}")]
-        public IActionResult Orders(int userId)
+        public IActionResult GetOrders(int userId)
         {
             try
             {
@@ -74,7 +75,7 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("order/{id}")]
-        public IActionResult Order(int id)
+        public IActionResult GetOrder(int id)
         {
             try
             {
@@ -97,7 +98,7 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var userId = CurrentUserId();
+                var userId = _userService.GetCurrentUserId(HttpContext);
                 var user = _userService.GetUser(userId);
                 var order = _orderService.AddOrder(userId);
                 _emailService.SendOrderInfo(user.Email, order);
@@ -107,7 +108,7 @@ namespace MVC.Backend.Controllers
             {
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -119,7 +120,8 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                _orderService.UpdateOrder(viewModel, CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+                _orderService.UpdateOrder(viewModel, userId);
                 return Ok();
             }
             catch (ArgumentException)
@@ -149,11 +151,6 @@ namespace MVC.Backend.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        private int CurrentUserId()
-        {
-            return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

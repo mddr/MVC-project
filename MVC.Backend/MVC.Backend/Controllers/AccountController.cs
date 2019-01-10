@@ -105,7 +105,7 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var userId = CurrentUserId();
+                var userId = _userService.GetCurrentUserId(HttpContext);
                 await _userService.ChangePassword(userId, viewModel.OldPassword, viewModel.NewPassword);
                 return Ok();
             }
@@ -128,25 +128,6 @@ namespace MVC.Backend.Controllers
                 _emailService.SendPasswordReset(user.Email);
                 return Ok();
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SetPassword([FromBody] ResetPasswordViewModel viewModel)
-        {
-            try
-            {
-				var user = _userService.GetUser(viewModel.Email);
-				await _userService.SetPassword(user.Id, viewModel.NewPassword, viewModel.Token);
-                return Ok();
-            }
             catch (ArgumentException)
             {
                 return BadRequest();
@@ -157,9 +138,23 @@ namespace MVC.Backend.Controllers
             }
         }
 
-        private int CurrentUserId()
+        [HttpPost]
+        public async Task<IActionResult> SetPassword([FromBody] ResetPasswordViewModel viewModel)
         {
-            return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            try
+            {
+                var user = _userService.GetUser(viewModel.Email);
+                await _userService.SetPassword(user.Id, viewModel.NewPassword, viewModel.Token);
+                return Ok();
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

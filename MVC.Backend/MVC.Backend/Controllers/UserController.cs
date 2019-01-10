@@ -30,15 +30,15 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var userId = CurrentUserId();
+                var userId = _userService.GetCurrentUserId(HttpContext);
                 var userData = _userService.GetUserData(userId);
                 return Ok(userData);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException )
             {
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -53,11 +53,11 @@ namespace MVC.Backend.Controllers
 				var users = _userService.GetUser(id);
 				return Ok(users);
 			}
-			catch (ArgumentException ex)
+			catch (ArgumentException )
 			{
 				return BadRequest();
 			}
-			catch (Exception ex)
+			catch (Exception )
 			{
 				return StatusCode(StatusCodes.Status500InternalServerError);
 			}
@@ -72,11 +72,11 @@ namespace MVC.Backend.Controllers
 				var users = _userService.GetUsers();
 				return Ok(users.Select(u => new UserViewModel(u)));
 			}
-			catch (ArgumentException ex)
+			catch (ArgumentException )
 			{
 				return BadRequest();
 			}
-			catch (Exception ex)
+			catch (Exception )
 			{
 				return StatusCode(StatusCodes.Status500InternalServerError);
 			}
@@ -93,9 +93,9 @@ namespace MVC.Backend.Controllers
 			}
 			catch (ArgumentException ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return StatusCode(StatusCodes.Status500InternalServerError);
 			}
@@ -112,9 +112,9 @@ namespace MVC.Backend.Controllers
 			}
 			catch (ArgumentException ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return StatusCode(StatusCodes.Status500InternalServerError);
 			}
@@ -132,17 +132,12 @@ namespace MVC.Backend.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        private int CurrentUserId()
-        {
-            return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

@@ -14,10 +14,12 @@ namespace MVC.Backend.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
+        private readonly IUserService _userService;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, IUserService userService)
         {
             _cartService = cartService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -27,11 +29,12 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var cart = _cartService.GetCartItems(CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+                var cart = _cartService.GetCartItems(userId);
                 var results = cart.Select(i => new CartItemViewModel(i)).ToList();
                 return Ok(results);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -44,14 +47,15 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                _cartService.AddToCart(viewModel, CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+                _cartService.AddToCart(viewModel, userId);
                 return Ok();
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -64,7 +68,8 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                _cartService.UpdateCart(viewModel, CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+                _cartService.UpdateCart(viewModel, userId);
                 return Ok();
             }
             catch (ArgumentException ex)
@@ -84,7 +89,9 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                _cartService.RemoveCart(CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+
+                _cartService.RemoveCart(userId);
                 return Ok();
             }
             catch (ArgumentException ex)
@@ -104,7 +111,8 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                _cartService.RemoveFromCart(productId, CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+                _cartService.RemoveFromCart(productId, userId);
                 return Ok();
             }
             catch (ArgumentException ex)
@@ -115,11 +123,6 @@ namespace MVC.Backend.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        private int CurrentUserId()
-        {
-            return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

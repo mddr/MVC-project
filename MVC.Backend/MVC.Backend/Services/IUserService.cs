@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Backend.Helpers;
 using MVC.Backend.Models;
@@ -17,6 +18,7 @@ namespace MVC.Backend.Services
         User GetUser(string email);
         IEnumerable<User> GetUsers();
         IEnumerable<User> GetUsersForNewsletter();
+        int GetCurrentUserId(HttpContext context);
 
         Task<ObjectResult> Login(LoginViewModel viewModel);
         Task ConfirmEmail(string token);

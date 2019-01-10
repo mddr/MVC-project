@@ -15,15 +15,17 @@ namespace MVC.Backend.Controllers
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;
+        private readonly IUserService _userService;
 
-        public AddressController(IAddressService addressService)
+        public AddressController(IAddressService addressService, IUserService userService)
         {
             _addressService = addressService;
+            _userService = userService;
         }
 
         [HttpGet]
         [Route("addresses")]
-        public IActionResult Addresses()
+        public IActionResult GetAddresses()
         {
             try
             {
@@ -40,7 +42,7 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("address/{id}")]
-        public IActionResult Address(int id)
+        public IActionResult GetAddress(int id)
         {
             try
             {
@@ -59,11 +61,12 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("userAddress/")]
-        public IActionResult UserAddress()
+        public IActionResult GetUserAddress()
         {
             try
             {
-                var address = _addressService.GetUserAddress(CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+                var address = _addressService.GetUserAddress(userId);
                 return Ok(new AddressViewModel(address));
             }
             catch (ArgumentException)
@@ -82,7 +85,8 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                _addressService.AddAddress(viewModel, CurrentUserId());
+                var userId = _userService.GetCurrentUserId(HttpContext);
+                _addressService.AddAddress(viewModel, userId);
                 return Ok();
             }
             catch (ArgumentException)
@@ -121,7 +125,7 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var userId = CurrentUserId();
+                var userId = _userService.GetCurrentUserId(HttpContext);
                 _addressService.UpdateAddress(userId, viewModel);
                 return Ok();
             }
@@ -153,11 +157,6 @@ namespace MVC.Backend.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        private int CurrentUserId()
-        {
-            return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

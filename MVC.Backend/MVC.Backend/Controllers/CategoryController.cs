@@ -31,7 +31,7 @@ namespace MVC.Backend.Controllers
                 var results = categories.Select(c => new CategoryViewModel(c)).ToList();
                 return Ok(results);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -86,7 +86,7 @@ namespace MVC.Backend.Controllers
             {
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }

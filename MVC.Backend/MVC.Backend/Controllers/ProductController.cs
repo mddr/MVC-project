@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Backend.Helpers;
+using MVC.Backend.Models;
 using MVC.Backend.Services;
 using MVC.Backend.ViewModels;
 
@@ -16,11 +17,13 @@ namespace MVC.Backend.Controllers
     {
         private readonly IProductService _productService;
         private readonly IFileService _fileService;
+        private readonly IUserService _userService;
 
-        public ProductController(IProductService productService, IFileService fileService)
+        public ProductController(IProductService productService, IFileService fileService, IUserService userService)
         {
             _productService = productService;
             _fileService = fileService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -57,7 +60,7 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("products/top/{amount}")]
-        public IActionResult TopProducts(int amount)
+        public IActionResult GetTopProducts(int amount)
         {
             try
             {
@@ -73,7 +76,7 @@ namespace MVC.Backend.Controllers
 
 		[HttpGet]
 		[Route("products/newest/{amount}")]
-		public IActionResult NewestProducts(int amount)
+		public IActionResult GetNewestProducts(int amount)
 		{
 			try
 			{
@@ -87,13 +90,15 @@ namespace MVC.Backend.Controllers
 			}
 		}
 
-		[HttpGet]
+        [HttpGet]
         [Route("products/{categoryId}")]
-        public IActionResult Products(int categoryId)
+        public IActionResult GetProducts(int categoryId, PaginationQuery<Product> query = null)
         {
             try
             {
                 var products = _productService.GetProducts(categoryId, false);
+                if (query != null)
+                    products = query.Paginate(products);
                 var results = products.Select(p => new ProductViewModel(p)).ToList();
                 return Ok(results);
             }
@@ -105,7 +110,7 @@ namespace MVC.Backend.Controllers
 
         [HttpGet]
         [Route("product/{id}")]
-        public IActionResult Product(string id)
+        public IActionResult GetProduct(string id)
         {
             try
             {
@@ -128,7 +133,7 @@ namespace MVC.Backend.Controllers
         {
             try
             {
-                var userId = CurrentUserId();
+                var userId = _userService.GetCurrentUserId(HttpContext);
                 var history = _productService.GetUserHistory(userId);
                 var results = history.Select(p => new ProductViewModel(p)).ToList();
                 return Ok(results);
@@ -304,11 +309,6 @@ namespace MVC.Backend.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        private int CurrentUserId()
-        {
-            return int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace MVC.Backend.ViewModels
         public string ProductId { get; set; }
         public string Base64 { get; set; }
         public string FileName { get; set; }
+        public string Description { get; set; }
     }
 
     public class FileResultViewModel
@@ -20,6 +21,7 @@ namespace MVC.Backend.ViewModels
         public string FileType { get; set; }
         public string Base64 { get; set; }
         public string CreatedAt { get; set; }
+        public string Description { get; set; }
 
         public FileResultViewModel()
         { 
@@ -30,6 +32,7 @@ namespace MVC.Backend.ViewModels
             Id = file.Id;
             FileName = file.FileName;
             CreatedAt = file.CreatedAt.ToString("g");
+            Description = file.Description;
         }
     }
 

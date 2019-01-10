@@ -163,7 +163,7 @@ namespace MVC.Backend.Services
         {
             var product = GetProduct(viewModel.ProductId);
             var filePath = _fileService.SaveFile(product.Id, viewModel.Base64, viewModel.FileName);
-            var file = new ProductFile(product, viewModel.FileName, filePath);
+            var file = new ProductFile(product, viewModel.FileName, filePath, viewModel.Description);
             _context.ProductFiles.Add(file);
             await _context.SaveChangesAsync();
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
@@ -44,6 +45,11 @@ namespace MVC.Backend.Services
         {
             var users = _context.Users.Where(u => u.AcceptsNewsletters);
             return users;
+        }
+
+        public int GetCurrentUserId(HttpContext context)
+        {
+            return int.Parse(context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
 
         public async Task<ObjectResult> Login(LoginViewModel viewModel)
