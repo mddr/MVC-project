@@ -1,30 +1,37 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MVC.Backend.Data;
 using MVC.Backend.Helpers;
 using MVC.Backend.Services;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
+using System;
+using System.Threading.Tasks;
 
 namespace MVC.Backend.Controllers
 {
+    /// <summary>
+    /// API umożliwiające rejestracje oraz logowanie sie
+    /// </summary>
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="userService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="emailService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public AccountController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
             _emailService = emailService;
         }
 
+        /// <summary>
+        /// Tworzy nowe konto o danych podanych w parametrze
+        /// </summary>
+        /// <param name="viewModel">Dane nowego konta</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         public async Task<IActionResult> Signup([FromBody] SignupViewModel viewModel)
         {
@@ -44,6 +51,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Tworzy nowe konto administratora
+        /// </summary>
+        /// <param name="viewModel">Dane administratora</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         public async Task<IActionResult> SignupAdmin([FromBody] SignupViewModel viewModel)
         {
@@ -63,6 +75,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Zalogowuje użytkownika jeżeli podano poprawne dane
+        /// </summary>
+        /// <param name="viewModel">Dane logowania</param>
+        /// <returns>JWT lub informacje o błędzie</returns>
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginViewModel viewModel)
         {
@@ -81,6 +98,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Potwierdza konto użytkownika odpowiadajęce tokenowi podanemu w parametrze
+        /// </summary>
+        /// <param name="token">Token potwierzający</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
 		[Route("account/ConfirmEmail/{token}")]
 		public async Task<IActionResult> ConfirmEmail(string token)
@@ -100,6 +122,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Zmienia hasło zalogowanego użytkownika zgodnie z podanym parametrem
+        /// </summary>
+        /// <param name="viewModel">Strae oraz nowe hasło</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordViewModel viewModel)
         {
@@ -119,6 +146,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Resetuje hasło i wysyła mail z linkiem do zmiany
+        /// </summary>
+        /// <param name="viewModel">Email użytkownika resetującego hasło</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         public IActionResult ResetPassword([FromBody] RequestResetPasswordViewModel viewModel)
         {
@@ -138,6 +170,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Zmienia hasło użytkownika o mailu podanym w parametrze jeżeli użytkownik podał poprawny token (zawarty w linku do resetu)
+        /// </summary>
+        /// <param name="viewModel">Mail, hasło, token potwierdzający</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         public async Task<IActionResult> SetPassword([FromBody] ResetPasswordViewModel viewModel)
         {

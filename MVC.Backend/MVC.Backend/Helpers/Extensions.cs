@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MVC.Backend.Models;
+using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using MVC.Backend.Models;
 
 namespace MVC.Backend.Helpers
 {
+    /// <summary>
+    /// Extensions methods
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Konwertuje plik do base64
+        /// </summary>
+        /// <param name="product">Metoda dodana do klasy Product</param>
+        /// <returns>Plik w postaci base64 lub pusty string</returns>
         public static string GetBase64(this Product product)
         {
             try

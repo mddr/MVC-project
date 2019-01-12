@@ -9,17 +9,25 @@ using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Services
 {
+    /// <summary>
+    /// <see cref="IProductService"/>
+    /// </summary>
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext _context;
         private readonly IFileService _fileService;
-
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="fileService"></param>
         public ProductService(ApplicationDbContext context, IFileService fileService)
         {
             _context = context;
             _fileService = fileService;
         }
 
+        /// <see cref="IProductService.GetProducts(bool?)"/>
         public IEnumerable<Product> GetProducts(bool? isHidden)
         {
             var products = _context.Products.Include(p => p.Files);

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Backend.Helpers;
 using MVC.Backend.Services;
 using MVC.Backend.ViewModels;
+using System;
+using System.Linq;
 
 namespace MVC.Backend.Controllers
 {
+    /// <summary>
+    /// Odpowiada za API do zamówień
+    /// </summary>
     [EmailConfirmed(Roles = "Admin, User")]
     public class OrderController : Controller
     {
@@ -18,6 +18,12 @@ namespace MVC.Backend.Controllers
         private readonly IEmailService _emailService;
         private readonly IUserService _userService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="orderService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="emailService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="userService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public OrderController(IOrderService orderService, IEmailService emailService, IUserService userService)
         {
             _orderService = orderService;
@@ -25,6 +31,10 @@ namespace MVC.Backend.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Pobiera wszystkie zamówienia
+        /// </summary>
+        /// <returns>Wszystkie zamówienia lub informacje o błędzie</returns>
         [HttpGet]
         [Route("orders")]
         public IActionResult GetOrders()
@@ -41,6 +51,10 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera historie zamówień zalogowanego użytkownika
+        /// </summary>
+        /// <returns>Zwraca zamowienia lub informacje o błędzie</returns>
         [HttpGet]
         [Route("orders/history")]
         public IActionResult GetOrdersHistory()
@@ -57,6 +71,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera zamówienia użytkownika o id podanym w parametrze
+        /// </summary>
+        /// <param name="userId">Id użytkownika</param>
+        /// <returns>Zamówienia użytkownika lub informacje o błędzie</returns>
         [HttpGet]
         [Route("orders/{userId}")]
         public IActionResult GetOrders(int userId)
@@ -73,6 +92,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera informacje o zamówienia o id podanym w parametrze
+        /// </summary>
+        /// <param name="id">Id zamówienia</param>
+        /// <returns>Dane dotyczące zamówienia lub informacje o błędzie</returns>
         [HttpGet]
         [Route("order/{id}")]
         public IActionResult GetOrder(int id)
@@ -92,6 +116,10 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Tworzy zamówienie skłądujące się z produktów w koszyku zalogowanego użytkownika
+        /// </summary>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("order/add")]
         public IActionResult Add()
@@ -114,6 +142,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Aktualizuje zamówienie zgodnie z danymi przekazanymi w parametrze
+        /// </summary>
+        /// <param name="viewModel">Nowe dane dotyczace zamówienia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("order/update")]
         public IActionResult Update([FromBody] OrderViewModel viewModel)
@@ -134,6 +167,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa zamówienie o id podanym w parametrze
+        /// </summary>
+        /// <param name="id">Id zamówienia do usuniecia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpDelete]
         [Route("order/delete/{id}")]
         public IActionResult Delete(int id)

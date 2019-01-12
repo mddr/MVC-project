@@ -1,29 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Backend.Helpers;
 using MVC.Backend.Services;
 using MVC.Backend.ViewModels;
+using System;
+using System.Linq;
 
 namespace MVC.Backend.Controllers
 {
+    /// <summary>
+    /// Zapewnia API umozliwiające interkacje z danymi użytkowników
+    /// </summary>
     [Authorize]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="userService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="emailService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public UserController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
             _emailService = emailService;
         }
 
+        /// <summary>
+        /// Zwraca dane zalogowanego użytkownika
+        /// </summary>
+        /// <returns>Dane użytkownika lub informacje o błędzie</returns>
         [HttpGet]
         [Route("user")]
         public IActionResult GetCurrentUserData()
@@ -44,14 +53,19 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Umozliwia pobranie danych uztykownika o przekazanym id
+        /// </summary>
+        /// <param name="id">Id żądanego użytkownika</param>
+        /// <returns>Dane użytkownika lub informacje o błędzie</returns>
 		[HttpGet]
 		[Route("user/{id}")]
 		public IActionResult GetUser(int id)
 		{
 			try
 			{
-				var users = _userService.GetUser(id);
-				return Ok(users);
+				var user = _userService.GetUser(id);
+				return Ok(user);
 			}
 			catch (ArgumentException )
 			{
@@ -63,6 +77,10 @@ namespace MVC.Backend.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Zwraca dane wszystkich użytkowników
+        /// </summary>
+        /// <returns>Dane użytkowników lub informacje o błędzie</returns>
 		[HttpGet]
 		[Route("users")]
 		public IActionResult GetUsers()
@@ -82,6 +100,11 @@ namespace MVC.Backend.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Aktualizuje dane użytkownika zgodnie z parametrem
+        /// </summary>
+        /// <param name="viewModel">Nowe wartości danych użytkownika</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
 		[HttpPost]
 		[Route("user/update")]
 		public IActionResult UpdateUser([FromBody]UserViewModel viewModel)
@@ -101,6 +124,11 @@ namespace MVC.Backend.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Usuwa uzytkownika o danym id
+        /// </summary>
+        /// <param name="id">Id uzytkownika do usunięcia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
 		[HttpDelete]
 		[Route("user/delete/{id}")]
 		public IActionResult DeleteUser(int id)
@@ -120,6 +148,10 @@ namespace MVC.Backend.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Wysyla newsletter dla użytkowników zgadzających się na jego otrzymywanie
+        /// </summary>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("users/newsletter")]
         [EmailConfirmed(Roles = "Admin")]

@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Linq;
 
 namespace MVC.Backend.Helpers
 {
+    /// <summary>
+    /// Atrybut sprawdzający czy użytkownik ma potwierdzony mail
+    /// </summary>
     public class EmailConfirmedAttribute : AuthorizeAttribute, IAuthorizationFilter
     {
+        /// <summary>
+        /// Sprawdza czy mail jest potwierdzony
+        /// </summary>
+        /// <param name="context">Kontekst uwieżytelnienia</param>
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var user = context.HttpContext.User;

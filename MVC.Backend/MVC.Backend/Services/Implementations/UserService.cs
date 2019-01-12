@@ -1,25 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Helpers;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using static MVC.Backend.Helpers.Enums;
 
 namespace MVC.Backend.Services
 {
+    /// <summary>
+    /// Implementacja IUserService
+    /// </summary>
+    /// <see cref="IUserService"/>
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
         private readonly ITokenService _tokenService;
         private readonly IAddressService _addressService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="context">Kontekst bazodanowy</param>
+        /// <param name="tokenService"></param>
+        /// <param name="addressService"></param>
         public UserService(ApplicationDbContext context, ITokenService tokenService, IAddressService addressService)
         {
             _context = context;
@@ -27,6 +36,8 @@ namespace MVC.Backend.Services
 			_addressService = addressService;
 		}
 
+        /// <see cref="IUserService.AddUser(SignupViewModel, Roles)"/>
+        /// <exception cref="ArgumentException"/>
         public async Task AddUser(SignupViewModel viewModel, Roles role = Roles.User)
         {
             var user = _context.Users.SingleOrDefault(u => u.Email == viewModel.Email);
@@ -41,17 +52,20 @@ namespace MVC.Backend.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <see cref="IUserService.AddUser(SignupViewModel, Roles)"/>
         public IEnumerable<User> GetUsersForNewsletter()
         {
             var users = _context.Users.Where(u => u.AcceptsNewsletters);
             return users;
         }
 
+        /// <see cref="IUserService.GetCurrentUserId(HttpContext)"/>
         public int GetCurrentUserId(HttpContext context)
         {
             return int.Parse(context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
 
+        /// <see cref="IUserService.Login(LoginViewModel)"/>
         public async Task<ObjectResult> Login(LoginViewModel viewModel)
         {
             var user = AuthHelper.Authenticate(viewModel.Email, viewModel.Password, _context);
@@ -79,6 +93,8 @@ namespace MVC.Backend.Services
             });
         }
 
+        /// <see cref="IUserService.ConfirmEmail(string)"/>
+        /// <exception cref="ArgumentException"/>
         public async Task ConfirmEmail(string token)
         {
             var claims = _tokenService.GetPrincipalFromExpiredToken(token);
@@ -93,6 +109,8 @@ namespace MVC.Backend.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <see cref="IUserService.GetUserData(int)"/>
+        /// <exception cref="ArgumentException"/>
         public UserViewModel GetUserData(int userId)
         {
             var user = _context.Users
@@ -105,6 +123,8 @@ namespace MVC.Backend.Services
             return result;
         }
 
+        /// <see cref="IUserService.GetUser(int)"/>
+        /// <exception cref="ArgumentException"/>
 		public User GetUser(int userId)
 		{
 			var user = _context.Users
@@ -114,6 +134,8 @@ namespace MVC.Backend.Services
 			return user;
 		}
 
+        /// <see cref="IUserService.GetUser(string)"/>
+        /// <exception cref="ArgumentException"/>
 		public User GetUser(string email)
 		{
 			var user = _context.Users
@@ -123,6 +145,7 @@ namespace MVC.Backend.Services
 			return user;
 		}
 
+        /// <see cref="IUserService.GetUsers"/>
 		public IEnumerable<User> GetUsers()
 		{
 			var users = _context.Users;
@@ -137,6 +160,8 @@ namespace MVC.Backend.Services
 			return users.ToList();
 		}
 
+        /// <see cref="IUserService.UpdateUser(UserViewModel)"/>
+        /// <exception cref="ArgumentException"/>
 		public void UpdateUser(UserViewModel viewModel)
 		{
 			if (viewModel == null)
@@ -162,6 +187,8 @@ namespace MVC.Backend.Services
 			_context.SaveChanges();
 		}
 
+        /// <see cref="IUserService.DeleteUser(int)"/>
+        /// <exception cref="ArgumentException"/>
 		public void DeleteUser(int userId)
 		{
 			var user = _context.Users.SingleOrDefault(c => c.Id == userId);
@@ -171,6 +198,8 @@ namespace MVC.Backend.Services
 			_context.SaveChanges();
 		}
 
+        /// <see cref="IUserService.ChangePassword(int, string, string)"/>
+        /// <exception cref="ArgumentException"/>
         public async Task ChangePassword(int userId, string oldPassword, string newPassword)
         {
             var user = _context.Users.Single(u => u.Id == userId);
@@ -186,6 +215,8 @@ namespace MVC.Backend.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <see cref="IUserService.SetPassword(int, string, string)"/>
+        /// <exception cref="ArgumentException"/>
         public async Task SetPassword(int userId, string newPassword, string token)
         {
             var user = _context.Users.Single(u => u.Id == userId);

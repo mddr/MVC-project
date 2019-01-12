@@ -1,28 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MVC.Backend.Helpers;
 using MVC.Backend.Services;
 using MVC.Backend.ViewModels;
+using System;
+using System.Linq;
 
 namespace MVC.Backend.Controllers
 {
+    /// <summary>
+    /// API do zarządanie adresem użytkownika
+    /// </summary>
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;
         private readonly IUserService _userService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="addressService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="userService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public AddressController(IAddressService addressService, IUserService userService)
         {
             _addressService = addressService;
             _userService = userService;
         }
 
+        /// <summary>
+        /// Pobiera wszystkie adresy
+        /// </summary>
+        /// <returns>Wszystkie adresy lub informacje o błędzie</returns>
         [HttpGet]
         [Route("addresses")]
         public IActionResult GetAddresses()
@@ -39,7 +47,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Pobiera adres o id podanym w paremetrze
+        /// </summary>
+        /// <param name="id">Id adresu</param>
+        /// <returns>Adres lub informacje o błędzie</returns>
         [HttpGet]
         [Route("address/{id}")]
         public IActionResult GetAddress(int id)
@@ -59,6 +71,10 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera adres zalogowanego użytkownika
+        /// </summary>
+        /// <returns>Adres lub informacje o błędzie</returns>
         [HttpGet]
         [Route("userAddress/")]
         public IActionResult GetUserAddress()
@@ -79,6 +95,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Dodaje adres zalogowanego użytkownika
+        /// </summary>
+        /// <param name="viewModel">Nowy adres</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("address/add")]
         public IActionResult Add([FromBody] AddressViewModel viewModel)
@@ -99,6 +120,12 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Zastępuje adres użytkownika o id podanym w parametrze
+        /// </summary>
+        /// <param name="viewModel">Nowy adres</param>
+        /// <param name="userId">Id użytkownika</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
 		[HttpPost]
 		[Route("address/add/{userId}")]
 		public IActionResult SetAddress([FromBody] AddressViewModel viewModel, int userId)
@@ -118,6 +145,11 @@ namespace MVC.Backend.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Aktualizuje dane adresu zalogowanego użytkownika
+        /// </summary>
+        /// <param name="viewModel">Nowe dane adresu</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
 		[HttpPost]
         [Route("address/update")]
         [Authorize]
@@ -139,6 +171,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa adres o podanym id
+        /// </summary>
+        /// <param name="id">Id adresu</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpDelete]
         [Route("address/delete/{id}")]
         [Authorize]

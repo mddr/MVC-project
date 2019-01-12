@@ -2,24 +2,36 @@
 using Microsoft.AspNetCore.Mvc;
 using MVC.Backend.Data;
 using MVC.Backend.Services;
-using System;
-using System.Collections.Generic;
+using MVC.Backend.ViewModels;
 using System.Linq;
 using System.Threading.Tasks;
-using MVC.Backend.ViewModels;
 
 namespace MVC.Backend.Controllers
 {
+    /// <summary>
+    /// Zajmuje sie obslugą JWT
+    /// </summary>
     public class TokenController : Controller
     {
         private readonly ITokenService _tokenService;
         private readonly ApplicationDbContext _usersDb;
+
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="tokenService">Instancja klasy tworzona przez DI implementująca interfejs</param>
+        /// <param name="usersDb">Kontekst bazodanowyu</param>
         public TokenController(ITokenService tokenService, ApplicationDbContext usersDb)
         {
             _tokenService = tokenService;
             _usersDb = usersDb;
         }
 
+        /// <summary>
+        /// Odświerza otrzymany token
+        /// </summary>
+        /// <param name="tokenViewModel">Token użyutkownika</param>
+        /// <returns>Nowy token o przedłużonej ważności</returns>
         [HttpPost]
         public async Task<IActionResult> Refresh([FromBody] TokenViewModel tokenViewModel)
         {
@@ -42,6 +54,10 @@ namespace MVC.Backend.Controllers
             });
         }
 
+        /// <summary>
+        /// Unieważnia token użytkownika
+        /// </summary>
+        /// <returns>Ok</returns>
         [HttpPost, Authorize]
         public async Task<IActionResult> Revoke()
         {

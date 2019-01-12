@@ -1,26 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Backend.Helpers;
 using MVC.Backend.Services;
 using MVC.Backend.ViewModels;
+using System;
+using System.Linq;
 
 namespace MVC.Backend.Controllers
-{    
+{
+    /// <summary>
+    /// Odpowiada za API do zarządzania kategoriami produktów
+    /// </summary>
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="categoryService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
 
-        
+        /// <summary>
+        /// Pobiera wszystkie kategorie
+        /// </summary>
+        /// <returns>Kategorie produktów lub informacje o błędzie</returns>
         [HttpGet]
         [Route("categories")]
         public IActionResult GetAllCategories()
@@ -37,6 +44,10 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera kategorie widoczne przez klientów
+        /// </summary>
+        /// <returns>Kategorie produktów lub informacje o błędzie</returns>
         [HttpGet]
         [Route("categories/visible")]
         public IActionResult GetVisibleCategories()
@@ -53,6 +64,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera informacje o kategorii o id podanym w parametrze
+        /// </summary>
+        /// <param name="id">Id kategorii</param>
+        /// <returns>Informacje o kategorii lub informacje o błędzie</returns>
         [HttpGet]
         [Route("category/{id}")]
         public IActionResult GetCategory(int id)
@@ -72,6 +88,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Dodaje kategorie o danych podanych w parametrze
+        /// </summary>
+        /// <param name="viewModel">Dane nowej kategorii</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("category/add")]
         [EmailConfirmed(Roles = "Admin")]
@@ -92,6 +113,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Aktualizuje dane kategorii o id podanym w parametrze
+        /// </summary>
+        /// <param name="viewModel">Nowe dane kategorii</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("category/update")]
         [EmailConfirmed(Roles = "Admin")]
@@ -112,6 +138,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa kategorie o id podanym w parametrze
+        /// </summary>
+        /// <param name="id">Id kategorii do usunięcia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpDelete]
         [Route("category/delete/{id}")]
         [EmailConfirmed(Roles = "Admin")]
@@ -132,6 +163,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Ukrywa kategorie i wszystkie produkty z niej
+        /// </summary>
+        /// <param name="id">Id kategorii do ukrycia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("category/hide/{id}")]
         [EmailConfirmed(Roles = "Admin")]
@@ -152,6 +188,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Ujawnia kategorie i wszystkie produkty z niej
+        /// </summary>
+        /// <param name="id">Id kategorii do ujawnienia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("category/show/{id}")]
         [EmailConfirmed(Roles = "Admin")]
@@ -172,6 +213,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Zwraca pdf podsumowujący kategorie o id podanym w parametrze
+        /// </summary>
+        /// <param name="id">Id kategeroii</param>
+        /// <returns>Plik podsumowania lub informacje o błędzie</returns>
         [HttpGet]
         [Route("category/{id}/summary")]
         public IActionResult GetCategorySummary(int id)

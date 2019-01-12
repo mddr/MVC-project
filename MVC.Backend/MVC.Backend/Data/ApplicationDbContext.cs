@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Models;
 
 namespace MVC.Backend.Data
 {
+    /// <summary>
+    /// Kontekst bazodanowy
+    /// </summary>
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext() { }

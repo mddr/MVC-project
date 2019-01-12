@@ -1,24 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Backend.Helpers;
 using MVC.Backend.Models;
 using MVC.Backend.Services;
 using MVC.Backend.ViewModels;
+using System;
+using System.Linq;
 
 namespace MVC.Backend.Controllers
 {
+    /// <summary>
+    /// Zapewnia API umozliwiające interkacje z danymi produktów
+    /// </summary>
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
         private readonly IFileService _fileService;
         private readonly IUserService _userService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="productService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="fileService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="userService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public ProductController(IProductService productService, IFileService fileService, IUserService userService)
         {
             _productService = productService;
@@ -26,6 +31,10 @@ namespace MVC.Backend.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Pobiera wszystkie produkty
+        /// </summary>
+        /// <returns>Wszystkie produkty lub informacje o błędzie</returns>
         [HttpGet]
         [Route("products")]
         public IActionResult GetAllProducts()
@@ -42,6 +51,10 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera produkty widoczne przez klientów
+        /// </summary>
+        /// <returns>Produkty widoczne przez klientów lub informacje o błędzie</returns>
         [HttpGet]
         [Route("products/visible")]
         public IActionResult GetVisibleProducts()
@@ -58,6 +71,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera najpopularniejsze produkty
+        /// </summary>
+        /// <param name="amount">Ilość produktów do pobrania</param>
+        /// <returns>Najpopularniejsze produkty lub informacje o błędziey</returns>
         [HttpGet]
         [Route("products/top/{amount}")]
         public IActionResult GetTopProducts(int amount)
@@ -74,6 +92,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera najnowsze produkty
+        /// </summary>
+        /// <param name="amount">Liczba produktów do pobrania</param>
+        /// <returns>Najnowsze produkty lub informacje o błędzie</returns>
 		[HttpGet]
 		[Route("products/newest/{amount}")]
 		public IActionResult GetNewestProducts(int amount)
@@ -90,6 +113,12 @@ namespace MVC.Backend.Controllers
 			}
 		}
 
+        /// <summary>
+        /// Pobiera produkty z kategorii
+        /// </summary>
+        /// <param name="categoryId">Id kategorii</param>
+        /// <param name="query">Query do paginacji</param>
+        /// <returns>Produkty z kategorii określone przez query lub informacje o błędzie</returns>
         [HttpGet]
         [Route("products/{categoryId}")]
         public IActionResult GetProducts(int categoryId, PaginationQuery<Product> query = null)
@@ -108,6 +137,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera prodkut o id podanym w parametrze
+        /// </summary>
+        /// <param name="id">Id produktu</param>
+        /// <returns>Produkt lub informacje o błędzie</returns>
         [HttpGet]
         [Route("product/{id}")]
         public IActionResult GetProduct(string id)
@@ -127,6 +161,10 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera historie zamówień użytkownika
+        /// </summary>
+        /// <returns>Zwraca zamówienia lub informacje o błędzie</returns>
         [HttpGet]
         [Route("products/history")]
         public IActionResult GetUserHistory()
@@ -148,8 +186,12 @@ namespace MVC.Backend.Controllers
             }
         }
 
-        
 
+        /// <summary>
+        /// Dodaje produkt o danych jak w parametrze
+        /// </summary>
+        /// <param name="viewModel">Dane opisujące produkt</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("product/add")]
         [EmailConfirmed(Roles = "Admin")]
@@ -170,6 +212,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Aktualizuje prodkut zgodnie z danymi w parametrze
+        /// </summary>
+        /// <param name="viewModel">Nowe dane produktu</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("product/update")]
         [EmailConfirmed(Roles = "Admin")]
@@ -190,6 +237,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa produkt o id podanym w parametrze
+        /// </summary>
+        /// <param name="id">Id produktu</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpDelete]
         [Route("product/delete/{id}")]
         [EmailConfirmed(Roles = "Admin")]
@@ -210,6 +262,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Ukrywa produkt o podanym id przed użytkownikami
+        /// </summary>
+        /// <param name="id">Id produktu do ukrycia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("product/hide/{id}")]
         [EmailConfirmed(Roles = "Admin")]
@@ -230,6 +287,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Umożliwia użytkownikom zobaczenie produktu o id podanym w parametrze
+        /// </summary>
+        /// <param name="id">Id produktu do ujawnienia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("product/show/{id}")]
         [EmailConfirmed(Roles = "Admin")]
@@ -250,6 +312,12 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Pobiera plik o podanym id związany z produktem o podanym id
+        /// </summary>
+        /// <param name="productId">Id produktu</param>
+        /// <param name="fileId">Id pliku do pobrania</param>
+        /// <returns>Plik lub informacje o błędzie</returns>
         [HttpGet]
         [Route("product/{productId}/file/{fileId}")]
         [EmailConfirmed(Roles = "Admin")]
@@ -271,6 +339,11 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Dodaje plik do produktu o id w parametrze
+        /// </summary>
+        /// <param name="viewModel">Dane dotyczące pliku</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpPost]
         [Route("product/{id}/file/add")]
         [EmailConfirmed(Roles = "Admin")]
@@ -291,6 +364,12 @@ namespace MVC.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Usuwa plik o podanym id zwiaany z produktem o podanym id
+        /// </summary>
+        /// <param name="productId">Id produktu</param>
+        /// <param name="fileId">Id pliku do usunięcia</param>
+        /// <returns>Ok lub informacje o błędzie</returns>
         [HttpDelete]
         [Route("product/{productId}/file/delete/{fileId}")]
         [EmailConfirmed(Roles = "Admin")]
