@@ -1,17 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using MVC.Backend.Models;
 using System.Text;
-using System.Threading.Tasks;
-using MVC.Backend.Models;
 
 namespace MVC.Backend.ViewModels
 {
+    /// <summary>
+    /// Dane przedmiotu koszyka wymieniane między frontem a backendem
+    /// </summary>
     public class CartItemViewModel
     {
+        /// <summary>
+        /// Id produktu w koszyku
+        /// </summary>
         public string ProductId { get; set; }
+        /// <summary>
+        /// Ilość produktu w koszyku
+        /// </summary>
         public int ProductAmount { get; set; }
+        /// <summary>
+        /// Czy przedmiot jest poprawny
+        /// </summary>
         public bool IsValid { get; set; }
+        /// <summary>
+        /// Dane produktu
+        /// </summary>
         public ProductViewModel Product { get; set; }
 
         public CartItemViewModel()

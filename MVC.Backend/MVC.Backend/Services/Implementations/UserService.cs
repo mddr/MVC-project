@@ -27,8 +27,8 @@ namespace MVC.Backend.Services
         /// Konstruktor
         /// </summary>
         /// <param name="context">Kontekst bazodanowy</param>
-        /// <param name="tokenService"></param>
-        /// <param name="addressService"></param>
+        /// <param name="tokenService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="addressService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public UserService(ApplicationDbContext context, ITokenService tokenService, IAddressService addressService)
         {
             _context = context;

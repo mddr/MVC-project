@@ -1,24 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MVC.Backend.Models;
+﻿using MVC.Backend.Models;
 
 namespace MVC.Backend.ViewModels
 {
+    /// <summary>
+    /// Dane użytkownika przesyłane na frontend
+    /// </summary>
     public class UserViewModel
     {
+        /// <summary>
+        /// Id
+        /// </summary>
         public int Id { get; set; }
+        /// <summary>
+        /// Czy potwierdzono email
+        /// </summary>
         public bool EmailConfirmed { get; set; }
 
+        /// <summary>
+        /// Imię
+        /// </summary>
         public string FirstName { get; set; }
+        /// <summary>
+        /// Nazwisko
+        /// </summary>
         public string LastName { get; set; }
+        /// <summary>
+        /// Email
+        /// </summary>
 		public string Email { get; set; }
+        /// <summary>
+        /// Dane adresu użytkownika
+        /// </summary>
 		public AddressViewModel Address { get; set; }
 
+        /// <summary>
+        /// Preferowana waluta
+        /// </summary>
         public string Currency { get; set; }
+        /// <summary>
+        /// Czy preferuje ceny netto
+        /// </summary>
         public bool PrefersNetPrice { get; set; }
+        /// <summary>
+        /// Czy akceptuje newsletter
+        /// </summary>
         public bool AcceptsNewsletters { get; set; }
+        /// <summary>
+        /// Produkty na strone
+        /// </summary>
         public int ProductsPerPage { get; set; }
 
         public UserViewModel()

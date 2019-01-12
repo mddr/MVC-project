@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
-using Microsoft.AspNetCore.Http;
+﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using MimeKit.Text;
 using MVC.Backend.Helpers;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace MVC.Backend.Services
 {
+    /// <see cref="IEmailService"/>
     public class EmailService : IEmailService
     {
         private const string Host = "localhost:3000";
@@ -22,6 +19,13 @@ namespace MVC.Backend.Services
         private readonly IUserService _userService;
         private readonly IProductService _productService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="options">Opcje emailów</param>
+        /// <param name="tokenService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="userService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
+        /// <param name="productService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public EmailService(IOptions<EmailSettings> options, ITokenService tokenService, IUserService userService, IProductService productService)
         {
             _options = options;
@@ -30,6 +34,7 @@ namespace MVC.Backend.Services
             _productService = productService;
         }
 
+        /// <see cref="IEmailService.SendConfirmationEmail(string)"/>
         public void SendConfirmationEmail(string address)
         {
             var message = new MimeMessage();
@@ -49,6 +54,7 @@ namespace MVC.Backend.Services
             Send(message);
         }
 
+        /// <see cref="IEmailService.SendPasswordReset(string)"/>
         public void SendPasswordReset(string address)
         {
             var message = new MimeMessage();
@@ -68,6 +74,7 @@ namespace MVC.Backend.Services
             Send(message);
         }
 
+        /// <see cref="IEmailService.SendOrderInfo(string, Order)"/>
         public void SendOrderInfo(string address, Order order)
         {
             var message = new MimeMessage();
@@ -88,6 +95,7 @@ namespace MVC.Backend.Services
             Send(message);
         }
 
+        /// <see cref="IEmailService.SendNewsletter"/>
         public void SendNewsletter()
         {
             var users = _userService.GetUsersForNewsletter();
@@ -125,6 +133,10 @@ namespace MVC.Backend.Services
             Send(message);
         }
 
+        /// <summary>
+        /// Wysyła email o treści i adresie określonych w parametrze
+        /// </summary>
+        /// <param name="message">Wiadmomość</param>
         private void Send(MimeMessage message)
         {
             using (var client = new SmtpClient())

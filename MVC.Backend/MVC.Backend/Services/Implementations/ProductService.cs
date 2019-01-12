@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MVC.Backend.Services
 {
-    /// <summary>
     /// <see cref="IProductService"/>
-    /// </summary>
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext _context;
@@ -19,8 +17,8 @@ namespace MVC.Backend.Services
         /// <summary>
         /// Konstruktor
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="fileService"></param>
+        /// <param name="context">Kontekst bazodanowy</param>
+        /// <param name="fileService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public ProductService(ApplicationDbContext context, IFileService fileService)
         {
             _context = context;
@@ -36,6 +34,7 @@ namespace MVC.Backend.Services
                 : products;
         }
 
+        /// <see cref="IProductService.GetProducts(int, bool?)"/>
         public IEnumerable<Product> GetProducts(int categoryId, bool? isHidden)
         {
             var products = _context.Products.Include(p => p.Files).Where(p => p.CategoryId == categoryId);
@@ -44,12 +43,14 @@ namespace MVC.Backend.Services
                 : products;
         }
 
+        /// <see cref="IProductService.GetMostPopular(int, bool)"/>
         public IEnumerable<Product> GetMostPopular(int amount, bool isHidden)
         {
             var products = _context.Products.Include(p => p.Files).Where(p => p.IsHidden == isHidden);
             return products.OrderByDescending(p => p.BoughtTimes).Take(amount).ToList();
         }
 
+        /// <see cref="IProductService.GetNewest(int?, bool)"/>
 		public IEnumerable<Product> GetNewest(int? amount, bool isHidden)
 		{
 			var products = _context.Products.Include(p => p.Files).Where(p => p.IsHidden == isHidden).OrderByDescending(p => p.CreatedAt);
@@ -58,6 +59,7 @@ namespace MVC.Backend.Services
 		        : products.ToList();
         }
 
+        /// <see cref="IProductService.GetDiscounted(int?, bool)"/>
         public IEnumerable<Product> GetDiscounted(int? amount, bool isHidden)
         {
             var products = _context.Products
@@ -70,6 +72,7 @@ namespace MVC.Backend.Services
                 : products.ToList();
         }
 
+        /// <see cref="IProductService.GetUserHistory(int)"/>
         public IEnumerable<Product> GetUserHistory(int userId)
         {
             var orders = _context.Orders.Where(o => o.UserId == userId);
@@ -90,6 +93,8 @@ namespace MVC.Backend.Services
             return products;
         }
 
+        /// <see cref="IProductService.GetProduct(string)"/>
+        /// <exception cref="ArgumentException"/>
         public Product GetProduct(string id)
         {
             var product = _context.Products.
@@ -100,6 +105,8 @@ namespace MVC.Backend.Services
             return product;
         }
 
+        /// <see cref="IProductService.AddProduct(ProductViewModel)"/>
+        /// <exception cref="ArgumentException"/>
         public void AddProduct(ProductViewModel viewModel)
         {
             if (viewModel == null)
@@ -118,6 +125,8 @@ namespace MVC.Backend.Services
             _context.SaveChanges();
         }
 
+        /// <see cref="IProductService.UpdateProduct(ProductViewModel)"/>
+        /// <exception cref="ArgumentException"/>
         public void UpdateProduct(ProductViewModel viewModel)
         {
             if (string.IsNullOrEmpty(viewModel?.Id))
@@ -147,6 +156,8 @@ namespace MVC.Backend.Services
             _context.SaveChanges();
         }
 
+        /// <see cref="IProductService.DeleteProduct(string)"/>
+        /// <exception cref="ArgumentException"/>
         public void DeleteProduct(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -160,6 +171,7 @@ namespace MVC.Backend.Services
             _context.SaveChanges();
         }
 
+        /// <see cref="IProductService.SetProductVisibility(string, bool)"/>
         public void SetProductVisibility(string id, bool isVisible)
         {
             var product = GetProduct(id);
@@ -167,6 +179,7 @@ namespace MVC.Backend.Services
             _context.SaveChanges();
         }
 
+        /// <see cref="IProductService.AddFile(FileRequestViewModel)"/>
         public async Task AddFile(FileRequestViewModel viewModel)
         {
             var product = GetProduct(viewModel.ProductId);
@@ -176,6 +189,7 @@ namespace MVC.Backend.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <see cref="IProductService.DeleteFile(string, int)"/>
         public async Task DeleteFile(string productId, int fileId)
         {
             var file = _context.ProductFiles.Single(f => f.ProductId == productId && f.Id == fileId);
@@ -184,6 +198,7 @@ namespace MVC.Backend.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <see cref="IProductService.GetFile(string, int)"/>
         public ProductFile GetFile(string productId, int fileId)
         {
             var file = _context.ProductFiles.Single(f => f.ProductId == productId && f.Id == fileId);

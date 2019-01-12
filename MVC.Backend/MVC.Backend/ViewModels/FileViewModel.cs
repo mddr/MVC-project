@@ -1,26 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MVC.Backend.Models;
+﻿using MVC.Backend.Models;
 
 namespace MVC.Backend.ViewModels
 {
+    /// <summary>
+    /// Dane uploadowanego pliku
+    /// </summary>
     public class FileRequestViewModel
     {
+        /// <summary>
+        /// Id powiązanego produktu
+        /// </summary>
         public string ProductId { get; set; }
+        /// <summary>
+        /// Plik w formie base64
+        /// </summary>
         public string Base64 { get; set; }
+        /// <summary>
+        /// Nazwa pliku
+        /// </summary>
         public string FileName { get; set; }
+        /// <summary>
+        /// Opis pliku
+        /// </summary>
         public string Description { get; set; }
     }
 
+    /// <summary>
+    /// Dane pliku związanego z produktem
+    /// </summary>
     public class FileResultViewModel
     {
+        /// <summary>
+        /// ID
+        /// </summary>
         public int Id { get; set; }
+        /// <summary>
+        /// Nazwa pliku
+        /// </summary>
         public string FileName { get; set; }
+        /// <summary>
+        /// Typ pliku
+        /// </summary>
         public string FileType { get; set; }
+        /// <summary>
+        /// Zawartość pliku w base64
+        /// </summary>
         public string Base64 { get; set; }
+        /// <summary>
+        /// Data utworzenia
+        /// </summary>
         public string CreatedAt { get; set; }
+        /// <summary>
+        /// Opis
+        /// </summary>
         public string Description { get; set; }
 
         public FileResultViewModel()
@@ -36,9 +68,18 @@ namespace MVC.Backend.ViewModels
         }
     }
 
+    /// <summary>
+    /// Zawartość odczytanego pliku w bajtach oraz jego typ
+    /// </summary>
     public class FileContent
     {
+        /// <summary>
+        /// Zawartość pliku
+        /// </summary>
         public byte[] Bytes{ get; set; }
+        /// <summary>
+        /// Typ pliku
+        /// </summary>
         public string FileType { get; set; }
 
         public FileContent(byte[] bytes, string fileType)

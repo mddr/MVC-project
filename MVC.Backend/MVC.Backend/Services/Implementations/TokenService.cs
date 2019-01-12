@@ -1,22 +1,29 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
 namespace MVC.Backend.Services
 {
+    /// <see cref="ITokenService"/>
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="configuration">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public TokenService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
+
+        /// <see cref="ITokenService.GenerateAccessToken(IEnumerable{Claim})"/>
         public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Secret"]));
@@ -30,6 +37,7 @@ namespace MVC.Backend.Services
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
 
+        /// <see cref="ITokenService.GenerateRefreshToken"/>
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
@@ -40,6 +48,7 @@ namespace MVC.Backend.Services
             }
         }
 
+        /// <see cref="ITokenService.GenerateConfirmationToken(string)"/>
         public string GenerateConfirmationToken(string email)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Secret"]));
@@ -59,6 +68,7 @@ namespace MVC.Backend.Services
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
 
+        /// <see cref="ITokenService.GenerateResetToken(string)"/>
         public string GenerateResetToken(string email)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Secret"]));
@@ -79,6 +89,8 @@ namespace MVC.Backend.Services
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
 
+        /// <see cref="ITokenService.GetPrincipalFromExpiredToken(string)"/>
+        /// <exception cref="SecurityTokenException"/>
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters

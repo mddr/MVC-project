@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MVC.Backend.ViewModels
+﻿namespace MVC.Backend.ViewModels
 {
+    /// <summary>
+    /// Tokeny JTW przesyłane na frontend
+    /// </summary>
     public class TokenViewModel
     {
+        /// <summary>
+        /// Token dostepu
+        /// </summary>
         public string AccessToken { get; set; }
+        /// <summary>
+        /// Token odświeżania
+        /// </summary>
         public string RefreshToken { get; set; }
     }
 }

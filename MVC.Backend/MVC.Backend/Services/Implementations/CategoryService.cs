@@ -1,28 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace MVC.Backend.Services
 {
+    /// <see cref="ICategoryService"/>
     public class CategoryService : ICategoryService
     {
         private readonly ApplicationDbContext _context;
         private readonly IProductService _productService;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="context">Kontekst bazodanowy</param>
+        /// <param name="productService">Instancja klasy, tworzona przez DI, implementująca interfejs</param>
         public CategoryService(ApplicationDbContext context, IProductService productService)
         {
             _context = context;
             _productService = productService;
         }
 
+        /// <see cref="ICategoryService.GetCategories"/>
         public IEnumerable<Category> GetCategories()
         {
             return _context.Categories
@@ -30,6 +36,7 @@ namespace MVC.Backend.Services
                 .ToList();
         }
 
+        /// <see cref="ICategoryService.GetVisibleCategories"/>
         public IEnumerable<Category> GetVisibleCategories()
         {
             return _context.Categories
@@ -38,6 +45,8 @@ namespace MVC.Backend.Services
                 .ToList();
         }
 
+        /// <see cref="ICategoryService.GetCategory(int)"/>
+        /// <exception cref="ArgumentException"/>
         public Category GetCategory(int id)
         {
             var category = _context.Categories
@@ -48,6 +57,8 @@ namespace MVC.Backend.Services
             return category;
         }
 
+        /// <see cref="ICategoryService.AddCategory(CategoryViewModel)"/>
+        /// <exception cref="ArgumentException"/>
         public void AddCategory(CategoryViewModel viewModel)
         {
             if (viewModel == null)
@@ -60,6 +71,8 @@ namespace MVC.Backend.Services
             _context.SaveChanges();
         }
 
+        /// <see cref="ICategoryService.UpdateCategory(CategoryViewModel)"/>
+        /// <exception cref="ArgumentException"/>
         public void UpdateCategory(CategoryViewModel viewModel)
         {
             if (viewModel == null)
@@ -74,6 +87,8 @@ namespace MVC.Backend.Services
             _context.SaveChanges();
         }
 
+        /// <see cref="ICategoryService.DeleteCategory(int)"/>
+        /// <exception cref="ArgumentException"/>
         public void DeleteCategory(int id)
         {
             var category = _context.Categories.SingleOrDefault(c => c.Id == id);
@@ -83,6 +98,7 @@ namespace MVC.Backend.Services
             _context.SaveChanges();
         }
 
+        /// <see cref="ICategoryService.SetCategoryVisibility(int, bool)"/>
         public void SetCategoryVisibility(int id, bool isVisible)
         {
             var category = GetCategory(id);
@@ -100,6 +116,7 @@ namespace MVC.Backend.Services
             }
         }
 
+        /// <see cref="ICategoryService.GeneratePdfSummary(int)"/>
         public byte[] GeneratePdfSummary(int id)
         {
             var category = GetCategory(id);
@@ -132,6 +149,11 @@ namespace MVC.Backend.Services
             }
         }
 
+        /// <summary>
+        /// Sprawdza czy kategoria o podanym id istenije
+        /// </summary>
+        /// <param name="id">Id kategorii</param>
+        /// <returns>Czy kategoria istnieje</returns>
         public bool Exists(int? id)
         {
             return _context.Categories.Any(c => c.Id == id);

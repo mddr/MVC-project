@@ -1,23 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVC.Backend.Data;
 using MVC.Backend.Models;
 using MVC.Backend.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MVC.Backend.Services
 {
+    /// <see cref="IOrderService"/>
     public class OrderService : IOrderService
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="context">Kontekst bazodanowy</param>
         public OrderService(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <see cref="IOrderService.AddOrder(int)"/>
+        /// <exception cref="ArgumentException"/>
         public Order AddOrder(int userId)
         {
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
@@ -51,6 +57,8 @@ namespace MVC.Backend.Services
             return order;
         }
 
+        /// <see cref="IOrderService.DeleteOrder(int)"/>
+        /// <exception cref="ArgumentException"/>
         public void DeleteOrder(int id)
         {
             if (id < 0)
@@ -74,6 +82,8 @@ namespace MVC.Backend.Services
             _context.SaveChanges();
         }
 
+        /// <see cref="IOrderService.GetOrder(int)"/>
+        /// <exception cref="ArgumentException"/>
         public Order GetOrder(int id)
         {
             var order = _context.Orders.SingleOrDefault(x => x.Id == id);
@@ -82,11 +92,13 @@ namespace MVC.Backend.Services
             return order;
         }
 
+        /// <see cref="IOrderService.GetOrders"/>
         public List<Order> GetOrders()
         {
             return _context.Orders.ToList();
         }
 
+        /// <see cref="IOrderService.OrderHistory(int)"/>
         public List<OrderViewModel> OrderHistory(int userId)
         {
             var results = new List<OrderViewModel>();
@@ -102,12 +114,15 @@ namespace MVC.Backend.Services
             return results;
         }
 
+        /// <see cref="IOrderService.GetOrders(int)"/>
         public List<Order> GetOrders(int userId)
         {
             var orders = _context.Orders.Where(o => o.UserId == userId);
             return orders.ToList();
         }
 
+        /// <see cref="IOrderService.UpdateOrder(OrderViewModel, int)"/>
+        /// <exception cref="ArgumentException"/>
         public void UpdateOrder(OrderViewModel viewModel, int userId)
         {
             if (viewModel == null)

@@ -1,17 +1,31 @@
 ﻿using MVC.Backend.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MVC.Backend.ViewModels
 {
+    /// <summary>
+    /// Dane adresu wymieniane między frontem a backendem
+    /// </summary>
     public class AddressViewModel
     {
+        /// <summary>
+        /// Id
+        /// </summary>
         public int Id { get; set; }
+        /// <summary>
+        /// Miasto
+        /// </summary>
         public string City { get; set; }
+        /// <summary>
+        /// Kod pocztowy
+        /// </summary>
         public string PostalCode { get; set; }
+        /// <summary>
+        /// Nazwa ulicy
+        /// </summary>
         public string Street { get; set; }
+        /// <summary>
+        /// Nr domu
+        /// </summary>
         public string HouseNumber { get; set; }
 
         public AddressViewModel()

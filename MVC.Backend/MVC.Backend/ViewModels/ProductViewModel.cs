@@ -1,31 +1,72 @@
-﻿using System;
+﻿using MVC.Backend.Helpers;
+using MVC.Backend.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MVC.Backend.Helpers;
-using MVC.Backend.Models;
 
 namespace MVC.Backend.ViewModels
 {
+    /// <summary>
+    /// Dane produktu wymieniane między frontem a backendem
+    /// </summary>
     public class ProductViewModel
     {
+        /// <summary>
+        /// Id
+        /// </summary>
         public string Id { get; set; }
 
+        /// <summary>
+        /// Nazwa
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Czy ukryty przed klientami
+        /// </summary>
         public bool IsHidden { get; set; }
+        /// <summary>
+        /// Email eksperta
+        /// </summary>
         public string ExpertEmail { get; set; }
+        /// <summary>
+        /// Opis
+        /// </summary>
 		public string Description { get; set; }
 
+        /// <summary>
+        /// Cena w PLN
+        /// </summary>
 		public double PricePln { get; set; }
+        /// <summary>
+        /// Staka VAT
+        /// </summary>
         public int TaxRate { get; set; }
+        /// <summary>
+        /// Zniżka w %
+        /// </summary>
         public int Discount { get; set; }
 
+        /// <summary>
+        /// Ilość na stanie
+        /// </summary>
         public int AmountAvailable { get; set; }
+        /// <summary>
+        /// Ile razy kupiono
+        /// </summary>
         public int BoughtTimes { get; set; }
 
+        /// <summary>
+        /// Id kategorii
+        /// </summary>
         public int CategoryId { get; set; }
 
+        /// <summary>
+        /// Obrazek w base64
+        /// </summary>
         public string ImageBase64 { get; set; }
+        /// <summary>
+        /// Pliki związane z obrazkiem
+        /// </summary>
         public List<FileResultViewModel> Files { get; set; }
 
         public ProductViewModel()
