@@ -3,7 +3,8 @@ import AuthService from "./AuthService";
 export class UserService {
   constructor() {
       this.Auth = new AuthService();
-      this.getUserInfo = this.getUserInfo.bind(this)
+    this.getUserInfo = this.getUserInfo.bind(this);
+    this.update = this.update.bind(this);
   }
 
   getUserInfo() {
@@ -28,15 +29,13 @@ export class UserService {
 
 		body = JSON.stringify(user);
 
-		this.props.Auth.fetch(
-			`${this.props.Auth.domain}/user/update`,
-			{
-				method: "post",
-				body
-			}
-		).then(() => {
-			this.props.updateData(user);
-		});
+    return this.Auth.fetch(
+      `${this.Auth.domain}/user/update`,
+      {
+        method: "post",
+        body
+      }
+    );
 	}
 
 }
