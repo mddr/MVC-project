@@ -97,7 +97,7 @@ namespace MVC.Backend.Services
         /// <exception cref="ArgumentException"/>
         public async Task ConfirmEmail(string token)
         {
-            var claims = _tokenService.GetPrincipalFromExpiredToken(token);
+            var claims = _tokenService.GetPrincipalFromToken(token, false);
             var email = claims.Claims.Where(c => c.Type == ClaimTypes.Email)
                 .Select(c => c.Value).SingleOrDefault();
 
@@ -221,7 +221,7 @@ namespace MVC.Backend.Services
         {
             var user = _context.Users.Single(u => u.Id == userId);
 
-            var claims = _tokenService.GetPrincipalFromExpiredToken(token);
+            var claims = _tokenService.GetPrincipalFromToken(token, true);
             var email = claims.Claims.First(c => c.Type == ClaimTypes.Email).Value;
             var type = claims.Claims.First(c => c.Type == "type").Value;
             if (type != "passwordReset" || email != user.Email)

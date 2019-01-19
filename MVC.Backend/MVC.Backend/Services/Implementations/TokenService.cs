@@ -89,9 +89,9 @@ namespace MVC.Backend.Services
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
 
-        /// <see cref="ITokenService.GetPrincipalFromExpiredToken(string)"/>
+        /// <see cref="ITokenService.GetPrincipalFromToken"/>
         /// <exception cref="SecurityTokenException"/>
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        public ClaimsPrincipal GetPrincipalFromToken(string token, bool validateLifetime)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -99,7 +99,7 @@ namespace MVC.Backend.Services
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Secret"])),
-                ValidateLifetime = false 
+                ValidateLifetime = validateLifetime
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

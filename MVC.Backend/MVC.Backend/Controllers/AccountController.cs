@@ -41,7 +41,7 @@ namespace MVC.Backend.Controllers
                 _emailService.SendConfirmationEmail(viewModel.Email);
                 return Ok();
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
                 return BadRequest();
             }
