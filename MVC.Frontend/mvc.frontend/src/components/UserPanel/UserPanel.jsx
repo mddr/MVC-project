@@ -16,7 +16,7 @@ import {
 import OrderService from "../../services/OrderService";
 import AddressService from "../../services/AddressService";
 import UserService from "../../services/UserService";
-import AuthService from '../../services/AuthService';
+import AuthService from "../../services/AuthService";
 
 class UserPanel extends Component {
   constructor(props) {
@@ -63,9 +63,11 @@ class UserPanel extends Component {
     };
     this.AddressService = new AddressService();
     this.OrderService = new OrderService();
-		this.UserService = new UserService();
-		this.AuthService = new AuthService();
-    this.handleChangePasswordSubmit = this.handleChangePasswordSubmit.bind(this)
+    this.UserService = new UserService();
+    this.AuthService = new AuthService();
+    this.handleChangePasswordSubmit = this.handleChangePasswordSubmit.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -83,17 +85,28 @@ class UserPanel extends Component {
         this.setState({
           Orders: data
         });
-      }
-    ).catch(error => alert("Przypominamy o potrzebie potwierdzenia adresu email"));
+      })
+      .catch(error =>
+        alert("Przypominamy o potrzebie potwierdzenia adresu email")
+      );
   }
 
-	validateChangePasswordForm() {
+  validateChangePasswordForm() {
     if (!(this.state.password.length > 0)) return false;
     if (this.state.password !== this.state.password2) return false;
     return true;
   }
 
   validateUpdateDataForm(tempUser) {
+    if (tempUser.address === null) {
+      tempUser["address"] = {
+        id: 0,
+        city: "",
+        postalCode: "",
+        street: "",
+        houseNumber: ""
+      };
+    }
     if (tempUser.firstName.length < 0) return false;
     if (tempUser.lastName.length < 0) return false;
     if (tempUser.address.city.length < 0) return false;
@@ -104,17 +117,33 @@ class UserPanel extends Component {
     return true;
   }
 
-	handleChangePasswordSubmit() {
-		this.AuthService.changepassword(this.state.curr_password, this.state.password);
-	}
+  handleChangePasswordSubmit() {
+    this.AuthService.changepassword(
+      this.state.curr_password,
+      this.state.password
+    );
+  }
 
   handleChangeUserData(tempUser) {
     this.setState({ currentUserInfo: tempUser });
-    this.UserService.update(tempUser.id, tempUser.firstName, tempUser.lastName,
-      tempUser.email, tempUser.currency, tempUser.emailConfirmed, tempUser.prefersNetPrice,
-      tempUser.acceptsNewsletters, tempUser.productsPerPage);
-    this.AddressService.setUsersAddres(tempUser.address.city, tempUser.address.postalCode,
-      tempUser.address.street, tempUser.address.houseNumber, tempUser.id);
+    this.UserService.update(
+      tempUser.id,
+      tempUser.firstName,
+      tempUser.lastName,
+      tempUser.email,
+      tempUser.currency,
+      tempUser.emailConfirmed,
+      tempUser.prefersNetPrice,
+      tempUser.acceptsNewsletters,
+      tempUser.productsPerPage
+    );
+    this.AddressService.setUsersAddres(
+      tempUser.address.city,
+      tempUser.address.postalCode,
+      tempUser.address.street,
+      tempUser.address.houseNumber,
+      tempUser.id
+    );
   }
 
   handleChange = event => {
@@ -123,7 +152,7 @@ class UserPanel extends Component {
     });
   };
 
-	render() {
+  render() {
     return (
       <div className="userpanel">
         <Tabs defaultActiveKey={1}>
@@ -135,8 +164,8 @@ class UserPanel extends Component {
             <hr />
             {this.renderHistory()}
           </Tab>
-					<Tab eventKey={3} title="Zmiana hasła">
-						{this.renderPassChange()}
+          <Tab eventKey={3} title="Zmiana hasła">
+            {this.renderPassChange()}
           </Tab>
         </Tabs>
       </div>
@@ -144,7 +173,6 @@ class UserPanel extends Component {
   }
 
   renderUserData() {
-
     return (
       <Form>
         <FormGroup>
@@ -325,7 +353,8 @@ class UserPanel extends Component {
         </div>
         <Button
           disabled={!this.validateUpdateDataForm(this.state.tempUser)}
-          onClick={() => this.handleChangeUserData(this.state.tempUser)}>
+          onClick={() => this.handleChangeUserData(this.state.tempUser)}
+        >
           Zatwierdź
         </Button>
       </Form>

@@ -38,30 +38,28 @@ class ProductPage extends Component {
     this.UserService.getUserInfo()
       .then(res => res.json())
       .then(res => {
-				this.setState({ netto: res.prefersNetPrice },
-					() => {
-						this.Auth.fetch(
-							`${this.Auth.domain}/product/${this.props.match.params.id}`,
-							null
-						)
-							.then(res => res.json())
-							.then(res => {
-								this.setState({
-									pricePln: this.state.netto
-										? this.afterTaxPrice(res.pricePln, res.taxRate)
-										: res.pricePln,
-									discount: res.discount,
-									name: res.name,
-									description: res.description,
-									boughtTimes: res.boughtTimes,
-									imageBase64: res.imageBase64,
-									id: res.id,
-									taxRate: res.taxRate
-								});
-							});
-					});
+        this.setState({ netto: res.prefersNetPrice }, () => {
+          this.Auth.fetch(
+            `${this.Auth.domain}/product/${this.props.match.params.id}`,
+            null
+          )
+            .then(res => res.json())
+            .then(res => {
+              this.setState({
+                pricePln: this.state.netto
+                  ? this.afterTaxPrice(res.pricePln, res.taxRate)
+                  : res.pricePln,
+                discount: res.discount,
+                name: res.name,
+                description: res.description,
+                boughtTimes: res.boughtTimes,
+                imageBase64: res.imageBase64,
+                id: res.id,
+                taxRate: res.taxRate
+              });
+            });
+        });
       });
-
   }
 
   addToCart() {
@@ -70,14 +68,23 @@ class ProductPage extends Component {
         this.CartService.updateItem(
           this.state.id,
           this.state.count + this.props.cartItems[i].productAmount
-        ).then(() => window.location.reload()
-        ).catch (error => alert("Przed dokonaniem zakupu wymagane jest potwierdzenie adresu email"));
+        )
+          .then(() => window.location.reload())
+          .catch(error =>
+            alert(
+              "Przed dokonaniem zakupu wymagane jest potwierdzenie adresu email"
+            )
+          );
         return;
       }
     }
-    this.CartService.addItem(this.state.id, this.state.count).then(() =>
-      window.location.reload()
-    ).catch(error => alert("Przed dokonaniem zakupu wymagane jest potwierdzenie adresu email"));
+    this.CartService.addItem(this.state.id, this.state.count)
+      .then(() => window.location.reload())
+      .catch(error =>
+        alert(
+          "Przed dokonaniem zakupu wymagane jest potwierdzenie adresu email"
+        )
+      );
   }
 
   afterTaxPrice(price, taxRate) {
@@ -190,9 +197,7 @@ class ProductPage extends Component {
                   <FormControl
                     value={this.state.count}
                     style={{ width: "50px", textAlign: "center" }}
-                    onChange={(
-                      x: React.FormEvent<FormControl & HTMLInputElement>
-                    ) => {
+                    onChange={x => {
                       this.setState({
                         count: isNaN(parseInt(x.currentTarget.value))
                           ? 1
