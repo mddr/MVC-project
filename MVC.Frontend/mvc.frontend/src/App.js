@@ -10,6 +10,7 @@ import Routes from "./Routes";
 import AuthService from "./services/AuthService";
 import CartService from "./services/CartService";
 import ProductService from "./services/ProductService";
+import UserService from "./services/UserService";
 
 const auth = new AuthService();
 
@@ -27,6 +28,7 @@ class App extends Component {
     this.ProductService = new ProductService();
     this.loadCart = this.loadCart.bind(this);
     this.cartItemChanged = this.cartItemChanged.bind(this);
+    this.UserService = new UserService();
   }
 
   componentDidMount() {
@@ -34,6 +36,7 @@ class App extends Component {
     if (isUserLogged) {
       this.loadCart();
     }
+    this.UserService.getUserInfo().then(data => data.json()).then(data => this.setState({userInfo: data}));
   }
 
   componentDidUpdate(prevProps, prevState) {

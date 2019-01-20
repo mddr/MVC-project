@@ -16,6 +16,13 @@
   border: 1px solid rgb(235, 235, 235);
 }
 
+.paginator-wrapper {
+  background-color: #fafafa !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: auto !important;
+}
+
 .search_banner {
   padding: 0px !important;
   grid-column: 1/2;

@@ -4,18 +4,22 @@ import { Link } from "react-router-dom";
 import { Nav } from "react-sidenav";
 import Product from "../Products/Product";
 import AuthService from "../../services/AuthService";
+import Pagination from "react-js-pagination";
 
 class SearchResultsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       Products: [],
-      categories: []
+      categories: [],
+      activePage: 1,
+      productsPerPage: 3
     };
     this.Auth = new AuthService();
   }
   componentDidMount() {
     this.fetchData();
+    this.setState({productsPerPage: this.props.userInfo.productsPerPage})
   }
 
   fetchData() {
@@ -59,15 +63,26 @@ class SearchResultsPage extends Component {
       category: category
     });
   };
+
+  handlePageChange = activePage => {
+    this.setState({activePage});
+  } 
+
   render() {
-    console.log(this.Products);
     const keyword = this.props.searchInput;
-    const results = this.state.Products.filter(product =>
+    let results = this.state.Products.filter(product =>
       product.name.toLowerCase().includes(keyword.toLowerCase())
-    ).map(product => (
-      <Link to={`/product/${product.id}`}>
+    );
+    
+    let searchResultsLength = results.length;
+    
+    results = results.filter(product => 
+      results.indexOf(product) < this.state.activePage*this.state.productsPerPage 
+      && results.indexOf(product) >= (this.state.activePage-1)*this.state.productsPerPage
+    )
+    results = results.map(product => (
+      <Link to={`/product/${product.id}`} key={product.id}>
         <Product
-          key={product.id}
           imageBase64={product.imageBase64}
           discount={product.discount}
           name={product.name}
@@ -75,6 +90,8 @@ class SearchResultsPage extends Component {
         />
       </Link>
     ));
+
+    console.log(this.props.userInfo);
 
     return (
       <div className="searchresults">
@@ -90,13 +107,22 @@ class SearchResultsPage extends Component {
             ""
           )}
           <hr />
-          {results.length < 1 ? (
+          {searchResultsLength < 1 ? (
             <div className="unfound_product">
               <p>Brak produktu o podanej nazwie</p>
             </div>
           ) : (
             results
-          )}
+          )}            
+        </div>
+        <div className="paginator-wrapper">
+          <Pagination
+              totalItemsCount= {searchResultsLength}
+              onChange= {this.handlePageChange}
+              activePage = {this.state.activePage}
+              itemsCountPerPage = { this.state.productsPerPage }
+              style = {{margin: "auto"}}
+            />
         </div>
       </div>
     );
