@@ -85,6 +85,7 @@ class UserPanel extends Component {
         this.setState({
           Orders: data
         });
+        console.log(this.state.Orders);
       })
       .catch(error =>
         alert("Przypominamy o potrzebie potwierdzenia adresu email")
@@ -375,8 +376,8 @@ class UserPanel extends Component {
         <h3>Zamówienie nr {this.state.Orders.indexOf(order) + 1}</h3>
         {order.shoppingCart.map(item => (
           <div className="orderitem">
-            <label>ID produktu: </label>
-            {item.productId} <br />
+            <label>Nazwa produktu: </label>
+            {item.product.name} <br />
             <label>Ilość produktu: </label>
             {item.productAmount}
             <br />
@@ -384,12 +385,12 @@ class UserPanel extends Component {
         ))}
         <div className="totalprice">
           <label>Całkowita cena: </label>
-          {order.totalPrice}
+          {order.totalPrice.toFixed(2)+" zł"}
           <br />
         </div>
         <div className="orderdate">
           <label>Data dokonania zakupu: </label>
-          {order.createdAt.toString()}
+          {(new Date(order.createdAt.toString())).toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})}
           <br />
         </div>
         <hr />
