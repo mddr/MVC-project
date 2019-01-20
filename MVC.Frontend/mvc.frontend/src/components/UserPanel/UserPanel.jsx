@@ -65,7 +65,7 @@ class UserPanel extends Component {
     this.OrderService = new OrderService();
 		this.UserService = new UserService();
 		this.AuthService = new AuthService();
-		this.handleSubmit = this.handleChangePasswordSubmit.bind(this)
+    this.handleChangePasswordSubmit = this.handleChangePasswordSubmit.bind(this)
   }
 
   componentDidMount() {
@@ -83,7 +83,8 @@ class UserPanel extends Component {
         this.setState({
           Orders: data
         });
-      });
+      }
+    ).catch(error => alert("Przypominamy o potrzebie potwierdzenia adresu email"));
   }
 
 	validateChangePasswordForm() {
@@ -371,7 +372,7 @@ class UserPanel extends Component {
       <div className="pass_change_box">
         <Panel>
           <Panel.Heading />
-          <form onSubmit={this.handleChangePasswordSubmit}>
+          <form>
             <FormGroup controlId="curr_password">
               <FormControl
                 value={this.state.curr_password}
@@ -401,7 +402,7 @@ class UserPanel extends Component {
             </FormGroup>
             <Button
               disabled={!this.validateChangePasswordForm()}
-              type="submit"
+              onClick={this.handleChangePasswordSubmit}
               className="btn btn-success"
               block
             >

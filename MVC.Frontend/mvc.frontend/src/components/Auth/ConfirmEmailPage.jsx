@@ -15,7 +15,9 @@ class ConfirmEmailPage extends Component {
     };
     this.AuthService = new AuthService();
   }
-	render() {
+  render() {
+    if (this.AuthService.loggedIn)
+      this.AuthService.logout();
 		if (!this.state.confirmed)
 			this.AuthService.confirmMail(this.props.match.params.token)
 			.then(this.setState({

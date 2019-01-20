@@ -21,7 +21,8 @@ class ChangePasswordPage extends Component {
 	}
 
 	validateForm() {
-		if (!(this.state.password.length > 0)) return false;
+    if (!(this.state.password.length > 0)) return false;
+    if (!(this.state.email.length > 0)) return false;
 		return true;
 	}
 

@@ -34,11 +34,14 @@ namespace MVC.Backend.ViewModels
         }
         public AddressViewModel(Address address)
         {
-            Id = address.Id;
-            City = address.City;
-            PostalCode = address.PostalCode;
-            Street = address.Street;
-            HouseNumber = address.HouseNumber;
+            if(address != null)
+            {
+                Id = address.Id;
+                City = address.City;
+                PostalCode = address.PostalCode;
+                Street = address.Street;
+                HouseNumber = address.HouseNumber;
+            }
         }
     }
 }
