@@ -19,7 +19,8 @@ class ProductPage extends Component {
       boughtTimes: -1,
       count: 0,
       netto: false,
-      taxRate: 0
+      taxRate: 0,
+      files: []
     };
 
     this.Auth = new AuthService();
@@ -236,9 +237,13 @@ class ProductPage extends Component {
             </div>
             <hr />
             <div className="description">{this.state.description}</div>
+            
+            {this.state.files.length > 0 ? (
             <span>
               <Button>Pobierz pliki związane z produktem</Button>
             </span>
+
+            ) : null }
           </div>
         </div>
 
