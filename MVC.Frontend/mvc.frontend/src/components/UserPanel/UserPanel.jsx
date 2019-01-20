@@ -144,6 +144,7 @@ class UserPanel extends Component {
       tempUser.address.houseNumber,
       tempUser.id
     );
+    window.location.reload();
   }
 
   handleChange = event => {

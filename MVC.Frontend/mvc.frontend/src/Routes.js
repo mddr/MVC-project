@@ -49,6 +49,7 @@ class Routes extends Component {
             <SearchResultsPage
               {...props}
               searchInput={this.props.searchInput}
+              userInfo={this.props.userInfo}
             />
           )}
         />
