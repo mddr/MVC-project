@@ -32,10 +32,11 @@ namespace MVC.Backend.Services
         /// <returns>Token resetu hasla</returns>
         string GenerateResetToken(string email);
         /// <summary>
-        /// Wyciąga informacje o użytkowniku z wygaśniętego tokenu
+        /// Wyciąga informacje o użytkowniku z tokenu
         /// </summary>
-        /// <param name="token">Wygaśnięty token</param>
+        /// <param name="token">Token</param>
+        /// <param name="validateLifetime">Flaga odpowiadająca za walidowanie czasu życia tokenu lub nie</param>
         /// <returns>Informacje o użytkowniku</returns>
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        ClaimsPrincipal GetPrincipalFromToken(string token, bool validateLifetime);
     }
 }

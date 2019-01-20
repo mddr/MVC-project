@@ -35,7 +35,7 @@ namespace MVC.Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Refresh([FromBody] TokenViewModel tokenViewModel)
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenViewModel.AccessToken);
+            var principal = _tokenService.GetPrincipalFromToken(tokenViewModel.AccessToken, false);
             var email = principal.Identity.Name; 
 
             var user = _usersDb.Users.SingleOrDefault(u => u.Email == email);

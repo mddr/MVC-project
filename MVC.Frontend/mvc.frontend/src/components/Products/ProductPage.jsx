@@ -70,13 +70,14 @@ class ProductPage extends Component {
         this.CartService.updateItem(
           this.state.id,
           this.state.count + this.props.cartItems[i].productAmount
-        ).then(() => window.location.reload());
+        ).then(() => window.location.reload()
+        ).catch (error => alert("Przed dokonaniem zakupu wymagane jest potwierdzenie adresu email"));
         return;
       }
     }
     this.CartService.addItem(this.state.id, this.state.count).then(() =>
       window.location.reload()
-    );
+    ).catch(error => alert("Przed dokonaniem zakupu wymagane jest potwierdzenie adresu email"));
   }
 
   afterTaxPrice(price, taxRate) {

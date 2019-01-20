@@ -65,7 +65,11 @@ class App extends Component {
         this.setState({
           cartItems: data.sort((a, b) => a.productId.localeCompare(b.productId))
         })
-      );
+    ).catch(error => {
+      if (auth.loggedIn)
+        alert("Do poprawnego dzialania strony wymagane jest potwierdzenie adresu email");
+    });
+
   }
 
   async handleLogout() {

@@ -9,6 +9,7 @@ import AddressService from '../../services/AddressService';
 import CartService from '../../services/CartService';
 import OrderService from '../../services/OrderService';
 import ProductService from '../../services/ProductService';
+import AuthService from '../../services/AuthService';
 
 class OrderPage extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ class OrderPage extends Component {
     this.ProductService = new ProductService();
     this.AddressService = new AddressService();
     this.OrderService = new OrderService();
+    this.AuthService = new AuthService();
   }
 
   componentDidMount() {
@@ -128,6 +130,13 @@ class OrderPage extends Component {
   }
 
   disableSubmit() {
+    const profile = this.AuthService.getProfile();
+    if (profile.Confirmed === "False") return true;
+    return this.state.city == null ||
+      this.props.cartItems == null ||
+      this.state.postalCode == null ||
+      this.state.houseNumber == null ||
+      this.state.street == null;
     return this.state.city.length < 1 ||
       this.props.cartItems.length < 1 ||
       this.state.postalCode.length < 1 ||

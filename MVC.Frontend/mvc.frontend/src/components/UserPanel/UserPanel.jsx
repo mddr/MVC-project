@@ -14,6 +14,7 @@ import {
   Panel
 } from "react-bootstrap";
 import OrderService from "../../services/OrderService";
+import AddressService from "../../services/AddressService";
 import UserService from "../../services/UserService";
 import AuthService from '../../services/AuthService';
 
@@ -39,21 +40,42 @@ class UserPanel extends Component {
         currency: "",
         prefersNetPrice: null,
         acceptsNewsletters: true,
-        productsPerPage: 0
+        productsPerPage: ""
+      },
+      tempUser: {
+        id: 0,
+        emailConfirmed: true,
+        firstName: "",
+        lastName: "",
+        address: {
+          id: 0,
+          city: "",
+          postalCode: "",
+          street: "",
+          houseNumber: ""
+        },
+        currency: "",
+        prefersNetPrice: null,
+        acceptsNewsletters: true,
+        productsPerPage: ""
       },
       Orders: []
     };
+    this.AddressService = new AddressService();
     this.OrderService = new OrderService();
 		this.UserService = new UserService();
 		this.AuthService = new AuthService();
-		this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChangePasswordSubmit = this.handleChangePasswordSubmit.bind(this)
   }
 
   componentDidMount() {
     this.UserService.getUserInfo()
       .then(res => res.json())
       .then(data => {
-        this.setState({ currentUserInfo: { ...data } });
+        this.setState({
+          currentUserInfo: { ...data },
+          tempUser: { ...data }
+        });
       });
     this.OrderService.getUserOrders()
       .then(res => res.json())
@@ -61,18 +83,39 @@ class UserPanel extends Component {
         this.setState({
           Orders: data
         });
-      });
+      }
+    ).catch(error => alert("Przypominamy o potrzebie potwierdzenia adresu email"));
   }
 
-	validateForm() {
+	validateChangePasswordForm() {
     if (!(this.state.password.length > 0)) return false;
     if (this.state.password !== this.state.password2) return false;
     return true;
-	}
+  }
 
-	handleSubmit() {
+  validateUpdateDataForm(tempUser) {
+    if (tempUser.firstName.length < 0) return false;
+    if (tempUser.lastName.length < 0) return false;
+    if (tempUser.address.city.length < 0) return false;
+    if (tempUser.address.postalCode.length < 0) return false;
+    if (tempUser.address.street.length < 0) return false;
+    if (tempUser.address.houseNumber < 0) return false;
+    if (tempUser.productsPerPage < 1) return false;
+    return true;
+  }
+
+	handleChangePasswordSubmit() {
 		this.AuthService.changepassword(this.state.curr_password, this.state.password);
 	}
+
+  handleChangeUserData(tempUser) {
+    this.setState({ currentUserInfo: tempUser });
+    this.UserService.update(tempUser.id, tempUser.firstName, tempUser.lastName,
+      tempUser.email, tempUser.currency, tempUser.emailConfirmed, tempUser.prefersNetPrice,
+      tempUser.acceptsNewsletters, tempUser.productsPerPage);
+    this.AddressService.setUsersAddres(tempUser.address.city, tempUser.address.postalCode,
+      tempUser.address.street, tempUser.address.houseNumber, tempUser.id);
+  }
 
   handleChange = event => {
     this.setState({
@@ -101,7 +144,7 @@ class UserPanel extends Component {
   }
 
   renderUserData() {
-    let tempUser = { ...this.state.currentUserInfo };
+
     return (
       <Form>
         <FormGroup>
@@ -112,7 +155,11 @@ class UserPanel extends Component {
             <FormControl
               type="text"
               defaultValue={this.state.currentUserInfo.firstName}
-              onChange={e => (tempUser.firstName = e.target.value)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.firstName = e.target.value;
+                this.setState({ tempUser: user });
+              }}
             />
           </Col>
         </FormGroup>
@@ -124,7 +171,11 @@ class UserPanel extends Component {
             <FormControl
               type="text"
               defaultValue={this.state.currentUserInfo.lastName}
-              onChange={e => (tempUser.lastName = e.target.value)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.lastName = e.target.value;
+                this.setState({ tempUser: user });
+              }}
             />
           </Col>
         </FormGroup>
@@ -140,7 +191,11 @@ class UserPanel extends Component {
                   ? this.state.currentUserInfo.address.city
                   : ""
               }
-              onChange={e => (tempUser.address.city = e.target.value)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.address.city = e.target.value;
+                this.setState({ tempUser: user });
+              }}
             />
           </Col>
         </FormGroup>
@@ -152,7 +207,9 @@ class UserPanel extends Component {
             <FormControl
               type="text"
               onChange={e => {
-                tempUser.address.postalCode = e.target.value;
+                let user = this.state.tempUser;
+                user.address.postalCode = e.target.value;
+                this.setState({ tempUser: user });
               }}
               defaultValue={
                 this.state.currentUserInfo.address
@@ -174,7 +231,11 @@ class UserPanel extends Component {
                   ? this.state.currentUserInfo.address.street
                   : ""
               }
-              onChange={e => (tempUser.address.street = e.target.value)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.address.street = e.target.value;
+                this.setState({ tempUser: user });
+              }}
             />
           </Col>
         </FormGroup>
@@ -190,7 +251,11 @@ class UserPanel extends Component {
                   ? this.state.currentUserInfo.address.houseNumber
                   : ""
               }
-              onChange={e => (tempUser.address.houseNumber = e.target.value)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.address.houseNumber = e.target.value;
+                this.setState({ tempUser: user });
+              }}
             />
           </Col>
         </FormGroup>
@@ -202,7 +267,11 @@ class UserPanel extends Component {
             <FormControl
               type="number"
               defaultValue={this.state.currentUserInfo.productsPerPage}
-              onChange={e => (tempUser.productsPerPage = e.target.value)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.productsPerPage = e.target.value;
+                this.setState({ tempUser: user });
+              }}
             />
           </Col>
         </FormGroup>
@@ -221,7 +290,11 @@ class UserPanel extends Component {
             <ControlLabel>Akceptujesz nasz newsletter</ControlLabel>
             <Checkbox
               defaultChecked={this.state.currentUserInfo.acceptsNewsletters}
-              onChange={e => (tempUser.acceptsNewsletters = e.target.checked)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.acceptsNewsletters = e.target.checked;
+                this.setState({ tempUser: user });
+              }}
             />
           </FormGroup>
           <FormGroup bsClass="price_radio_group">
@@ -229,20 +302,30 @@ class UserPanel extends Component {
             <Radio
               name="radioGroup"
               defaultChecked={this.state.currentUserInfo.prefersNetPrice}
-              onChange={e => (tempUser.prefersNetPrice = true)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.prefersNetPrice = true;
+                this.setState({ tempUser: user });
+              }}
             >
               Netto
             </Radio>
             <Radio
               name="radioGroup"
               defaultChecked={!this.state.currentUserInfo.prefersNetPrice}
-              onChange={e => (tempUser.prefersNetPrice = false)}
+              onChange={e => {
+                let user = this.state.tempUser;
+                user.prefersNetPrice = false;
+                this.setState({ tempUser: user });
+              }}
             >
               Brutto
             </Radio>
           </FormGroup>
         </div>
-        <Button onClick={() => this.setState({ currentUserInfo: tempUser })}>
+        <Button
+          disabled={!this.validateUpdateDataForm(this.state.tempUser)}
+          onClick={() => this.handleChangeUserData(this.state.tempUser)}>
           Zatwierdź
         </Button>
       </Form>
@@ -283,12 +366,13 @@ class UserPanel extends Component {
       </div>
     );
   }
+
   renderPassChange() {
     return (
       <div className="pass_change_box">
         <Panel>
           <Panel.Heading />
-          <form onSubmit={this.handleSubmit}>
+          <form>
             <FormGroup controlId="curr_password">
               <FormControl
                 value={this.state.curr_password}
@@ -317,8 +401,8 @@ class UserPanel extends Component {
               />
             </FormGroup>
             <Button
-              disabled={!this.validateForm()}
-              type="submit"
+              disabled={!this.validateChangePasswordForm()}
+              onClick={this.handleChangePasswordSubmit}
               className="btn btn-success"
               block
             >

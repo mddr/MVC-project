@@ -86,7 +86,7 @@ namespace MVC.Backend.Controllers
                 var results = products.Select(p => new ProductViewModel(p)).ToList();
                 return Ok(results);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
