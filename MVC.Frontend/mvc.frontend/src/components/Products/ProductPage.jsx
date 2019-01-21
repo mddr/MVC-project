@@ -62,6 +62,30 @@ class ProductPage extends Component {
               });
             });
         });
+      })
+      .catch(x => {
+        this.setState({ netto: false }, () => {
+          this.Auth.fetch(
+            `${this.Auth.domain}/product/${this.props.match.params.id}`,
+            null
+          )
+            .then(res => res.json())
+            .then(res => {
+              this.setState({
+                pricePln: this.state.netto
+                  ? this.afterTaxPrice(res.pricePln, res.taxRate)
+                  : res.pricePln,
+                discount: res.discount,
+                name: res.name,
+                description: res.description,
+                boughtTimes: res.boughtTimes,
+                imageBase64: res.imageBase64,
+                id: res.id,
+                taxRate: res.taxRate,
+                files: res.files
+              });
+            });
+        });
       });
   }
 
