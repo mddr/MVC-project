@@ -130,14 +130,15 @@ export default class ProductForm extends React.Component {
 				filereader.readAsDataURL(this.state.filesList[i]);
 				// eslint-disable-next-line no-loop-func
 				filereader.onload = () => {
-					this.ProductService.addFile(
-						this.state.id,
-						this.state.filesList[i].name,
-						filereader.result
-					);
+          this.ProductService.addFile(
+            this.state.id,
+            this.state.filesList[i].name,
+            filereader.result
+          ).then(() => {
+            this.props.updateData(obj);
+          });
 				};
 			}
-      this.props.updateData(obj);
     });
   }
 
@@ -250,7 +251,7 @@ export default class ProductForm extends React.Component {
                 type="file"
                 id="multiplefiles"
                 onChange={this.handleMultipleFiles}
-                multiple
+                
               />
 						</div>
 						{this.renderProdcutFiles()}

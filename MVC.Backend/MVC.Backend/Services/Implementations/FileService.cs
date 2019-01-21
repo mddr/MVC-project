@@ -139,6 +139,7 @@ namespace MVC.Backend.Services
 			var sb = new StringBuilder();
 			sb.Append(basePath);
 			sb.Append(productId);
+			sb.Append(Guid.NewGuid().ToString());
 			sb.Append(fileName);
 			sb.Append(extension);
 			return sb.ToString();
