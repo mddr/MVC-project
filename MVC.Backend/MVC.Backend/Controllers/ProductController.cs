@@ -149,6 +149,7 @@ namespace MVC.Backend.Controllers
             try
             {
                 var product = _productService.GetProduct(id);
+                product.ThumbnailPath = product.FullImagePath; // do strony z detalami dajemy max res
                 return Ok(new ProductViewModel(product));
             }
             catch (ArgumentException ex)
