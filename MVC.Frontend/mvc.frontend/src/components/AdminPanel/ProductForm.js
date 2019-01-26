@@ -4,11 +4,15 @@ import {
   Checkbox,
   DropdownButton,
   FormControl,
-	FormGroup,
-	Glyphicon,
+  FormGroup,
+  Glyphicon,
   MenuItem,
   Modal
 } from "react-bootstrap";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { EditorState, convertToRaw } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
 import ProductService from "../../services/ProductService";
 
 export default class ProductForm extends React.Component {
@@ -22,7 +26,7 @@ export default class ProductForm extends React.Component {
       categoryId: "",
       amountAvailable: "",
       expertEmail: "",
-			description: "",
+      description: EditorState.createEmpty(),
       discount: "",
       imageBase64: "",
       categoryName: "",
@@ -45,12 +49,12 @@ export default class ProductForm extends React.Component {
         this.state.pricePln > 0 &&
         this.state.categoryId > 0 &&
         this.state.amountAvailable > -1 &&
-				this.state.taxRate > -1 &&
-				this.state.taxRate <= 100 &&
+        this.state.taxRate > -1 &&
+        this.state.taxRate <= 100 &&
         this.state.discount >= 0 &&
         this.state.discount <= 100 &&
         this.state.discount !== "" &&
-				this.state.taxRate !== "" &&
+        this.state.taxRate !== "" &&
         this.state.amountAvailable !== ""
       )
     )
@@ -62,6 +66,10 @@ export default class ProductForm extends React.Component {
     this.setState({
       [event.target.id]: event.target.value
     });
+  };
+
+  handleEditorStateChange = description => {
+    this.setState({ description });
   };
 
   handleFile = e => {
@@ -106,7 +114,7 @@ export default class ProductForm extends React.Component {
       categoryId: this.state.categoryId,
       amountAvailable: this.state.amountAvailable,
       expertEmail: this.state.expertEmail,
-			description: this.state.description,
+      description: stateToHTML(this.state.description.getCurrentContent()),
       discount: this.state.discount,
       imageBase64: this.state.imageBase64,
       taxRate: this.state.taxRate
@@ -123,20 +131,20 @@ export default class ProductForm extends React.Component {
         body
       }
     ).then(() => {
-			//dodawanie plików
+      //dodawanie plików
 
-			for (let i = 0; i < this.state.filesList.length;i++) {
-			let filereader = new FileReader();
-				filereader.readAsDataURL(this.state.filesList[i]);
-				// eslint-disable-next-line no-loop-func
-				filereader.onload = () => {
-					this.ProductService.addFile(
-						this.state.id,
-						this.state.filesList[i].name,
-						filereader.result
-					);
-				};
-			}
+      for (let i = 0; i < this.state.filesList.length; i++) {
+        let filereader = new FileReader();
+        filereader.readAsDataURL(this.state.filesList[i]);
+        // eslint-disable-next-line no-loop-func
+        filereader.onload = () => {
+          this.ProductService.addFile(
+            this.state.id,
+            this.state.filesList[i].name,
+            filereader.result
+          );
+        };
+      }
       this.props.updateData(obj);
     });
   }
@@ -229,14 +237,14 @@ export default class ProductForm extends React.Component {
                 type="number"
                 name="discount"
                 placeholder="Podaj zniżke"
-							/>
-						</FormGroup>
-						<FormGroup controlId="taxRate">
+              />
+            </FormGroup>
+            <FormGroup controlId="taxRate">
               <FormControl
-								value={this.state.taxRate}
+                value={this.state.taxRate}
                 onChange={this.handleChange}
                 type="number"
-								name="taxRate"
+                name="taxRate"
                 placeholder="Podaj wysokość opodatkowania"
               />
             </FormGroup>
@@ -252,18 +260,16 @@ export default class ProductForm extends React.Component {
                 onChange={this.handleMultipleFiles}
                 multiple
               />
-						</div>
-						{this.renderProdcutFiles()}
-						<FormGroup controlId="description">
-							<FormControl
-								componentClass="textarea"
-								value={this.state.description}
-								onChange={this.handleChange}
-								type="description"
-								name="description"
-								placeholder="Podaj opis"
-							/>
-						</FormGroup>
+            </div>
+            {this.renderProdcutFiles()}
+            <FormGroup controlId="description">
+              <Editor
+                editorState={this.state.description}
+                onEditorStateChange={this.handleEditorStateChange}
+                name="description"
+                placeholder="Podaj opis"
+              />
+            </FormGroup>
           </form>
         </Modal.Body>
         <Modal.Footer>
@@ -280,26 +286,26 @@ export default class ProductForm extends React.Component {
         </Modal.Footer>
       </Modal>
     );
-	}
-	renderProdcutFiles() {
-		let files = [];
-		this.state.files.forEach((file, index) => {
-			files.push(<li>
-				{file.fileName} 
-				<Glyphicon
-					glyph="trash"
-					style={{ color: "red" }}
-					onClick={() => {
-						this.ProductService.removeFile(this.state.id, file.id)
-						let stateFiles = this.state.files;
-						stateFiles = stateFiles.filter(elem => elem.id !== file.id);
-						this.setState({ files: stateFiles });
-					}}
-				/>
-			</li>)
-		})
-		return (<ul>
-			{files}
-		</ul>)
-	}
+  }
+  renderProdcutFiles() {
+    let files = [];
+    this.state.files.forEach((file, index) => {
+      files.push(
+        <li>
+          {file.fileName}
+          <Glyphicon
+            glyph="trash"
+            style={{ color: "red" }}
+            onClick={() => {
+              this.ProductService.removeFile(this.state.id, file.id);
+              let stateFiles = this.state.files;
+              stateFiles = stateFiles.filter(elem => elem.id !== file.id);
+              this.setState({ files: stateFiles });
+            }}
+          />
+        </li>
+      );
+    });
+    return <ul>{files}</ul>;
+  }
 }

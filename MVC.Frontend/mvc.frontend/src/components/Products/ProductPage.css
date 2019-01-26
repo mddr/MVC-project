@@ -59,12 +59,12 @@
   font-size: 1em;
   text-align: center;
 }
-.btn-buyButton,
-.btn-buyButton:focus {
+.buyButton,
+.buyButton:focus {
   background-color: #ff5a00;
   color: white;
 }
-.btn-buyButton:hover {
+.buyButton:hover {
   background-color: #ee7432;
   color: white;
 }

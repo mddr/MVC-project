@@ -3,6 +3,7 @@ import "./ProductPage.css";
 
 import React, { Component } from "react";
 import { Button, FormControl, Glyphicon, InputGroup } from "react-bootstrap";
+import ReactHtmlParser from "react-html-parser";
 import AuthService from "../../services/AuthService";
 import UserService from "../../services/UserService";
 import CartService from "../../services/CartService";
@@ -180,7 +181,7 @@ class ProductPage extends Component {
                 }}
               >
                 <Button
-                  bsStyle="buyButton"
+                  bsClass="btn buyButton"
                   onClick={this.addToCart}
                   bsSize="large"
                   disabled={this.validate()}
@@ -220,7 +221,7 @@ class ProductPage extends Component {
                 }}
               >
                 <Button
-                  bsStyle="buyButton"
+                  bsClass="btn buyButton"
                   onClick={this.buyNow}
                   bsSize="large"
                   disabled={this.validate()}
@@ -236,14 +237,15 @@ class ProductPage extends Component {
               </span>
             </div>
             <hr />
-            <div className="description">{this.state.description}</div>
-            
-            {this.state.files.length > 0 ? (
-            <span>
-              <Button>Pobierz pliki związane z produktem</Button>
-            </span>
+            <div className="description">
+              {ReactHtmlParser(this.state.description)}
+            </div>
 
-            ) : null }
+            {this.state.files.length > 0 ? (
+              <span>
+                <Button>Pobierz pliki związane z produktem</Button>
+              </span>
+            ) : null}
           </div>
         </div>
 
