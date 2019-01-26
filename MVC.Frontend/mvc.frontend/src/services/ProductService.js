@@ -16,7 +16,6 @@ export class ProductService {
   }
 
 	getProduct(id) {
-		console.log(2)
     return this.Auth.fetch(`${this.Auth.domain}/product/${id}`, null);
   }
 

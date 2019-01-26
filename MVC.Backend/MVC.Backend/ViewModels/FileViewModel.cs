@@ -1,4 +1,6 @@
 ﻿using MVC.Backend.Models;
+using System;
+using System.IO;
 
 namespace MVC.Backend.ViewModels
 {
@@ -65,6 +67,8 @@ namespace MVC.Backend.ViewModels
             FileName = file.FileName;
             CreatedAt = file.CreatedAt.ToString("g");
             Description = file.Description;
+            var bytes = File.ReadAllBytes(file.FilePath);
+            Base64 = Convert.ToBase64String(bytes);
         }
     }
 

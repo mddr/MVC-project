@@ -29,6 +29,7 @@ class ProductPage extends Component {
     this.CartService = new CartService();
     this.fetchData = this.fetchData.bind(this);
     this.buyNow = this.buyNow.bind(this);
+    this.downloadFiles = this.downloadFiles.bind(this);
     this.addToCart = this.addToCart.bind(this);
   }
 
@@ -57,7 +58,32 @@ class ProductPage extends Component {
                 boughtTimes: res.boughtTimes,
                 imageBase64: res.imageBase64,
                 id: res.id,
-                taxRate: res.taxRate
+                taxRate: res.taxRate,
+                files: res.files
+              });
+            });
+        });
+      })
+      .catch(x => {
+        this.setState({ netto: false }, () => {
+          this.Auth.fetch(
+            `${this.Auth.domain}/product/${this.props.match.params.id}`,
+            null
+          )
+            .then(res => res.json())
+            .then(res => {
+              this.setState({
+                pricePln: this.state.netto
+                  ? this.afterTaxPrice(res.pricePln, res.taxRate)
+                  : res.pricePln,
+                discount: res.discount,
+                name: res.name,
+                description: res.description,
+                boughtTimes: res.boughtTimes,
+                imageBase64: res.imageBase64,
+                id: res.id,
+                taxRate: res.taxRate,
+                files: res.files
               });
             });
         });
@@ -116,6 +142,25 @@ class ProductPage extends Component {
     if (decimals.length === 2) decimals += "0";
     return decimals;
   };
+
+  downloadFiles() {
+    for (var i = 0; i < this.state.files.length; i++) {
+      this.download(this.state.files[i].fileName, this.state.files[i].base64);
+    }
+  }
+
+  download(filename, base64) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:application/octet-stream;base64,' + base64);
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
 
   render() {
     const addValue = () => {
@@ -242,10 +287,14 @@ class ProductPage extends Component {
             </div>
 
             {this.state.files.length > 0 ? (
-              <span>
-                <Button>Pobierz pliki związane z produktem</Button>
-              </span>
-            ) : null}
+            <span>
+                <Button
+                  onClick={this.downloadFiles}
+                >
+                  Pobierz pliki związane z produktem</Button>
+            </span>
+
+            ) : null }
           </div>
         </div>
 

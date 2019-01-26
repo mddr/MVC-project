@@ -35,8 +35,8 @@ class App extends Component {
     const isUserLogged = auth.loggedInWithRefresh();
     if (isUserLogged) {
       this.loadCart();
+      this.UserService.getUserInfo().then(data => data.json()).then(data => this.setState({userInfo: data}));
     }
-    this.UserService.getUserInfo().then(data => data.json()).then(data => this.setState({userInfo: data}));
   }
 
   componentDidUpdate(prevProps, prevState) {

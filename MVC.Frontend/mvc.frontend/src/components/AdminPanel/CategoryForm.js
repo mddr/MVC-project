@@ -9,6 +9,7 @@ import {
   Modal
 } from "react-bootstrap";
 import CategoryService from "../../services/CategoryService";
+import AuthService from "../../services/AuthService";
 
 export default class ProductForm extends React.Component {
   constructor(props) {
@@ -24,7 +25,9 @@ export default class ProductForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.validateForm = this.validateForm.bind(this);
 		this.getCategoryName = this.getCategoryName.bind(this);
+    this.getPdf = this.getPdf.bind(this);
 		this.CategoryService = new CategoryService();
+    this.AuthService = new AuthService();
   }
 
   validateForm() {
@@ -84,6 +87,23 @@ export default class ProductForm extends React.Component {
     });
   }
 
+  getPdf() {
+    this.CategoryService.getPdfSummary(this.state.id)
+      .then(res => {
+        //var element = document.createElement('a');
+        //element.setAttribute('href', 'data:application/octet-stream;,' + res);
+        //element.setAttribute('download', this.state.categoryName+"-summary.pdf");
+
+        //element.style.display = 'none';
+        //document.body.appendChild(element);
+
+        //element.click();
+
+        //document.body.removeChild(element);
+        window.open(this.AuthService.domain + `/category/${this.state.id}/summary`);
+      })
+  }
+
   renderMenuItems() {
     const items = [];
     for (let i = 0; i < this.props.categories.length; i++) {
@@ -137,6 +157,12 @@ export default class ProductForm extends React.Component {
 							Ukryta
 							</Checkbox>
           </form>
+          <Button
+            bsStyle="primary"
+            onClick={this.getPdf}
+          >
+            Generuj cennik pdf
+          </Button>
         </Modal.Body>
         <Modal.Footer>
           <Button

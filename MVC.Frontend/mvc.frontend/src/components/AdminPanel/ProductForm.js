@@ -43,23 +43,23 @@ export default class ProductForm extends React.Component {
   }
 
   validateForm() {
-    if (
-      !(
-        this.state.name.length > 0 &&
-        this.state.pricePln > 0 &&
-        this.state.categoryId > 0 &&
-        this.state.amountAvailable > -1 &&
-        this.state.taxRate > -1 &&
-        this.state.taxRate <= 100 &&
-        this.state.discount >= 0 &&
-        this.state.discount <= 100 &&
-        this.state.discount !== "" &&
-        this.state.taxRate !== "" &&
-        this.state.amountAvailable !== ""
+      if (
+        !(
+          this.state.name.length > 0 &&
+          this.state.pricePln > 0 &&
+          this.state.categoryId > 0 &&
+          this.state.amountAvailable > -1 &&
+                  this.state.taxRate > -1 &&
+                  this.state.taxRate <= 100 &&
+          this.state.discount >= 0 &&
+          this.state.discount <= 100 &&
+          this.state.discount !== "" &&
+                  this.state.taxRate !== "" &&
+          this.state.amountAvailable !== ""
+        )
       )
-    )
-      return false;
-    return true;
+          return false;
+      return true;
   }
 
   handleChange = event => {
@@ -133,19 +133,20 @@ export default class ProductForm extends React.Component {
     ).then(() => {
       //dodawanie plików
 
-      for (let i = 0; i < this.state.filesList.length; i++) {
-        let filereader = new FileReader();
-        filereader.readAsDataURL(this.state.filesList[i]);
-        // eslint-disable-next-line no-loop-func
-        filereader.onload = () => {
+			for (let i = 0; i < this.state.filesList.length;i++) {
+			let filereader = new FileReader();
+				filereader.readAsDataURL(this.state.filesList[i]);
+				// eslint-disable-next-line no-loop-func
+				filereader.onload = () => {
           this.ProductService.addFile(
             this.state.id,
             this.state.filesList[i].name,
             filereader.result
-          );
-        };
-      }
-      this.props.updateData(obj);
+          ).then(() => {
+            this.props.updateData(obj);
+          });
+				};
+			}
     });
   }
 
@@ -258,7 +259,7 @@ export default class ProductForm extends React.Component {
                 type="file"
                 id="multiplefiles"
                 onChange={this.handleMultipleFiles}
-                multiple
+                
               />
             </div>
             {this.renderProdcutFiles()}
@@ -286,26 +287,26 @@ export default class ProductForm extends React.Component {
         </Modal.Footer>
       </Modal>
     );
-  }
-  renderProdcutFiles() {
-    let files = [];
-    this.state.files.forEach((file, index) => {
-      files.push(
-        <li>
-          {file.fileName}
-          <Glyphicon
-            glyph="trash"
-            style={{ color: "red" }}
-            onClick={() => {
-              this.ProductService.removeFile(this.state.id, file.id);
-              let stateFiles = this.state.files;
-              stateFiles = stateFiles.filter(elem => elem.id !== file.id);
-              this.setState({ files: stateFiles });
-            }}
-          />
-        </li>
-      );
-    });
-    return <ul>{files}</ul>;
-  }
+	}
+	renderProdcutFiles() {
+		let files = [];
+		this.state.files.forEach((file, index) => {
+			files.push(<li>
+				{file.fileName} 
+				<Glyphicon
+					glyph="trash"
+					style={{ color: "red" }}
+					onClick={() => {
+						this.ProductService.removeFile(this.state.id, file.id)
+						let stateFiles = this.state.files;
+						stateFiles = stateFiles.filter(elem => elem.id !== file.id);
+						this.setState({ files: stateFiles });
+					}}
+				/>
+			</li>)
+		})
+		return (<ul>
+			{files}
+		</ul>)
+	}
 }

@@ -43,7 +43,7 @@ namespace MVC.Backend.Services
                 var product = _context.Products.FirstOrDefault(u => u.Id == item.ProductId);
                 if (product == null)
                     throw new ArgumentException($"Product not found. Id: {item.ProductId}");
-                totalPrice += product.PricePln * (100 - product.Discount) / 100;
+                totalPrice += product.PricePln * (100 - product.Discount) / 100 * item.ProductAmount;
                 product.BoughtTimes += item.ProductAmount;
                 product.AmountAvailable -= item.ProductAmount;
             }
