@@ -1,7 +1,14 @@
 import "./App.css";
 
 import React, { Component } from "react";
-import { Nav, Navbar, NavItem, FormControl, Button } from "react-bootstrap";
+import {
+  Nav,
+  Navbar,
+  NavItem,
+  FormControl,
+  Button,
+  Glyphicon
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, Redirect } from "react-router-dom";
 import Cart from "./components/Products/Cart";
@@ -14,6 +21,8 @@ import UserService from "./services/UserService";
 
 const auth = new AuthService();
 
+const bkgCol = { bright: "#fafafa", dark: "#888888" };
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -22,7 +31,8 @@ class App extends Component {
       cartItemChanged: -1,
       searchInput: "",
       userInfo: {},
-      pressedLogout: false
+      pressedLogout: false,
+      navInverse: false
     };
     this.CartService = new CartService();
     this.ProductService = new ProductService();
@@ -35,7 +45,9 @@ class App extends Component {
     const isUserLogged = auth.loggedInWithRefresh();
     if (isUserLogged) {
       this.loadCart();
-      this.UserService.getUserInfo().then(data => data.json()).then(data => this.setState({userInfo: data}));
+      this.UserService.getUserInfo()
+        .then(data => data.json())
+        .then(data => this.setState({ userInfo: data }));
     }
   }
 
@@ -68,11 +80,13 @@ class App extends Component {
         this.setState({
           cartItems: data.sort((a, b) => a.productId.localeCompare(b.productId))
         })
-    ).catch(error => {
-      if (auth.loggedIn)
-        alert("Do poprawnego dzialania strony wymagane jest potwierdzenie adresu email");
-    });
-
+      )
+      .catch(error => {
+        if (auth.loggedIn)
+          alert(
+            "Do poprawnego dzialania strony wymagane jest potwierdzenie adresu email"
+          );
+      });
   }
 
   async handleLogout() {
@@ -83,8 +97,16 @@ class App extends Component {
       cartItemsInfo: []
     });
   }
-
-  handleInput;
+  darkMode = () => {
+    console.log("Style: ", document.styleSheets);
+    if (this.state.navInverse) {
+      this.setState({ navInverse: false });
+      document.getElementById("AppID").style.backgroundColor = bkgCol.bright;
+    } else {
+      this.setState({ navInverse: true });
+      document.getElementById("AppID").style.backgroundColor = bkgCol.dark;
+    }
+  };
 
   render() {
     if (this.state.pressedLogout === true) {
@@ -93,8 +115,8 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
-        <Navbar fluid collapseOnSelect>
+      <div id="AppID" className="App">
+        <Navbar fluid collapseOnSelect inverse={this.state.navInverse}>
           <Navbar.Header>
             <Navbar.Brand>
               <Link to="/">Strona główna</Link>
@@ -138,6 +160,14 @@ class App extends Component {
           {searchBox}
           <Nav pullRight>
             <NavItem style={{ padding: "none" }}>
+              <button
+                style={{ background: "none", border: "none", padding: 0 }}
+                onClick={this.darkMode}
+              >
+                <i className="fa fa-moon-o" style={{ fontSize: 22 }} />
+              </button>
+            </NavItem>
+            <NavItem style={{ padding: "none" }}>
               <Cart
                 cartItems={this.state.cartItems}
                 cartItemChanged={this.cartItemChanged}
@@ -159,6 +189,15 @@ class App extends Component {
         <Navbar.Collapse>
           {searchBox}
           <Nav pullRight>
+            <NavItem style={{ padding: "none" }}>
+              <button
+                style={{ background: "none", border: "none", padding: 0 }}
+                onClick={this.darkMode}
+              >
+                <i className="fa fa-moon-o" style={{ fontSize: 22 }} />
+              </button>
+            </NavItem>
+
             <NavItem style={{ padding: "none" }}>
               <Cart
                 cartItems={this.state.cartItems}
