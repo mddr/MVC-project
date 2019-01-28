@@ -11,7 +11,8 @@ import {
   Checkbox,
   Radio,
   Button,
-  Panel
+  Panel,
+  Modal
 } from "react-bootstrap";
 import OrderService from "../../services/OrderService";
 import AddressService from "../../services/AddressService";
@@ -59,7 +60,8 @@ class UserPanel extends Component {
         acceptsNewsletters: true,
         productsPerPage: ""
       },
-      Orders: []
+      Orders: [],
+      showChangesSavedModal: false,
     };
     this.AddressService = new AddressService();
     this.OrderService = new OrderService();
@@ -137,15 +139,18 @@ class UserPanel extends Component {
       tempUser.prefersNetPrice,
       tempUser.acceptsNewsletters,
       tempUser.productsPerPage
-    );
+    ).then(() => {
+      this.setState({ showChangesSavedModal: true });
+    });
     this.AddressService.setUsersAddres(
       tempUser.address.city,
       tempUser.address.postalCode,
       tempUser.address.street,
       tempUser.address.houseNumber,
       tempUser.id
-    );
-    window.location.reload();
+    ).then(() => {
+      this.setState({ showChangesSavedModal: true });
+    });
   }
 
   handleChange = event => {
@@ -157,6 +162,7 @@ class UserPanel extends Component {
   render() {
     return (
       <div className="userpanel">
+        {this.renderChangesSavedModal()}
         <Tabs defaultActiveKey={1}>
           <Tab eventKey={1} title="Dane użytkownika">
             {this.renderUserData()}
@@ -442,6 +448,19 @@ class UserPanel extends Component {
           </form>
         </Panel>
       </div>
+    );
+  }
+
+  renderChangesSavedModal() {
+    return (
+      <Modal show={this.state.showChangesSavedModal}>
+        <Modal.Header>
+          <Modal.Title>Zmiany zapisane</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Button onClick={() => this.setState({ showChangesSavedModal: false })} >Zamknij</Button>
+        </Modal.Footer>
+      </Modal>
     );
   }
 }
