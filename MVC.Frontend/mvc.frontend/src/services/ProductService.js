@@ -57,12 +57,13 @@ export class ProductService {
 		});
 	}
 
-	addFile(productId, filename, base64) {
+  addFile(productId, filename, base64, description) {
 		let body = "";
 		const obj = {
 			productId,
 			filename,
-			base64,
+      base64,
+      description
 		};
 
 		body = JSON.stringify(obj);

@@ -31,6 +31,7 @@ export default class ProductForm extends React.Component {
       imageBase64: "",
       categoryName: "",
       taxRate: "",
+      fileDesc: "",
       filesList: [],
       files: []
     };
@@ -86,14 +87,20 @@ export default class ProductForm extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.modelProps)
-      this.setState({
+    if (this.props.modelProps) {
+      var stuff = {
         ...this.props.modelProps,
         categoryName: this.getCategoryName(
           this.props.modelProps.categoryId,
           this.props.categories
         )
+      };
+      if (!stuff.description)
+        stuff.description = EditorState.createEmpty();
+      this.setState({
+        ...stuff
       });
+    }
   }
 
   getCategoryName(id, categories) {
@@ -105,6 +112,7 @@ export default class ProductForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.props.hideForm();
     let body = "";
     const obj = {
       id: this.state.id,
@@ -132,21 +140,20 @@ export default class ProductForm extends React.Component {
       }
     ).then(() => {
       //dodawanie plików
-
-			for (let i = 0; i < this.state.filesList.length;i++) {
+      if (this.state.filesList.length === 0) this.props.updateData(obj);
 			let filereader = new FileReader();
-				filereader.readAsDataURL(this.state.filesList[i]);
-				// eslint-disable-next-line no-loop-func
-				filereader.onload = () => {
-          this.ProductService.addFile(
-            this.state.id,
-            this.state.filesList[i].name,
-            filereader.result
-          ).then(() => {
-            this.props.updateData(obj);
-          });
-				};
-			}
+			filereader.readAsDataURL(this.state.filesList[0]);
+			// eslint-disable-next-line no-loop-func
+			filereader.onload = () => {
+        this.ProductService.addFile(
+          this.state.id,
+          this.state.filesList[0].name,
+          filereader.result,
+          this.state.fileDesc
+        ).then(() => {
+          this.props.updateData(obj);
+        });
+			};
     });
   }
 
@@ -178,7 +185,6 @@ export default class ProductForm extends React.Component {
           <Modal.Title>{this.props.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={this.handleSubmit} id="createForm">
             <FormGroup controlId="name">
               <FormControl
                 value={this.state.name}
@@ -261,7 +267,16 @@ export default class ProductForm extends React.Component {
                 onChange={this.handleMultipleFiles}
                 
               />
-            </div>
+          </div>
+          <FormGroup controlId="fileDesc">
+            <FormControl
+              value={this.state.fileDesc}
+              onChange={this.handleChange}
+              type="text"
+              name="fileDesc"
+              placeholder="Podaj opis pliku"
+            />
+          </FormGroup>
             {this.renderProdcutFiles()}
             <FormGroup controlId="description">
               <Editor
@@ -271,15 +286,12 @@ export default class ProductForm extends React.Component {
                 placeholder="Podaj opis"
               />
             </FormGroup>
-          </form>
         </Modal.Body>
         <Modal.Footer>
           <Button
             bsStyle="primary"
-            type="submit"
-            form="createForm"
             disabled={!this.validateForm()}
-            onClick={this.props.hideForm}
+            onClick={this.handleSubmit}
           >
             Zatwierdź
           </Button>

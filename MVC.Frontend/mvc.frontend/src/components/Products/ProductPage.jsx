@@ -286,21 +286,36 @@ class ProductPage extends Component {
               {ReactHtmlParser(this.state.description)}
             </div>
 
-            {this.state.files.length > 0 ? (
-            <span>
+            {this.state.files.length > 0 ? (<div>
+              <span>
                 <Button
                   onClick={this.downloadFiles}
                 >
-                  Pobierz pliki związane z produktem</Button>
-            </span>
+                  Pobierz wszystkie pliki związane z produktem</Button>
+              </span>
+              {this.renderFilesDownloadLink()}
+            </div>
 
-            ) : null }
+          ) : null }
           </div>
         </div>
 
         {/* TODO: Breadcrumbs lokacja na podstawie kategorii */}
       </div>
     );
+  }
+
+  renderFilesDownloadLink() {
+    var links = [];
+    this.state.files.map((link) => links.push(<li>
+      <a href={"data:application/octet-stream;base64,"+link.base64}
+        download={link.fileName}
+      >
+        {link.fileName}
+      </a > - {link.description}</li>));
+    return (<ul>
+      {links}
+    </ul>);
   }
 }
 
