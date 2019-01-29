@@ -28,6 +28,11 @@
 .productImageSection {
   grid-column: 1/2;
 }
+
+.productImageSection > img {
+  max-height: 340px;
+  max-width: 340px;
+}
 .productDescribeSection {
   grid-column: 2/3;
 }
