@@ -11,8 +11,10 @@ import {
 } from "react-bootstrap";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, ContentState, convertFromHTML, convertFromRaw, convertToRaw } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 import ProductService from "../../services/ProductService";
 
 export default class ProductForm extends React.Component {
@@ -95,8 +97,14 @@ export default class ProductForm extends React.Component {
           this.props.categories
         )
       };
-      if (!stuff.description)
-        stuff.description = EditorState.createEmpty();
+      if (stuff.description) {
+        const contentBlock = htmlToDraft(stuff.description);
+        if (contentBlock) {
+          const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+          stuff.description = EditorState.createWithContent(contentState);
+        }
+      }
+
       this.setState({
         ...stuff
       });
