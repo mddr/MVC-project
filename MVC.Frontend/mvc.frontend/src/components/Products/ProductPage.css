@@ -1,0 +1,89 @@
+.productContainer {
+  margin: auto;
+  display: grid;
+  display: -ms-grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 220px auto;
+  grid-gap: 1em;
+  margin-left: 8em;
+  margin-right: 8em;
+}
+
+.productContainer > div {
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 4px 1px rgba(120, 120, 120, 0.5);
+  -moz-box-shadow: 0px 0px 4px 1px rgba(120, 120, 120, 0.5);
+  box-shadow: 0px 0px 4px 1px rgba(120, 120, 120, 0.5);
+  border: 1px solid rgb(235, 235, 235);
+}
+
+.productSection {
+  display: grid;
+  grid-template-columns: 4fr 3fr;
+  grid-template-rows: 1fr;
+  margin: 0;
+  padding: 25px;
+  width: 100%;
+}
+.productImageSection {
+  grid-column: 1/2;
+}
+
+.productImageSection > img {
+  max-height: 340px;
+  max-width: 340px;
+}
+.productDescribeSection {
+  grid-column: 2/3;
+}
+.unitsPriceValue {
+  line-height: 0.75em;
+  font-size: 4em;
+  font-weight: 600;
+}
+.decimalPriceValue {
+  font-size: 3em;
+}
+.currencySign {
+  font-size: 2em;
+}
+.priceAndButtonsWrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.productPrice {
+  margin: auto;
+  color: #ff5a00;
+  text-align: left;
+}
+.boughtCounter {
+  text-align: center;
+}
+.description {
+  font-size: 1em;
+  text-align: center;
+}
+.buyButton,
+.buyButton:focus {
+  background-color: #ff5a00;
+  color: white;
+}
+.buyButton:hover {
+  background-color: #ee7432;
+  color: white;
+}
+.buyButtonWrapper {
+  width: 200px;
+  margin: auto;
+}
+
+.buyButtonWrapper button {
+  width: 200px;
+}
+
+.numberPicker {
+  margin: auto;
+  width: 100px;
+  align-self: center;
+}

@@ -1,0 +1,40 @@
+.LoginForm {
+    padding: 20vh 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.panel {
+    border-radius: 12px;
+}
+
+form {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    max-width: 60%;
+    margin: 0 auto;
+}
+
+::-webkit-input-placeholder {
+    font-style: italic;
+}
+
+:-moz-placeholder {
+    font-style: italic;
+}
+
+::-moz-placeholder {
+    font-style: italic;
+}
+
+:-ms-input-placeholder {
+    font-style: italic;
+}
+
+.form-control {
+    border-radius: 12px;
+}
+
+.btn {
+    border-radius: 12px;
+}

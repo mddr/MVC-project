@@ -1,0 +1,24 @@
+.confirmView {
+  display: flex;
+  width: 100%;
+  height: 60vh;
+}
+.simpleDiv {
+  margin: auto;
+  padding: 2em;
+  background-color: white;
+  -webkit-box-shadow: 1px 1px 4px 1px rgba(120, 120, 120, 0.5);
+  -moz-box-shadow: 1px 1px 4px 1px rgba(120, 120, 120, 0.5);
+  box-shadow: 1px 1px 4px 1px rgba(120, 120, 120, 0.5);
+  border: 1px solid rgb(235, 235, 235);
+}
+.simpleDiv > h1 {
+  margin: 1em;
+  color: green;
+}
+.simpleDiv > p {
+  margin: 2em;
+}
+.btn-log {
+  background-color: green;
+}

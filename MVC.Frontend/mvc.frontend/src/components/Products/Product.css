@@ -1,0 +1,49 @@
+.product {
+  margin: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  width: 15vw;
+  text-align: center;
+}
+
+.greenbox {
+  background-color: green;
+  height: 150px;
+  flex-basis: 60%;
+}
+
+.productimage {
+  position: relative;
+  overflow: hidden;
+}
+
+.discount {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: #ff5a00;
+  font-weight: 600;
+  color: white;
+  border-radius: 2px;
+}
+
+.namebox {
+  font-size: 17px;
+  background-color: azure;
+  flex-basis: 20%;
+}
+
+.pricebox {
+  background-color: beige;
+  flex-basis: 20%;
+  color: orangered;
+}
+
+.pricebox .units {
+  font-size: 17px;
+}
+
+.pricebox .decimals {
+  font-size: 14px;
+}
